@@ -15,14 +15,16 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
         
         if fighter_kind == *FIGHTER_KIND_CAPTAIN {
-            
-            if MotionModule::motion_kind(module_accessor)== smash::hash40("throw_lw"){
+            //FIX DOWN TRHROW, IT HAS NO HITBOX 
+            if MotionModule::motion_kind(module_accessor)== smash::hash40("throw_lw"){ 
                 if MotionModule::frame(module_accessor)>= 22.0 {
                     CancelModule::enable_cancel(module_accessor);
                 }
 
             }
+            //SIDE B
             if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
+                //TAUNT CANCEL
                 if MotionModule::frame(module_accessor)>= 20.0 {
                     if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI)
                     || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW)
@@ -31,6 +33,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                         CancelModule::enable_cancel(module_accessor);
                     }
                 }
+                //CANCEL ON HIT WITH GRAB AND A ATTACKS
                 if AttackModule:: is_attack_occur(module_accessor){
                     if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CATCH){
                         CancelModule::enable_cancel(module_accessor);

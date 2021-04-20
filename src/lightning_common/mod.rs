@@ -45,6 +45,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             ||fighter_kind == *FIGHTER_KIND_ELIGHT
             ) 
             {
+                //CANCEL ON HIT
                 if AttackModule:: is_attack_occur(module_accessor) {
                     CancelModule::enable_cancel(module_accessor);
                     

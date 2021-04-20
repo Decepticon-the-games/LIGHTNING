@@ -15,6 +15,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
         
         if fighter_kind == *FIGHTER_KIND_ELIGHT {
+            //Fix Neutral B
             if (MotionModule::motion_kind(module_accessor) == smash::hash40("special_n") && MotionModule::frame(module_accessor) >=29.0) 
             || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_n") && MotionModule::frame(module_accessor) >=29.0) 
             || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_n2") && MotionModule::frame(module_accessor) >=38.0)

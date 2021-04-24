@@ -1,8 +1,6 @@
-use smash::app::lua_bind::StatusModule::*;
 use smash::app::lua_bind::*;
-use smash::lua2cpp::{L2CFighterCommon, L2CFighterBase};
+use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
-use acmd::{acmd, acmd_func};
 use acmd::*;
 
 
@@ -23,8 +21,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let lua_state = fighter.lua_state_agent; 
-        let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
-        let cat3 = ControlModule::get_command_flag_cat(module_accessor, 2);
+        //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
+        //let cat3 = ControlModule::get_command_flag_cat(module_accessor, 2);
         
         //LIGHTNING_CANCEL (LIGHTNING CANCELLING)
         
@@ -56,7 +54,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 //DamageModule::add_damage(module_accessor, -5.0, 0); 
             }
             
-            if (StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_ATTACK_S3
+            if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_ATTACK_S3
             || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_ATTACK_HI3
             || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_ATTACK_LW3
             || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_ATTACK_S4
@@ -65,7 +63,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_ATTACK_AIR
             || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_N
             || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_S
-            || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_LW) {
+            || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_LW {
                 
                 if ! AttackModule::is_attack(module_accessor, 0, false) {
                   MotionModule::set_rate(module_accessor, 1.1);
@@ -95,8 +93,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                             FILL_SCREEN_MODEL_COLOR( 0, 12, 0.1, 0.1, 0.1, 0.01, 0, 0, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, 205);
 
                         });
-                        for mut x in CAN_CRIMSON_CANCEL.iter() {
-                            x = &false;
+                        for mut _x in CAN_CRIMSON_CANCEL.iter() {
+                            _x = &false;
                         }
                         CAN_CRIMSON_CANCEL_TEMP = CAN_CRIMSON_CANCEL;
                     

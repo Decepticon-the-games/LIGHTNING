@@ -1,18 +1,17 @@
-use smash::app::lua_bind::StatusModule::*;
+use smash::app::*;
 use smash::app::lua_bind::*;
-use smash::lua2cpp::{L2CFighterCommon, L2CFighterBase};
+use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
-use acmd::*;
 
 // Use this for general per-frame fighter-level hooks
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
-        let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let fighter_kind = smash::app::utility::get_kind(module_accessor);
-        let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
-        let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
+        let module_accessor = sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+        let fighter_kind = utility::get_kind(module_accessor);
+        let status_kind = StatusModule::status_kind(module_accessor);
+        //let situation_kind = StatusModule::situation_kind(module_accessor);
         let jump_button_pressed = ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_JUMP);
-        let jump_dash_pressed = (ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP) || (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0);
+        //let jump_dash_pressed = (ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP) || (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0);
         
         //DISABLE UP SPECIAL/PUMMEL INFLICTION CANCEL
         if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI)
@@ -54,7 +53,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }         
         }
         //EASIER WAVEDASH CHAINS// 
-        if (MotionModule::motion_kind(module_accessor)== smash::hash40("landing_light") || MotionModule::motion_kind(module_accessor)== smash::hash40("landing_heavy")) {
+        if MotionModule::motion_kind(module_accessor)== smash::hash40("landing_light") || MotionModule::motion_kind(module_accessor)== smash::hash40("landing_heavy") {
             if MotionModule::frame(module_accessor) >= 10.0 && jump_button_pressed {
                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
             }
@@ -94,10 +93,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 if status_kind == *FIGHTER_STATUS_KIND_ATTACK
                 || status_kind == *FIGHTER_STATUS_KIND_ATTACK_100 {
                     if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
-                        change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
+                        StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
                     }
                     if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CATCH) {
-                        change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_CATCH, true);
+                        StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_CATCH, true);
                     }
                     if ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH != 0 {
                         CancelModule::enable_cancel(module_accessor);
@@ -109,16 +108,16 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 }
 
 // Use this for general per-frame weapon-level hooks
-pub fn once_per_weapon_frame(fighter_base : &mut L2CFighterBase) {
-    unsafe {
-        let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter_base.lua_state_agent);
-        let frame = smash::app::lua_bind::MotionModule::frame(module_accessor) as i32;
+// pub fn once_per_weapon_frame(fighter_base : &mut L2CFighterBase) {
+//     unsafe {
+//         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter_base.lua_state_agent);
+//         let frame = smash::app::lua_bind::MotionModule::frame(module_accessor) as i32;
 
-        if frame % 10 == 0 {
-            println!("[Weapon Hook] Frame : {}", frame);
-        }
-    }
-}
+//         if frame % 10 == 0 {
+//             println!("[Weapon Hook] Frame : {}", frame);
+//         }
+//     }
+// }
 
 pub fn install() {
     acmd::add_custom_hooks!(once_per_fighter_frame);

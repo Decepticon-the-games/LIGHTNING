@@ -1,10 +1,8 @@
-use smash::phx::Hash40;
-use smash::lua2cpp::L2CAgentBase;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::app::FighterManager;
 use smash::app::*;
-use smash::lua2cpp::{L2CFighterCommon, L2CFighterBase};
+use smash::lua2cpp::L2CFighterCommon;
 use smash::phx::Vector2f;
 use acmd::*;
 
@@ -36,7 +34,7 @@ move_type_again: bool) -> u64 {
     let attacker_boma = sv_battle_object::module_accessor(attacker_object_id);
     let defender_boma = sv_battle_object::module_accessor(defender_object_id);
     // let attacker_fighter_kind = sv_battle_object::kind(attacker_object_id);
-    let defender_fighter_kind = sv_battle_object::kind(defender_object_id);
+    // let defender_fighter_kind = sv_battle_object::kind(defender_object_id);
     // let a_entry_id = WorkModule::get_int(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let d_entry_id = WorkModule::get_int(defender_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     //if defender_fighter_kind == *FIGHTER_KIND_ALL {
@@ -71,32 +69,13 @@ move_type_again: bool) -> u64 {
     original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)
 }
 
-#[skyline::hook(replace = smash::app::lua_bind::WorkModule::is_enable_transition_term )]
-pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObjectModuleAccessor, term: i32) -> bool {
-    let fighter_kind = smash::app::utility::get_kind(module_accessor);
-    let ret = original!()(module_accessor,term);
-    let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if //fighter_kind == *FIGHTER_KIND_ALL && 
-    entry_id < 8 {
-        if SECRET_SENSATION[entry_id] {
-            return false;
-        }
-        else {
-            return ret;
-        }
-    }
-    else {
-        return ret;
-    }
-}
-
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
-        let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+        let module_accessor = sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let fighter_kind = smash::app::utility::get_kind(module_accessor);
-        let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
-        let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
+        let fighter_kind = utility::get_kind(module_accessor);
+        //let status_kind = StatusModule::status_kind(module_accessor);
+        //let situation_kind = StatusModule::situation_kind(module_accessor);
         let lua_state = fighter.lua_state_agent; 
        
         
@@ -243,5 +222,4 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 pub fn install() {
     acmd::add_custom_hooks!(once_per_fighter_frame);
     skyline::install_hook!(notify_log_event_collision_hit_replace);
-    skyline::install_hook!(is_enable_transition_term_replace);
 }

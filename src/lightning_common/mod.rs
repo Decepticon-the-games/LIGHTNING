@@ -43,6 +43,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             ||fighter_kind == *FIGHTER_KIND_PITB
             ||fighter_kind == *FIGHTER_KIND_ELIGHT
             ||fighter_kind == *FIGHTER_KIND_PALUTENA
+            ||fighter_kind == *FIGHTER_KIND_EDGE
             ) 
             {
                 //CANCEL ON HIT
@@ -59,12 +60,15 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }
             
         }
-        //if status_kind == *FIGHTER_STATUS_KIND_JUMP_SQUAT {
-        //    if MotionModule::end_frame(module_accessor) < 1.0 {
-        //        CancelModule::enable_cancel(module_accessor);
-        //    }
-        //}
-
+        
+        //AIRDASH
+        if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
+            if MotionModule::frame(module_accessor) >= 4.0 {
+                
+                CancelModule::enable_cancel(module_accessor);
+                
+            }
+        }
 
         //REWARD PERFECT WAVEDASHES WITH INVINCIBILITY
 
@@ -80,7 +84,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
 
 
-        //NO JAB CHAINS (CANCEL WITH JUMP/GRAB)
+        //NO JAB CHAINS (CANCEL WITH JUMP/GRAB/DASH)
         if MotionModule::motion_kind(module_accessor)== smash::hash40("attack_11")
         || MotionModule::motion_kind(module_accessor)== smash::hash40("attack_12")
         || MotionModule::motion_kind(module_accessor)== smash::hash40("attack_13")

@@ -116,9 +116,9 @@ pub fn mewtwo_up_b_air(fighter: &mut L2CFighterCommon) {
 //SEPHIROTH
 #[acmd_func(
     battle_object_category = BATTLE_OBJECT_CATEGORY_FIGHTER, 
-    battle_object_kind = FIGHTER_KIND_MEWTWO, 
+    battle_object_kind = FIGHTER_KIND_EDGE, 
     animation = "special_hi1",
-    animcmd = "game_specialairhi")]
+    animcmd = "game_specialhi1")]
 pub fn seph_up_b_move(fighter: &mut L2CFighterCommon) {
     acmd!(lua_state,{
         
@@ -135,7 +135,7 @@ pub fn install() {
         falco_side_b,
         mewtwo_up_b,
         mewtwo_up_b_air,
-        seph_up_b_move
+        //seph_up_b_move
         
     );
 }

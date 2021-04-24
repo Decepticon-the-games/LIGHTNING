@@ -24,7 +24,7 @@ mod lightning_counter_cancels;
 mod lightning_motioncancels;
 mod lightning_upbcancels;
 mod lightning_special_tech;
-mod lightning_upbtransitions;
+//mod lightning_upbtransitions;
 
 #[skyline::main(name = "acmd_test")]
 pub fn main() {
@@ -51,5 +51,5 @@ pub fn main() {
     lightning_motioncancels::install();
     lightning_upbcancels::install();
     lightning_special_tech::install();
-    lightning_upbtransitions::install();
+    //lightning_upbtransitions::install();
 }

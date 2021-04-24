@@ -18,11 +18,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S
             ||  status_kind == *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S2
             ||  status_kind == *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S3)
-            ||  status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 
-            && ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI)
-            && ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
-            && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
-            && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100) {   
+            ||  status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 {   
                 
                 //FIX Side Special
                 if status_kind == *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S3 {

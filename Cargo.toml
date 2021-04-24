@@ -1,5 +1,5 @@
 [package]
-name = "lightning_4-19-21"
+name = "lightning_4-23-21"
 version = "0.1.0"
 authors = ["jam1garner <jam1.mcleod@hotmail.com>"]
 edition = "2018"
@@ -12,7 +12,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 skyline = { git = "https://github.com/ultimate-research/skyline-rs.git" }
-skyline_smash = { git = "https://github.com/ultimate-research/skyline-smash.git" }
+skyline_smash = { git = "https://github.com/ultimate-research/skyline-smash.git", features = ["weak_l2cvalue"] }
 acmd = { git = "https://github.com/ultimate-research/skyline-acmd.git" }
 
 [profile.dev]

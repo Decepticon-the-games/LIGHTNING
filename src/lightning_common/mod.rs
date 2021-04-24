@@ -43,6 +43,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             ||fighter_kind == *FIGHTER_KIND_PIT
             ||fighter_kind == *FIGHTER_KIND_PITB
             ||fighter_kind == *FIGHTER_KIND_ELIGHT
+            ||fighter_kind == *FIGHTER_KIND_PALUTENA
             ) 
             {
                 //CANCEL ON HIT

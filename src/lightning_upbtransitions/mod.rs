@@ -1,4 +1,4 @@
-use smash::app::lua_bind::StatusModule::*;
+use smash::app::*;
 use smash::app::lua_bind::*;
 use smash::lua2cpp::{L2CFighterCommon, L2CFighterBase};
 use smash::lib::lua_const::*;
@@ -20,8 +20,9 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
 #[skyline::hook(replace=smash::app::lua_bind::WorkModule::is_enable_transition_term)]
 pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObjectModuleAccessor, term: i32) -> bool {
     let ret = original!()(module_accessor,term);
-    ENTRY_ID = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if UP_SPECIAL[entry_id(module_accessor)] {
+    let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+
+    if UP_SPECIAL[ENTRY_ID] {
          if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI {
              return false;
          }

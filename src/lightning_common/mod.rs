@@ -73,7 +73,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if situation_kind == *SITUATION_KIND_AIR {
             if AttackModule:: is_attack_occur(module_accessor) { 
                 if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD){
-                    CancelModule::enable_cancel(module_accessor);
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR);
                 }   
             }
             

@@ -11,7 +11,7 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         let lua_state = fighter.lua_state_agent;
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(lua_state);
         ENTRY_ID = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_HI {
+        if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_HI && AttackModule::is_attack_occur(module_accessor) {
             UP_SPECIAL[ENTRY_ID] = true;
         }
         if (StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND) {

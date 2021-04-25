@@ -14,8 +14,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //let jump_dash_pressed = (ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP) || (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0);
         
         //DISABLE UP SPECIAL/PUMMEL INFLICTION CANCEL
-        if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100) {
                          

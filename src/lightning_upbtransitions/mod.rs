@@ -11,9 +11,12 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         let lua_state = fighter.lua_state_agent;
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(lua_state);
         ENTRY_ID = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        
+        //Set up bool to make up bs with an attack to only be used once in the air
         if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_HI && AttackModule::is_attack_occur(module_accessor) {
             UP_SPECIAL[ENTRY_ID] = true;
         }
+        //Reset up b once you touch the ground
         if (StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND) {
             UP_SPECIAL[ENTRY_ID] = false;
         }
@@ -23,6 +26,7 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
 #[skyline::hook(replace=smash::app::lua_bind::WorkModule::is_enable_transition_term)]
 pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObjectModuleAccessor, term: i32) -> bool {
     let ret = original!()(module_accessor,term);
+    //Use up b only once in the air
     ENTRY_ID = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     if UP_SPECIAL[ENTRY_ID] {
         if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI {
@@ -35,8 +39,14 @@ pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObje
     else {
         return ret;
     } 
+    // No Free Fall
+    if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_FALL_SPECIAL {
+        return false;
+    }
+    else {
+        return ret;
+    }
 }
-
 pub fn install() {
     acmd::add_custom_hooks!(set_bool);
     skyline::install_hook!(is_enable_transition_term_replace);  

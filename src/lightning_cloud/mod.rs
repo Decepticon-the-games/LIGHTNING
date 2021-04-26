@@ -103,4 +103,5 @@ pub fn seph_up_b_move(fighter: &mut L2CFighterCommon) {
 
 pub fn install() {
     acmd::add_custom_hooks!(once_per_fighter_frame);
+    acmd::add_hooks!(seph_up_b_move);
 }

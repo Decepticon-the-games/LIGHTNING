@@ -38,20 +38,19 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
        
         if situation_kind == *SITUATION_KIND_AIR {
               
-            if (fighter_kind == *FIGHTER_KIND_CHROM
-            || fighter_kind == *FIGHTER_KIND_CLOUD) {
+           
 
-                if fighter_kind == *FIGHTER_KIND_CHROM && (! motion_kind == smash::hash40("spceial_hi") || ! motion_kind == smash::hash40("spceial_air_hi") || motion_kind == smash::hash40("spceial_hi2") || motion_kind == smash::hash40("special_air_hi2")) {
-                    if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-                        StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                    }
+            if fighter_kind == *FIGHTER_KIND_CHROM && ( ! motion_kind == smash::hash40("spceial_air_hi") || ((motion_kind == smash::hash40("spceial_hi2") || motion_kind == smash::hash40("special_air_hi2")) && frame >9.0)) {
+                if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                 }
-                if fighter_kind == *FIGHTER_KIND_CLOUD && motion_kind == smash::hash40("spceial_hi2") && frame >= 16.0 {
-                    if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-                        StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                    }
-                } 
             }
+            else if fighter_kind == *FIGHTER_KIND_CLOUD && motion_kind == smash::hash40("spceial_hi2") && frame >= 16.0 {
+                if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+                }
+            } 
+            
             else if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD){
                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
             }

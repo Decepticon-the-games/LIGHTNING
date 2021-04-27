@@ -10,10 +10,11 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
     unsafe {
         let lua_state = fighter.lua_state_agent;
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(lua_state);
+        let fighter_kind = smash::app::utility::get_kind(module_accessor);
         ENTRY_ID = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 
         //Set up bool to make up bs to only be used once in the air no matter what
-        if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_HI  {
+        if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_HI && ! (fighter_kind == *FIGHTER_KIND_CAPTAIN || fighter_kind == FIGHTER_KIND_GANON) {
             UP_SPECIAL[ENTRY_ID] = true;
         }
         //Reset up b once you touch the ground

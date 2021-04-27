@@ -3,6 +3,7 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 
+
 // Use this for general per-frame fighter-level hooks
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
@@ -11,6 +12,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let status_kind = StatusModule::status_kind(module_accessor);
         let situation_kind = StatusModule::situation_kind(module_accessor);
         let jump_button_pressed = ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_JUMP);
+        let motion_kind = MotionModule::motion_kind(module_accessor);       
+        let frame = MotionModule::frame(module_accessor);
         //let jump_dash_pressed = (ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP) || (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0);
         
                  
@@ -34,11 +37,28 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //RESET AIRDODGE ON HIT
        
         if situation_kind == *SITUATION_KIND_AIR {
-            if AttackModule:: is_attack_occur(module_accessor) { 
-                if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD){
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                }   
+              
+            if (fighter_kind == *FIGHTER_KIND_CHROM
+            || fighter_kind == *FIGHTER_KIND_CLOUD) {
+
+                if fighter_kind == *FIGHTER_KIND_CHROM && (! motion_kind == smash::hash40("spceial_hi") || ! motion_kind == smash::hash40("spceial_air_hi") || motion_kind == smash::hash40("spceial_hi2") || motion_kind == smash::hash40("special_air_hi2")) {
+                    if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+                        StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+                    }
+                }
+                if fighter_kind == *FIGHTER_KIND_CLOUD && motion_kind == smash::hash40("spceial_hi2") && frame >= 16.0 {
+                    if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+                        StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+                    }
+                } 
             }
+            else if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD){
+                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+            }
+            
+            
+        
+            
             
         }
         // Get airdodge back during free fall

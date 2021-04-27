@@ -60,10 +60,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 //Make Side Special 2 link with 3 faster
 #[acmd_func(
     battle_object_category = BATTLE_OBJECT_CATEGORY_FIGHTER, 
-    battle_object_kind = FIGHTER_KIND_EDGE, 
+    battle_object_kind = FIGHTER_KIND_CLOUD, 
     animation = "special_air_s2",
     animcmd = "game_specialairs2")]
-pub fn seph_up_b_move(fighter: &mut L2CFighterCommon) {
+pub fn cloud_side_b_connect(fighter: &mut L2CFighterCommon) {
     acmd!(lua_state,{
         
         if(is_excute){
@@ -103,5 +103,5 @@ pub fn seph_up_b_move(fighter: &mut L2CFighterCommon) {
 
 pub fn install() {
     acmd::add_custom_hooks!(once_per_fighter_frame);
-    acmd::add_hooks!(seph_up_b_move);
+    acmd::add_hooks!(cloud_side_b_connect);
 }

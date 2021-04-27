@@ -2,6 +2,7 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use acmd::*;
+use smash::hash40;
 
 // Use this for general per-frame fighter-level hooks
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
@@ -71,8 +72,8 @@ pub fn seph_up_b_move(fighter: &mut L2CFighterCommon) {
             WorkModule::on_flag(Flag=FIGHTER_CLOUD_STATUS_SPECIAL_S_FLAG_DETACH_EFFECT)
         }
         frame(Frame=2)
-        get_value_float(SO_VAR_FLOAT_LR)
-        if(0x180150(2001240, 0)){
+        //get_value_float(SO_VAR_FLOAT_LR)
+        //if(0x180150(2001240, 0)){
             if(is_excute){
                 ATTACK(ID=0, Part=0, Bone=hash40("top"), Damage=3.0, Angle=95, KBG=25, FKB=0, BKB=33, Size=7.3, X=0.0, Y=13.5, Z=17.7, X2=0.0, Y2=9.0, Z2=15.7, Hitlag=0.8, SDI=0.0, Clang_Rebound=ATTACK_SETOFF_KIND_OFF, FacingRestrict=ATTACK_LR_CHECK_F, SetWeight=true, ShieldDamage=0, Trip=0.0, Rehit=0, Reflectable=false, Absorbable=false, Flinchless=false, DisableHitlag=false, Direct_Hitbox=true, Ground_or_Air=COLLISION_SITUATION_MASK_GA, Hitbits=COLLISION_CATEGORY_MASK_ALL, CollisionPart=COLLISION_PART_MASK_ALL, FriendlyFire=false, Effect=hash40("collision_attr_cutup"), SFXLevel=ATTACK_SOUND_LEVEL_M, SFXType=COLLISION_SOUND_ATTR_CUTUP, Type=ATTACK_REGION_SWORD)
                 ATTACK(ID=1, Part=0, Bone=hash40("top"), Damage=3.0, Angle=60, KBG=25, FKB=0, BKB=43, Size=3.0, X=0.0, Y=8.5, Z=9.5, X2=0.0, Y2=8.5, Z2=9.5, Hitlag=0.8, SDI=0.0, Clang_Rebound=ATTACK_SETOFF_KIND_OFF, FacingRestrict=ATTACK_LR_CHECK_F, SetWeight=true, ShieldDamage=0, Trip=0.0, Rehit=0, Reflectable=false, Absorbable=false, Flinchless=false, DisableHitlag=false, Direct_Hitbox=true, Ground_or_Air=COLLISION_SITUATION_MASK_GA, Hitbits=COLLISION_CATEGORY_MASK_ALL, CollisionPart=COLLISION_PART_MASK_ALL, FriendlyFire=false, Effect=hash40("collision_attr_cutup"), SFXLevel=ATTACK_SOUND_LEVEL_M, SFXType=COLLISION_SOUND_ATTR_CUTUP, Type=ATTACK_REGION_SWORD)
@@ -83,7 +84,7 @@ pub fn seph_up_b_move(fighter: &mut L2CFighterCommon) {
                     ATTACK(ID=1, Part=0, Bone=hash40("top"), Damage=3.0, Angle=60, KBG=25, FKB=0, BKB=43, Size=3.0, X=0.0, Y=8.5, Z=9.5, X2=0.0, Y2=8.5, Z2=9.5, Hitlag=0.8, SDI=0.0, Clang_Rebound=ATTACK_SETOFF_KIND_OFF, FacingRestrict=ATTACK_LR_CHECK_F, SetWeight=true, ShieldDamage=0, Trip=0.0, Rehit=0, Reflectable=false, Absorbable=false, Flinchless=false, DisableHitlag=false, Direct_Hitbox=true, Ground_or_Air=COLLISION_SITUATION_MASK_GA, Hitbits=COLLISION_CATEGORY_MASK_ALL, CollisionPart=COLLISION_PART_MASK_ALL, FriendlyFire=false, Effect=hash40("collision_attr_cutup"), SFXLevel=ATTACK_SOUND_LEVEL_M, SFXType=COLLISION_SOUND_ATTR_CUTUP, Type=ATTACK_REGION_SWORD)
                 }
             }
-        }
+        //}
         frame(Frame=4)
         if(is_excute){
             AttackModule::clear_all()
@@ -92,7 +93,7 @@ pub fn seph_up_b_move(fighter: &mut L2CFighterCommon) {
         if(is_excute){
             WorkModule::on_flag(Flag=FIGHTER_CLOUD_STATUS_SPECIAL_S_FLAG_MOTION_CHANGE_ENABLE)
         }
-        frame(Frame=30)
+        frame(Frame=20)
         if(is_excute){
             WorkModule::off_flag(Flag=FIGHTER_CLOUD_STATUS_SPECIAL_S_FLAG_INPUT_CHECK)
         }

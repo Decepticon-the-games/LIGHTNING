@@ -113,6 +113,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     }                                      
 }
 
+
 pub fn install() {
     acmd::add_custom_hooks!(once_per_fighter_frame);
 }

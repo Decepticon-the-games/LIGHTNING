@@ -49,9 +49,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             
         }
         //GRAB COMBOS
-        if status_kind == *FIGHTER_STATUS_KIND_THROW && StopModule::is_damage(module_accessor) {
-            CancelModule::enable_cancel(module_accessor);
-        }
+        //if status_kind == *FIGHTER_STATUS_KIND_THROW && StopModule::is_damage(module_accessor) {
+        //    CancelModule::enable_cancel(module_accessor);
+        //}
 
         //REWARD PERFECT WAVEDASHES WITH INVINCIBILITY
 
@@ -65,7 +65,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //    }
         //}
 
-
+        
 
         //NO JAB CHAINS (CANCEL WITH JUMP/GRAB/DASH)
         if MotionModule::motion_kind(module_accessor)== smash::hash40("attack_11")

@@ -14,11 +14,14 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         ENTRY_ID = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 
         //Set up bool to make up bs to only be used once in the air no matter what
-        if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_HI && ! (fighter_kind == *FIGHTER_KIND_CAPTAIN || fighter_kind == FIGHTER_KIND_GANON) {
+        if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_HI 
+        || StatusModule::status_kind(module_accessor) == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_JUMP {
             UP_SPECIAL[ENTRY_ID] = true;
         }
-        //Reset up b once you touch the ground
-        if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND {
+        //Reset up b once you touch the ground, or if captain falcon/ganondorf up b because they naturally gain it again after grabbing
+        if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND 
+        || StatusModule::status_kind(module_accessor) == *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_HI_CLING 
+        || StatusModule::status_kind(module_accessor) == *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_CLING {
             UP_SPECIAL[ENTRY_ID] = false;
         }
         // No Free Fall? Get jump back after up b

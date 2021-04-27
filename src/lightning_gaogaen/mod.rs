@@ -16,7 +16,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let frame = MotionModule::frame(module_accessor);
         
         
-        if fighter_kind == *FIGHTER_KIND_GAOGEN {
+        if fighter_kind == *FIGHTER_KIND_GAOGAEN {
 
             //FIXES
             //-------------------------------------------------------------------------------

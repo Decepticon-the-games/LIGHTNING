@@ -22,7 +22,6 @@ static mut SEC_SEN_DIREC : [i32; 8] = [0; 8];
 static mut NOTIFY_LOG_EVENT_COLLISION_HIT_OFFSET : usize = 0x675A20;
 //pub const UI_AURA: u64 = smash::hash40("sys_cloud_limitbreak_aura");
 
-
 #[skyline::hook(offset = NOTIFY_LOG_EVENT_COLLISION_HIT_OFFSET)]
 pub unsafe fn notify_log_event_collision_hit_replace(
 fighter_manager: &mut FighterManager,

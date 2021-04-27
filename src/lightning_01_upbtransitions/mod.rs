@@ -20,17 +20,12 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         }
         //Reset up b once you touch the ground, or if captain falcon/ganondorf up b because they naturally gain it again after grabbing
         if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND 
+        || StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_CLIFF
         || StatusModule::status_kind(module_accessor) == *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_HI_CLING 
         || StatusModule::status_kind(module_accessor) == *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_CLING {
             UP_SPECIAL[ENTRY_ID] = false;
         }
-        // No Free Fall? Get jump back after up b
-        if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
-            if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
-               StatusModule::change_status_request_from_script(module_accessor,*FIGHTER_STATUS_KIND_JUMP_AERIAL,true); 
-            }
-            
-        }
+    
     }
 }
 

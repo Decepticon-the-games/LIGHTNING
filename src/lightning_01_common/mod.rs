@@ -41,6 +41,17 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }
             
         }
+        // Get airdodge back during free fall
+        if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
+            if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+               StatusModule::change_status_request_from_script(module_accessor,*FIGHTER_STATUS_KIND_ESCAPE_AIR,true); 
+            }
+            
+        }
+        //GRAB COMBOS
+        if status_kind == *FIGHTER_STATUS_KIND_THROW && StopModule::is_damage(module_accessor) {
+            CancelModule::enable_cancel(module_accessor);
+        }
 
         //REWARD PERFECT WAVEDASHES WITH INVINCIBILITY
 

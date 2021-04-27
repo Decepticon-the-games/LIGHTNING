@@ -54,8 +54,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 }
             }
             
-            else if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI)
-            && ! (status_kind == *FIGHTER_SHULK_STATUS_KIND_SPECIAL_HI_ADD)
+            else if ! (status_kind == *FIGHTER_SHULK_STATUS_KIND_SPECIAL_HI_ADD)
             && ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100) {

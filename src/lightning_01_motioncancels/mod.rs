@@ -722,12 +722,14 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_air_b") && frame >9.0 )//&& jump_guard_button_pressed)
                     ||(motion_kind == smash::hash40("attack_air_hi") && frame >12.0 )//&& jump_guard_button_pressed)
                     ||(motion_kind == smash::hash40("attack_air_lw") && frame >30.0 )//&& jump_guard_button_pressed)
-                    ||(motion_kind == smash::hash40("special_n") && frame >43.0 )//&& jump_guard_button_pressed)
-                    ||(motion_kind == smash::hash40("special_air_n") && frame >43.0 )//&& jump_guard_button_pressed)
+                    ||(motion_kind == smash::hash40("special_n_shoot") && frame >1.0 )//&& jump_guard_button_pressed)
+                    ||(motion_kind == smash::hash40("special_air_n_shoot") && frame >1.0 )//&& jump_guard_button_pressed)
                     ||(motion_kind == smash::hash40("special_s") && frame >35.0 )//&& jump_guard_button_pressed)
+                    ||(motion_kind == smash::hash40("special_s2") && frame >48.0 )//&& jump_guard_button_pressed)
                     ||(motion_kind == smash::hash40("special_air_s") && frame >35.0 )//&& jump_guard_button_pressed)
+                    ||(motion_kind == smash::hash40("special_air_s2") && frame >48.0 )//&& jump_guard_button_pressed)
                     ||(motion_kind == smash::hash40("special_lw") && frame >0.0 )//&& jump_guard_button_pressed)
-                    ||(motion_kind == smash::hash40("special_air_lw") && frame >0.0 )//&& jump_guard_button_pressed)
+                    ||(motion_kind == smash::hash40("special_air_lw_kick") && frame >17.0 )//&& jump_guard_button_pressed)
                 ) {
                     CancelModule::enable_cancel(module_accessor);
                 } 
@@ -1045,7 +1047,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_air_f") && frame >15.0 )//&& jump_guard_button_pressed)
                     ||(motion_kind == smash::hash40("attack_air_b") && frame >9.0 )//&& jump_guard_button_pressed)
                     ||(motion_kind == smash::hash40("attack_air_hi") && frame >40.0 )//&& jump_guard_button_pressed)
-                    ||(motion_kind == smash::hash40("attack_air_lw") && frame >64.0 )//&& jump_guard_button_pressed)
+                    ||(motion_kind == smash::hash40("attack_air_lw") && frame >44.0 )//&& jump_guard_button_pressed)
                     ||(motion_kind == smash::hash40("special_n") && frame >18.0 )//&& jump_guard_button_pressed)
                     ||(motion_kind == smash::hash40("special_air_n") && frame >18.0 )//&& jump_guard_button_pressed)
                     ||(motion_kind == smash::hash40("special_s") && frame >27.0 )//&& jump_guard_button_pressed)
@@ -1071,8 +1073,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_air_lw") && frame >17.0 )//&& jump_guard_button_pressed)
                     ||(motion_kind == smash::hash40("special_n") && frame >16.0 )//&& jump_guard_button_pressed)
                     ||(motion_kind == smash::hash40("special_air_n") && frame >16.0 )//&& jump_guard_button_pressed)
-                    ||(motion_kind == smash::hash40("special_s") && frame >0.0 )//&& jump_guard_button_pressed)
-                    ||(motion_kind == smash::hash40("special_air_s") && frame >0.0 )//&& jump_guard_button_pressed)
+                    ||(motion_kind == smash::hash40("special_s_end") && frame >1.0 )//&& jump_guard_button_pressed)
+                    ||(motion_kind == smash::hash40("special_air_s_end") && frame >1.0 )//&& jump_guard_button_pressed)
                     ||(motion_kind == smash::hash40("special_lw") && frame >8.0 )//&& jump_guard_button_pressed)
                     ||(motion_kind == smash::hash40("special_air_lw") && frame >8.0 )//&& jump_guard_button_pressed)
                 ) {

@@ -31,7 +31,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 //Cancel into side b
 
                 if  (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0) {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_S, true);
                 }
 
                 //Cancel into up air
@@ -191,7 +191,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //if fighter_kind == *FIGHTER_KIND_RYU
         if fighter_kind == *FIGHTER_KIND_SAMUS || fighter_kind == *FIGHTER_KIND_SAMUSD {
             if motion_kind == smash::hash40("special_hi") || motion_kind == smash::hash40("special_hi") {
-                if frame == 25.0 {
+                if frame == 20.0 {
                     CancelModule::enable_cancel(module_accessor);
                 }
             }

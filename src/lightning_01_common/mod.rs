@@ -34,31 +34,14 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
             }
         }
-        //RESET AIRDODGE ON HIT
+        //RESET AIRDODGE ON HIT EXCEPT UP SPECIAL
        
-        if situation_kind == *SITUATION_KIND_AIR {
-              
-           
-
-            if fighter_kind == *FIGHTER_KIND_CHROM && ( ! motion_kind == smash::hash40("spceial_air_hi") || (motion_kind == smash::hash40("spceial_hi2") && frame >31.0) || (motion_kind == smash::hash40("special_air_hi2") && frame >31.0)) {
-                if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                }
-            }
-            else if fighter_kind == *FIGHTER_KIND_CLOUD && ((motion_kind == smash::hash40("spceial_hi") || motion_kind == smash::hash40("spceial_air_hi")) && frame >= 16.0) {
-                if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                }
-            } 
-            
-            else if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD){
+        if situation_kind == *SITUATION_KIND_AIR && ! status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
+ 
+            if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD){
                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
             }
-            
-            
-        
-            
-            
+  
         }
         // Get airdodge back during free fall
         if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_FALL_SPECIAL {

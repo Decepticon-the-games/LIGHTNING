@@ -30,8 +30,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 //Cancel into side b
 
-                if  (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0) {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
+                if  frame >= 31.0 && (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0) {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_S, true);
                 }
 
                 //Cancel into up air

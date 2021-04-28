@@ -1,7 +1,7 @@
 use smash::app::*;
 use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CFighterCommon;
-use StatusModule::status_kind(module_accessor) == **;
+use smash::lib::lua_const::*;
 use acmd;
 
 static mut UP_SPECIAL : [bool; 8] = [false; 8];

@@ -31,7 +31,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 //Cancel into side b
 
                 if  (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0) {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_S, true);
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
                 }
 
                 //Cancel into up air
@@ -64,13 +64,17 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                             StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                         //}
                     }
+                
                     //if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
                     //    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_HI, false);
                     //}
                         
                     
                 }
-                
+                if frame >= 11.0 {
+                    CancelModule::enable_cancel(module_accessor);
+                    
+                }
             }
         }
         //if fighter_kind == *FIGHTER_KIND_DEDEDE

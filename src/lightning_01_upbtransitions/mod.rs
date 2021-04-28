@@ -219,13 +219,15 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
             UP_SPECIAL[ENTRY_ID] = true;
         }
         //Reset up b once you're in certain situations
-        if (StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND 
+        if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND 
         || StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_RESTRAINT
         || StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_CLIFF
         || StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_WATER
         || StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_LADDER
         || StatusModule::status_kind(module_accessor) == *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_HI_CLING 
         || StatusModule::status_kind(module_accessor) == *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_CLING
+        || StopModule::is_damage(module_accessor)
+        || StopModule::is_hit(module_accessor)
         || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_THROWN
         || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH
         || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CLUNG_DIDDY
@@ -233,35 +235,7 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CLUNG_CAPTAIN
         || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CATCHED_GANON
         || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_MEWTWO_THROWN
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DAMAGE
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DAMAGE_AIR
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_THROWN
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CAPTURE_WAIT
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CAPTURE_DAMAGE
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DAMAGE_FLY 
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR 
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U 
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DAMAGE_FALL
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SLEEP
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CLIFF_ESCAPE
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_ESCAPE_AIR
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CAPTURE_JACK_WIRE
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CAPTURE_MASTERHAND
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CAPTURE_MASTER_SWORD
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SWALLOWED
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CATCHED_REFLET
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CATCHED_RIDLEY
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_MISS_FOOT
-        || WorkModule::is_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAPTURE_YOSHI)
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DEAD
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_BURY
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_BURY_WAIT
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_ICE
-        ){
+        {
             UP_SPECIAL[ENTRY_ID] = false;
         }
     

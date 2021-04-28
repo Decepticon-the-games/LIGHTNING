@@ -214,32 +214,27 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         || StatusModule::status_kind(module_accessor) == *FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_AIR_REACH
         || StatusModule::status_kind(module_accessor) == *WEAPON_INKLING_SQUID_STATUS_KIND_SPECIAL_HI_ROT
         || StatusModule::status_kind(module_accessor) == *WEAPON_PIKMIN_PIKMIN_STATUS_KIND_SPECIAL_HI_SET
-        || StatusModule::status_kind(module_accessor) == *WEAPON_ROSETTA_TICO_STATUS_KIND_SPECIAL_HI_JUM
+        || StatusModule::status_kind(module_accessor) == *WEAPON_ROSETTA_TICO_STATUS_KIND_SPECIAL_HI_JUMP
         ){
             UP_SPECIAL[ENTRY_ID] = true;
         }
         //Reset up b once you're in certain situations
         if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND 
-        || StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_ODD
-        || StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_NONE
-        || StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_TERM
-        || StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_OUTFIELD
         || StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_RESTRAINT
         || StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_CLIFF
         || StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_WATER
         || StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_LADDER
         || StatusModule::status_kind(module_accessor) == *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_HI_CLING 
         || StatusModule::status_kind(module_accessor) == *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_CLING
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_GANON_STATUS_KIND_DAMAGE
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_GANON_STATUS_KIND_DAMAGE_AIR
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_GANON_STATUS_KIND_DAMAGE_FLY
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_GANON_STATUS_KIND_THROWN
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_GANON_STATUS_KIND_REBIRTH
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_GANON_STATUS_KIND_CLUNG_DIDDY
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_GANON_STATUS_KIND_CLUNG_GANON
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_GANON_STATUS_KIND_CLUNG_CAPTAIN
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_GANON_STATUS_KIND_CATCHED_GANON
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_GANON_STATUS_KIND_MEWTWO_THROWN
+        || StopModule::is_damage(module_accessor)
+        || StopModule::is_hit(module_accessor)
+        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_THROWN
+        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH
+        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CLUNG_DIDDY
+        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CLUNG_GANON
+        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CLUNG_CAPTAIN
+        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CATCHED_GANON
+        || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_MEWTWO_THROWN
         {
             UP_SPECIAL[ENTRY_ID] = false;
         }

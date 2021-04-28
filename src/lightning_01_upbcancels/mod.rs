@@ -71,7 +71,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                         
                     
                 }
-                if frame >= 11.0 {
+                if frame >= 28.0 {
                     CancelModule::enable_cancel(module_accessor);
                     
                 }

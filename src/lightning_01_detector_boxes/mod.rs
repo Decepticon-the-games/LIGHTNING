@@ -207,7 +207,7 @@ pub fn install() {
         falco_side_b,
         mewtwo_up_b,
         mewtwo_up_b_air,
-        seph_up_b_move,
+        //seph_up_b_move,
         
         inkling_up_b,
         pit_ub_b,

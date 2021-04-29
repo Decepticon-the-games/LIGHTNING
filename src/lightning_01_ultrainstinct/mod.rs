@@ -12,9 +12,10 @@ pub static mut SECRET_SENSATION : [bool; 8] = [false; 8];
 static mut CAMERA : [bool; 8] = [false; 8];
 pub static mut OPPONENT_X : [f32; 8] = [0.0; 8];
 pub static mut OPPONENT_Y : [f32; 8] = [0.0; 8];
+pub static mut OPPONENT_BOMA : [u64; 8] = [0; 8];
 static mut RYU_X : [f32; 8] = [0.0; 8];
 static mut RYU_Y : [f32; 8] = [0.0; 8];
-static mut SEC_SEN_TIMER : [f32; 8] = [0.0; 8]; // I start this as -0.4 so that Ryu doesn't immediately start dodging, there's a little pause before he does
+static mut SEC_SEN_TIMER : [f32; 8] = [-0.2; 8]; // I start this as -0.4 so that Ryu doesn't immediately start dodging, there's a little pause before he does
 static mut OPPONENT_DIRECTION : [f32; 8] = [12.0; 8];
 static mut VERT_EXTRA : [f32; 8] = [12.0; 8];
 static mut SEC_SEN_STATE : [bool; 8] = [false; 8];
@@ -37,31 +38,38 @@ move_type_again: bool) -> u64 {
     // let a_entry_id = WorkModule::get_int(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let d_entry_id = WorkModule::get_int(defender_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     //if defender_fighter_kind == *FIGHTER_KIND_ALL {
-        if (StatusModule::status_kind(defender_boma) == *FIGHTER_STATUS_KIND_WAIT || StatusModule::status_kind(defender_boma) == *FIGHTER_STATUS_KIND_FALL) && MotionModule::frame(defender_boma) <30.0 
-        && DamageModule::damage(defender_boma,0) >= 150.0 {//If player is at 150% or up and in fall or idle animation 
-            if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER // Grabs the attacker's position and stores it in a public variable.
+        if SEC_SEN_STATE[d_entry_id] {//If player is at 150% or up and in fall or idle animation 
+            if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER
             || utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_ENEMY {
-                OPPONENT_X[d_entry_id] = PostureModule::pos_x(attacker_boma); // Sets the variable to True, so Ryu's mod.rs can see it an start working.
+                OPPONENT_BOMA[d_entry_id] = (&mut *attacker_boma as *mut BattleObjectModuleAccessor) as u64;
+                OPPONENT_X[d_entry_id] = PostureModule::pos_x(attacker_boma);
                 OPPONENT_Y[d_entry_id] = PostureModule::pos_y(attacker_boma);
-                SECRET_SENSATION[d_entry_id] = true;
+                if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+                    JostleModule::set_status(&mut *attacker_boma, false);
+                }
             }
             else if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON {
-                let oboma = smash::app::sv_battle_object::module_accessor((WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-                if utility::get_category(&mut *oboma) != *BATTLE_OBJECT_CATEGORY_FIGHTER { // Checks to see if the owner of what hit you is a Fighter or not
-                    OPPONENT_X[d_entry_id] = PostureModule::pos_x(defender_boma); // If yes, stores the opponent's position
+                let oboma = sv_battle_object::module_accessor((WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
+                if utility::get_category(&mut *oboma) != *BATTLE_OBJECT_CATEGORY_FIGHTER {
+                    OPPONENT_X[d_entry_id] = PostureModule::pos_x(defender_boma);
                     OPPONENT_Y[d_entry_id] = PostureModule::pos_y(defender_boma);
+                    OPPONENT_BOMA[d_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
                 }
                 else {
-                    OPPONENT_X[d_entry_id] = PostureModule::pos_x(oboma); // If no, stores Ryu's position (check Ryu's mod.rs for an explanation)
+                    OPPONENT_X[d_entry_id] = PostureModule::pos_x(oboma);
                     OPPONENT_Y[d_entry_id] = PostureModule::pos_y(oboma);
+                    OPPONENT_BOMA[d_entry_id] = (&mut *oboma as *mut BattleObjectModuleAccessor) as u64;
+                    if utility::get_category(&mut *oboma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+                        JostleModule::set_status(&mut *oboma, false);
+                    }
                 }
-                SECRET_SENSATION[d_entry_id] = true;
             }
             else {
-                OPPONENT_X[d_entry_id] = PostureModule::pos_x(defender_boma); // If what his you is anything else, stores Ryu's position (for the same reason as above, will explain)
+                OPPONENT_X[d_entry_id] = PostureModule::pos_x(defender_boma);
                 OPPONENT_Y[d_entry_id] = PostureModule::pos_y(defender_boma);
-                SECRET_SENSATION[d_entry_id] = true;
+                OPPONENT_BOMA[d_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
             }
+            SECRET_SENSATION[d_entry_id] = true;
         }
     //}
     
@@ -167,6 +175,20 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                                 SEC_SEN_DIREC[entry_id] = *FIGHTER_STATUS_KIND_ESCAPE;
                             }
                         }
+                        if (RYU_Y[entry_id] - OPPONENT_Y[entry_id]).abs() <= 12.0
+                        && StatusModule::situation_kind(OPPONENT_BOMA[entry_id] as *mut BattleObjectModuleAccessor) == *SITUATION_KIND_GROUND {
+                            VERT_EXTRA[entry_id] = 0.0;
+                        }
+                        else {
+                            StatusModule::set_situation_kind(module_accessor, SituationKind(*SITUATION_KIND_AIR), true);
+                            WorkModule::on_flag(module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_GRAVITY_STABLE_UNABLE);
+                            VERT_EXTRA[entry_id] = 12.0;
+                            RYU_Y[entry_id] += 2.0;
+                            PostureModule::add_pos_2d(module_accessor, &Vector2f{
+                                x: 0.0,
+                                y: 2.0
+                            });
+                        }
                         CAMERA[entry_id] = true; // Again, ensures that the above code only runs once.
                     }
                     if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_AIR {
@@ -174,17 +196,14 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                             SEC_SEN_DIREC[entry_id] = *FIGHTER_STATUS_KIND_ESCAPE_AIR;
                         }
                     }
-                    if StatusModule::status_kind(module_accessor) != SEC_SEN_DIREC[entry_id] { // Checks every frame if Ryu is in Focus Attack Dash state. Use another status, perhaps ESCAPE, if you're using another character
-                        KineticModule::change_kinetic(module_accessor, *FIGHTER_KINETIC_TYPE_RESET);
-                        StatusModule::change_status_request_from_script(module_accessor, SEC_SEN_DIREC[entry_id], true);
-                    }
                     if SEC_SEN_TIMER[entry_id] >= 0.0 { // This whole if statement is for linearly interpolating Ryu's position, instead of just teleporting him behind the opponent.
-                        if RYU_Y[entry_id] != OPPONENT_Y[entry_id] {
-                            StatusModule::set_situation_kind(module_accessor, smash::app::SituationKind(*SITUATION_KIND_AIR), true);
-                            VERT_EXTRA[entry_id] = 12.0; // Set the extra vertical distance
+                        if (RYU_Y[entry_id] - OPPONENT_Y[entry_id]).abs() <= 12.0
+                        && StatusModule::situation_kind(OPPONENT_BOMA[entry_id] as *mut BattleObjectModuleAccessor) == *SITUATION_KIND_GROUND {
+                            GroundModule::correct(module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
                         }
-                        else {
-                            VERT_EXTRA[entry_id] = 0.0; // If both Ryu and his opponent are on the same Y, he just slides instead
+                        if StatusModule::status_kind(module_accessor) != SEC_SEN_DIREC[entry_id] { // Checks every frame if Ryu is in Focus Attack Dash state. Use another status, perhaps ESCAPE, if you're using another character
+                            KineticModule::change_kinetic(module_accessor, *FIGHTER_KINETIC_TYPE_RESET);
+                            StatusModule::change_status_request_from_script(module_accessor, SEC_SEN_DIREC[entry_id], true);
                         }
                         PostureModule::set_pos_2d(module_accessor, &Vector2f{ // Linear Interpolation formula: Destination * t + Starting * (1.0 - t), where 0 <= t <= 1. You can't add vectors apparently, so I did this for both X and Y.
                             x: (((OPPONENT_X[entry_id] + OPPONENT_DIRECTION[entry_id]) * SEC_SEN_TIMER[entry_id]) + RYU_X[entry_id] * (1.0 - SEC_SEN_TIMER[entry_id])),
@@ -209,7 +228,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                         }
                         SlowModule::clear_whole(module_accessor); // Clears the global 4x slowdown multiplier from above
                         JostleModule::set_status(module_accessor, true); // Resets Ryu's body blocking back to normal
-                        SEC_SEN_TIMER[entry_id] = 0.0; // Resets the interpolation timer.
+                        SEC_SEN_TIMER[entry_id] = -0.2; // Resets the interpolation timer.
                     }
                 }
                 

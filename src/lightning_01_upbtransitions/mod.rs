@@ -235,6 +235,7 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CLUNG_CAPTAIN
         || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CATCHED_GANON
         || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_MEWTWO_THROWN
+        || (fighter_kind == *FIGHTER_KIND_BAYONETTA && StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_JUMP_AERIAL)
         {
             UP_SPECIAL[ENTRY_ID] = false;
         }

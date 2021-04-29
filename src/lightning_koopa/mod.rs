@@ -17,12 +17,6 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             //Attack cancel Up Special
             if status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G {
 
-                if MotionModule::frame(module_accessor) >=37.0{
-                    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK){
-                        CancelModule::enable_cancel(module_accessor);
-                    }
-                }
-
                 //Fix Up Special 
                 if MotionModule::frame(module_accessor) >=38.0 {
                     if AttackModule:: is_attack_occur(module_accessor){
@@ -30,15 +24,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     }
                 }
             }
-            else if status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A {
-
-                if MotionModule::frame(module_accessor) == 45.0 {
-                    if ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_ATTACK)
-                    || ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL){
-                        CancelModule::enable_cancel(module_accessor);
-                    }
-                }
-            }
+            
             else if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI)
             && ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)

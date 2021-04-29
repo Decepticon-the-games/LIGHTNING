@@ -31,7 +31,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 //Cancel into side b
 
                 if  frame >= 31.0 && (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0) {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_S, true);
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
                 }
 
                 //Cancel into up air
@@ -101,10 +101,23 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //if fighter_kind == *FIGHTER_KIND_KIRBY
         if fighter_kind == *FIGHTER_KIND_KOOPA {
 
-            //Cancel into nair
+            //Attack cancel Up Special
+            if status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G {
 
+                if MotionModule::frame(module_accessor) >=37.0{
+                    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK){
+                        CancelModule::enable_cancel(module_accessor);
+                    }
+                }
+            }
+            else if status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A {
 
-            //Cancel into up air
+                if MotionModule::frame(module_accessor) == 45.0 {
+                    if ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_ATTACK){
+                        CancelModule::enable_cancel(module_accessor);
+                    }
+                }
+            }
 
             
         }

@@ -1,8 +1,8 @@
-use smash::app::lua_bind::StatusModule::*;
+
 use smash::app::lua_bind::*;
-use smash::lua2cpp::{L2CFighterCommon, L2CFighterBase};
+use smash::lua2cpp::{L2CFighterCommon};
 use smash::lib::lua_const::*;
-use acmd::*;
+
 
 // Use this for general per-frame fighter-level hooks
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {

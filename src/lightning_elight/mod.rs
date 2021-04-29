@@ -1,6 +1,6 @@
-use smash::app::lua_bind::StatusModule::*;
+
 use smash::app::lua_bind::*;
-use smash::lua2cpp::{L2CFighterCommon, L2CFighterBase};
+use smash::lua2cpp::{L2CFighterCommon};
 use smash::lib::lua_const::*;
 use acmd;
 

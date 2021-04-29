@@ -1,5 +1,5 @@
 use smash::app::lua_bind::*;
-use smash::lua2cpp::{L2CFighterCommon, L2CFighterBase};
+use smash::lua2cpp::{L2CFighterCommon};
 use smash::lib::lua_const::*;
 use acmd::*;
 use smash::hash40;
@@ -26,11 +26,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //if fighter_kind == *FIGHTER_KIND_BUDDY
         //if fighter_kind == *FIGHTER_KIND_CAPTAIN
         if fighter_kind == *FIGHTER_KIND_CHROM {
-            if motion_kind == smash::hash40("special_hi2") || motion_kind == smash::hash40(("special_air_hi2")) {
+            if motion_kind == smash::hash40("special_hi2") || motion_kind == smash::hash40("special_air_hi2") {
 
                 //Cancel into side b
 
-                if  frame >= 31.0 && (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0) {
+                if  frame >= 31.0 && cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0 {
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
                 }
 
@@ -48,7 +48,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 if frame == 6.0 {
                     if AttackModule::is_attack_occur(module_accessor) {
-                        if  (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0) {
+                        if  cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 {
                             StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, false);
                         }
                     }
@@ -60,7 +60,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 }
                 if frame == 10.0 {
                     if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-                        //if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0){
+                        //if ! cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0{
                             StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                         //}
                     }
@@ -170,7 +170,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
                 //Cancel into side b
 
-                if  (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0) {
+                if  cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0 {
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
                 }
             }
@@ -195,7 +195,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             
                 //Cancel into side b
 
-                if  (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0) {
+                if  cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0 {
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
                 }
                 
@@ -223,7 +223,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if motion_kind == smash::hash40("special_hi") {
                 if frame == 6.0 || frame == 10.0 {
                     if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-                        //if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0){
+                        //if ! cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0{
                             StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                         //}
                     }

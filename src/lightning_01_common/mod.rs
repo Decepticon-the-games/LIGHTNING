@@ -19,8 +19,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                  
         
         //EASIER WAVEDASH CHAINS// 
-        if MotionModule::motion_kind(module_accessor)== smash::hash40("landing_light") || MotionModule::motion_kind(module_accessor)== smash::hash40("landing_heavy") {
-            if MotionModule::frame(module_accessor) >= 10.0 && jump_button_pressed {
+        if motion_kind== smash::hash40("landing_light") || motion_kind== smash::hash40("landing_heavy") {
+            if frame >= 10.0 && jump_button_pressed {
                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
             }
             
@@ -28,7 +28,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
         //AIRDASH
         if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-            if MotionModule::frame(module_accessor) >= 4.0 {
+            if frame >= 4.0 {
                 
                 CancelModule::enable_cancel(module_accessor);
                 
@@ -44,7 +44,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
   
         }
         // Get airdodge back during free fall
-        if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
+        if status_kind == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
             if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
                StatusModule::change_status_request_from_script(module_accessor,*FIGHTER_STATUS_KIND_ESCAPE_AIR,true); 
             }
@@ -57,11 +57,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
         //REWARD PERFECT WAVEDASHES WITH INVINCIBILITY
 
-        //if (status_kind == *FIGHTER_STATUS_KIND_JUMP && MotionModule::frame(module_accessor) == 1.0 {
+        //if (status_kind == *FIGHTER_STATUS_KIND_JUMP && frame == 1.0 {
 
-        //    if (MotionModule::motion_kind(module_accessor)== smash::hash40("landing_light") || MotionModule::motion_kind(module_accessor)== smash::hash40("landing_heavy"))
+        //    if (motion_kind== smash::hash40("landing_light") || motion_kind== smash::hash40("landing_heavy"))
         //    && StatusModule::prev_status_kind(module_accessor, 0) == FIGHTER_STATUS_KIND_ESCAPE_AIR 
-        //    && StatusModule::prev_status_kind(module_accessor, 1) == FIGHTER_STATUS_KIND_JUMP //&& MotionModule::frame(module_accessor) == 1.0 )
+        //    && StatusModule::prev_status_kind(module_accessor, 1) == FIGHTER_STATUS_KIND_JUMP //&& frame == 1.0 )
         //    {
         //        HitModule::set_whole(module_accessor, smash::app::HitStatus(*HIT_STATUS_INVINCIBLE), 0);    
         //    }
@@ -70,12 +70,12 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
 
         //NO JAB CHAINS (CANCEL WITH JUMP/GRAB/DASH)
-        if MotionModule::motion_kind(module_accessor)== smash::hash40("attack_11")
-        || MotionModule::motion_kind(module_accessor)== smash::hash40("attack_12")
-        || MotionModule::motion_kind(module_accessor)== smash::hash40("attack_13")
-        || MotionModule::motion_kind(module_accessor)== smash::hash40("attack_100")
-        || MotionModule::motion_kind(module_accessor)== smash::hash40("attack_100_sub")
-        || MotionModule::motion_kind(module_accessor)== smash::hash40("attack_100_end") {
+        if motion_kind== smash::hash40("attack_11")
+        || motion_kind== smash::hash40("attack_12")
+        || motion_kind== smash::hash40("attack_13")
+        || motion_kind== smash::hash40("attack_100")
+        || motion_kind== smash::hash40("attack_100_sub")
+        || motion_kind== smash::hash40("attack_100_end") {
             
             if AttackModule::is_attack_occur(module_accessor) {
                 
@@ -100,7 +100,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 // pub fn once_per_weapon_frame(fighter_base : &mut L2CFighterBase) {
 //     unsafe {
 //         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter_base.lua_state_agent);
-//         let frame = smash::app::lua_bind::MotionModule::frame(module_accessor) as i32;
+//         let frame = smash::app::lua_bind::frame as i32;
 
 //         if frame % 10 == 0 {
 //             println!("[Weapon Hook] Frame : {}", frame);

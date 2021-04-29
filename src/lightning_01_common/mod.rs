@@ -239,7 +239,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || StatusModule::status_kind(module_accessor) == *WEAPON_ROSETTA_TICO_STATUS_KIND_SPECIAL_HI_JUMP
         ){
             if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD){
-            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+            }
             
         }
         // Get airdodge back during free fall

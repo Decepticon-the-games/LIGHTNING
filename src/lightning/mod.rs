@@ -153,9 +153,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 if status_kind == *FIGHTER_MARTH_STATUS_KIND_SPECIAL_S4 {
             
-                    if AttackModule:: is_attack_occur(module_accessor){
+                    if AttackModule:: is_attack_occur(module_accessor) {
+                    if MotionModule::frame(module_acessor){ 
                         CancelModule::enable_cancel(module_accessor);
-                    } 
+                    }
+                } 
                 }
             }
             //Roy/Chrom
@@ -167,9 +169,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 if status_kind == *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4 {
             
-                    if AttackModule:: is_attack_occur(module_accessor){
+                    if AttackModule:: is_attack_occur(module_accessor) {
+                    if MotionModule::frame(module_acessor){ 
                         CancelModule::enable_cancel(module_accessor);
-                    }                
+                    }
+                }                
                 }
             }
             //Young Link

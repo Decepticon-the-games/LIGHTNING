@@ -19,9 +19,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 //Fix Up Special 
                 if MotionModule::frame(module_accessor) >=38.0 {
-                    if AttackModule:: is_attack_occur(module_accessor){
+                    if AttackModule:: is_attack_occur(module_accessor) {
+                    if MotionModule::frame(module_acessor){ 
                         CancelModule::enable_cancel(module_accessor);
                     }
+                }
                 }
             }
             
@@ -30,7 +32,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100) {
                 if AttackModule:: is_attack_occur(module_accessor) {
-                    CancelModule::enable_cancel(module_accessor);
+                    if MotionModule::frame(module_acessor){ 
+                        CancelModule::enable_cancel(module_accessor);
+                    }
                 }
             }
         }

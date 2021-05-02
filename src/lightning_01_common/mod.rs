@@ -36,8 +36,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         }
         //RESET AIRDODGE ON HIT EXCEPT UP SPECIAL OF ALL KINDS
        
-        if situation_kind == *SITUATION_KIND_AIR 
-        && ! (StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_HI
+        //if situation_kind == *SITUATION_KIND_AIR 
+        if ! (StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_HI
         || StatusModule::status_kind(module_accessor) == *FIGHTER_IKE_STATUS_KIND_SPECIAL_HI_2
         || StatusModule::status_kind(module_accessor) == *FIGHTER_IKE_STATUS_KIND_SPECIAL_HI_3
         || StatusModule::status_kind(module_accessor) == *FIGHTER_IKE_STATUS_KIND_SPECIAL_HI_4
@@ -148,9 +148,6 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || StatusModule::status_kind(module_accessor) == *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_FALL
         || StatusModule::status_kind(module_accessor) == *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_RUSH
         || StatusModule::status_kind(module_accessor) == *FIGHTER_LUCAS_STATUS_KIND_SPECIAL_HI_ATTACK
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIENEMYF_STATUS_KIND_SPECIAL_HI2_2
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIENEMYF_STATUS_KIND_SPECIAL_HI2_3
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIENEMYF_STATUS_KIND_SPECIAL_HI2_4
         || StatusModule::status_kind(module_accessor) == *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_HI_END
         || StatusModule::status_kind(module_accessor) == *FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_REFLECT
         || StatusModule::status_kind(module_accessor) == *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP
@@ -193,9 +190,6 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || StatusModule::status_kind(module_accessor) == *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_ATTACK
         || StatusModule::status_kind(module_accessor) == *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_ESCAPE
         || StatusModule::status_kind(module_accessor) == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_JUMP
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIENEMYF_STATUS_KIND_SPECIAL_HI3_END
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIENEMYS_STATUS_KIND_SPECIAL_HI1_END
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIENEMYS_STATUS_KIND_SPECIAL_HI3_END
         || StatusModule::status_kind(module_accessor) == *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_LANDING
         || StatusModule::status_kind(module_accessor) == *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_HI_GLIDING
         || StatusModule::status_kind(module_accessor) == *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_HI_LANDING
@@ -208,14 +202,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || StatusModule::status_kind(module_accessor) == *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_LANDING
         || StatusModule::status_kind(module_accessor) == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_START
         || StatusModule::status_kind(module_accessor) == *FIGHTER_MASTER_STATUS_KIND_SPECIAL_HI_OVERTAKE
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_METAKNIGHT_STATUS_KIND_SPECIAL_HI_LOOP
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIENEMYG_STATUS_KIND_SPECIAL_HI1_JUMP
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIENEMYG_STATUS_KIND_SPECIAL_HI2_FAIL
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIENEMYG_STATUS_KIND_SPECIAL_HI3_RUSH
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIENEMYS_STATUS_KIND_SPECIAL_HI1_HOLD
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIENEMYS_STATUS_KIND_SPECIAL_HI2_RUSH
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIENEMYS_STATUS_KIND_SPECIAL_HI3_JUMP
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIENEMYS_STATUS_KIND_SPECIAL_HI3_LOOP
+        || StatusModule::status_kind(module_accessor) == *FIGHTER_METAKNIGHT_STATUS_KIND_SPECIAL_HI_LOOP   
         || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_HI2_END
         || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI2_JUMP
         || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH
@@ -223,10 +210,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || StatusModule::status_kind(module_accessor) == *FIGHTER_POPO_STATUS_KIND_SPECIAL_HI_CLIFF_COMP
         || StatusModule::status_kind(module_accessor) == *FIGHTER_RIDLEY_STATUS_KIND_SPECIAL_HI_CHARGE_B
         || StatusModule::status_kind(module_accessor) == *FIGHTER_RIDLEY_STATUS_KIND_SPECIAL_HI_CHARGE_F
-        || StatusModule::status_kind(module_accessor) == *WEAPON_ROSETTA_TICO_STATUS_KIND_SPECIAL_HI_END
         || StatusModule::status_kind(module_accessor) == *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_RUSH_END
         || StatusModule::status_kind(module_accessor) == *FIGHTER_MASTER_STATUS_KIND_SPECIAL_HI_WALL_JUMP
-        || StatusModule::status_kind(module_accessor) == *FIGHTER_MIIENEMYS_STATUS_KIND_SPECIAL_HI2_BOUND
         || StatusModule::status_kind(module_accessor) == *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_HI_LANDING
         || StatusModule::status_kind(module_accessor) == *FIGHTER_RIDLEY_STATUS_KIND_SPECIAL_HI_CHARGE_HI
         || StatusModule::status_kind(module_accessor) == *FIGHTER_RIDLEY_STATUS_KIND_SPECIAL_HI_CHARGE_LW
@@ -234,9 +219,6 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || StatusModule::status_kind(module_accessor) == *FIGHTER_RIDLEY_STATUS_KIND_SPECIAL_HI_STOP_WALL
         || StatusModule::status_kind(module_accessor) == *FIGHTER_ROBOT_STATUS_KIND_SPECIAL_HI_ITEM_THROW
         || StatusModule::status_kind(module_accessor) == *FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_AIR_REACH
-        || StatusModule::status_kind(module_accessor) == *WEAPON_INKLING_SQUID_STATUS_KIND_SPECIAL_HI_ROT
-        || StatusModule::status_kind(module_accessor) == *WEAPON_PIKMIN_PIKMIN_STATUS_KIND_SPECIAL_HI_SET
-        || StatusModule::status_kind(module_accessor) == *WEAPON_ROSETTA_TICO_STATUS_KIND_SPECIAL_HI_JUMP
         ){
             if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD){
                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);

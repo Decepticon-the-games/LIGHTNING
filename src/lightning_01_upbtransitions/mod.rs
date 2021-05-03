@@ -166,7 +166,8 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         || status_kind == *FIGHTER_JACK_STATUS_KIND_SPECIAL_HI_PULL
         || status_kind == *FIGHTER_JACK_STATUS_KIND_SPECIAL_HI_THROW
         || status_kind == *FIGHTER_JACK_STATUS_KIND_SPECIAL_HI_PICKUP
-        || 
+        || StopModule::is_damage(module_accessor)
+        || StopModule::is_stop(module_accessor)
         || status_kind == *FIGHTER_STATUS_KIND_THROWN
         || status_kind == *FIGHTER_STATUS_KIND_REBIRTH
         || status_kind == *FIGHTER_STATUS_KIND_CLUNG_DIDDY

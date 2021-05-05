@@ -37,7 +37,7 @@ move_type_again: bool) -> u64 {
     // let defender_fighter_kind = sv_battle_object::kind(defender_object_id);
     // let a_entry_id = WorkModule::get_int(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let d_entry_id = WorkModule::get_int(defender_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    //if defender_fighter_kind == *FIGHTER_KIND_ALL {
+    if d_entry_id < 8 {
         if SEC_SEN_STATE[d_entry_id] {//If player is at 150% or up and in fall or idle animation 
             if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER
             || utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_ENEMY {
@@ -71,7 +71,7 @@ move_type_again: bool) -> u64 {
             }
             SECRET_SENSATION[d_entry_id] = true;
         }
-    //}
+    }
     
     original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)
 }

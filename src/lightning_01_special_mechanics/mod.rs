@@ -12,15 +12,20 @@ pub static mut TIME_SLOW_EFFECT_VECTOR: smash::phx::Vector3f = smash::phx::Vecto
 pub const TIME_SLOW_EFFECT_HASH: u64 = smash::hash40("sys_sp_flash");
 static mut LIGHTNING_CANCEL : [bool; 8] = [false;  8];
 static mut LIGHTNING_CANCEL_TIMER : [i32; 8] = [-1;  8];
+pub const FINAL_AURA_HASH: u64 = smash::hash40("sys_final_aura");
 static mut CRIMSON_CANCELLING : [i32; 8] = [-1;  8];
 static mut CAN_CRIMSON_CANCEL : [bool; 8] = [true; 8];
 static mut CAN_CRIMSON_CANCEL_TEMP : [bool; 8] = [true; 8];
+
     
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let lua_state = fighter.lua_state_agent; 
+        let mut gfxname: [&str; 8] = ["sys_final_aura"; 8];
+        let gfxcoords  = smash::phx::Vector3f { x: 0.0, y: 0.0, z: 0.0 };
+        let mut gfxsize: [f32; 8] = [0.15; 8];
         //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         //let cat3 = ControlModule::get_command_flag_cat(module_accessor, 2);
         
@@ -39,19 +44,21 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     
                     
                    
-                EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("head"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 1.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0); 
+               
             }
             
         }
         
 
         if LIGHTNING_CANCEL_TIMER[entry_id] >= 0 {     
-            
+            //EffectModule::req_follow(module_accessor, smash::phx::Hash40::new(gfxname[entry_id]), smash::phx::Hash40::new("havel"), &gfxcoords, &gfxcoords, gfxsize[entry_id], true, 0, 0, 0, 0, 0, true, true);
+				 
             if LIGHTNING_CANCEL_TIMER[entry_id] >= 1740 {
                 if  MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw_l") || MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw_r") {
                     CancelModule::enable_cancel(module_accessor);
                 }
-                //DamageModule::add_damage(module_accessor, -5.0, 0); 
+                //DamageModule::add_damage(module_accessor, -5.0, 0);  
+
             }
             
             if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_ATTACK_S3

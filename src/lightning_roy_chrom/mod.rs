@@ -22,9 +22,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 if status_kind == *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4 {
             
                     if AttackModule:: is_attack_occur(module_accessor) {
-                    if MotionModule::frame(module_accessor) >1.0 { 
                         CancelModule::enable_cancel(module_accessor);
-                    }
                 } 
                 }
             } 
@@ -34,9 +32,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100) {
                 if AttackModule:: is_attack_occur(module_accessor) {
-                    if MotionModule::frame(module_accessor) >1.0 { 
                         CancelModule::enable_cancel(module_accessor);
-                    }
                 }
             }
             if MotionModule::motion_kind(module_accessor) == smash::hash40("attack_11") && AttackModule::is_attack_occur(module_accessor) {

@@ -50,9 +50,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
             ){
                 if AttackModule:: is_attack_occur(module_accessor) {
-                    if MotionModule::frame(module_accessor) >1.0 { 
                         CancelModule::enable_cancel(module_accessor);
-                    }
                 }
             }  
         }         

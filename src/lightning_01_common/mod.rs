@@ -8,7 +8,7 @@ use smash::lib::lua_const::*;
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        //let fighter_kind = utility::get_kind(module_accessor);
+        let fighter_kind = utility::get_kind(module_accessor);
         let status_kind = StatusModule::status_kind(module_accessor);
         let situation_kind = StatusModule::situation_kind(module_accessor);
         let jump_button_pressed = ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_JUMP);

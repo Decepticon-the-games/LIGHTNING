@@ -4,7 +4,7 @@ use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use acmd;
 
-static mut UP_SPECIAL : [bool; 8] = [false; 8];
+pub static mut UP_SPECIAL : [bool; 8] = [false; 8];
 static mut ENTRY_ID : usize = 0;
 pub fn set_bool(fighter: &mut L2CFighterCommon) {
     unsafe {

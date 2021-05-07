@@ -129,6 +129,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 if SECRET_SENSATION[entry_id] {
                     
                     JostleModule::set_status(module_accessor, false); // Turns off body blocking for Ryu every frame Secret Sensation is true
+                    acmd!(lua_state,{
+                        WHOLE_HIT(HIT_STATUS_XLU) // Makes Ryu Invincible
+                    });
+                    DamageModule::set_damage_lock(module_accessor, true); // Makes sure Ryu doesn't take damage during the dodge
+                    DamageModule::set_no_reaction_no_effect(module_accessor, true); // Makes sure Ryu doesn't take knockback.
                     if CAMERA[entry_id] == false { // Exists so all of this code will only happen once.
                         acmd!(lua_state,{
 

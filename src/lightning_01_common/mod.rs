@@ -73,14 +73,14 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         }
         //RESET AIRDODGE ON HIT EXCEPT UP SPECIAL OF ALL KINDS
        
-        //if situation_kind == *SITUATION_KIND_AIR 
-        if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
-        ){
-            if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD){
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+        if situation_kind == *SITUATION_KIND_AIR {
+            if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI){
+                if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD){
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+                }   
             }
-            
         }
+        
         // Get airdodge back during free fall
         //if status_kind == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
           //  if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {

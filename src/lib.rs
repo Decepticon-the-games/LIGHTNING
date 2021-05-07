@@ -1,6 +1,7 @@
 #![feature(concat_idents)]
 #![feature(proc_macro_hygiene)]
 
+mod hooks;
 mod lightning_01_common;
 mod lightning_01_counter_cancels;
 mod lightning_01_detector_boxes;
@@ -91,8 +92,10 @@ mod lightning_zelda;
 
 
 
+
 #[skyline::main(name = "acmd_test")]
 pub fn main() {
+hooks::install();
 lightning_01_common::install();
 lightning_01_counter_cancels::install();
 lightning_01_detector_boxes::install();
@@ -180,5 +183,5 @@ lightning_toonlink::install();
 //lightning_yoshi::install();
 //lightning_younglink::install();
 lightning_zelda::install();
-    
+
 }

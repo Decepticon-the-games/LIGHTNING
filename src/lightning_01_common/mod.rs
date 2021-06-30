@@ -14,12 +14,16 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let jump_button_pressed = ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_JUMP);
         let motion_kind = MotionModule::motion_kind(module_accessor);       
         let frame = MotionModule::frame(module_accessor);
-        //let jump_dash_pressed = (ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP) || (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0);
-        
+        let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
+        let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
+        let jump_guard_dash_upspecial_pressed = ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_JUMP) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_GUARD) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (situation_kind == *SITUATION_KIND_AIR && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0);
+    
         //CANCEL ON HIT (EXCEPT UP SPECIALS)
         if !(status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
+        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
+        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         {
         
             if ! (fighter_kind == *FIGHTER_KIND_CAPTAIN
@@ -50,11 +54,19 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
             ){
                 if AttackModule:: is_attack_occur(module_accessor) {
-                        CancelModule::enable_cancel(module_accessor);
+                    CancelModule::enable_cancel(module_accessor);
                 }
             }  
-        }         
+        }  
+
+        //BALANCE UP SMASH/SIDE SMASH/ UP TILT
         
+        if (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 || status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 || status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4) && AttackModule:: is_attack_occur(module_accessor) {
+            if jump_guard_dash_upspecial_pressed {
+                CancelModule::enable_cancel(module_accessor);
+            }
+        }
+
         //EASIER WAVEDASH CHAINS// 
         if motion_kind== smash::hash40("landing_light") || motion_kind== smash::hash40("landing_heavy") {
             if frame >= 10.0 && jump_button_pressed {
@@ -81,17 +93,19 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }
         }
         
-        // Get airdodge back during free fall
-        //if status_kind == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
-          //  if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-            //   StatusModule::change_status_request_from_script(module_accessor,*FIGHTER_STATUS_KIND_ESCAPE_AIR,true); 
-            //}
+        //Get airdodge back during free fall
+        if status_kind == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
+            if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+               StatusModule::change_status_request_from_script(module_accessor,*FIGHTER_STATUS_KIND_ESCAPE_AIR,true); 
+            }
             
-        //}
+        }
         //GRAB COMBOS
-        //if status_kind == *FIGHTER_STATUS_KIND_THROW && StopModule::is_damage(module_accessor) {
-        //    CancelModule::enable_cancel(module_accessor);
-        //}
+        if status_kind == *FIGHTER_STATUS_KIND_THROW && StopModule::is_damage(module_accessor) {
+            CancelModule::enable_cancel(module_accessor);
+        }
+        
+       
 
         //REWARD PERFECT WAVEDASHES WITH INVINCIBILITY
 

@@ -52,14 +52,17 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                         }
                     }
                 }
+                if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && MotionModule::frame(module_accessor) >20.0 {
+                    CancelModule::enable_cancel(module_accessor);
+                }
             }
             
-            else if ! (status_kind == *FIGHTER_SHULK_STATUS_KIND_SPECIAL_HI_ADD)
+            else if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI)
             && ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100) {
-                if AttackModule:: is_attack_occur(module_accessor) {
-                        CancelModule::enable_cancel(module_accessor);
+                if AttackModule:: is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT)  &&  ! AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) {
+                    CancelModule::enable_cancel(module_accessor);
                 }
             }
             

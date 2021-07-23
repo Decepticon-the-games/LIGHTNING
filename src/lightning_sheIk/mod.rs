@@ -16,8 +16,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
         if fighter_kind == *FIGHTER_KIND_SHEIK {
             if MotionModule::motion_kind(module_accessor) == smash::hash40("attack_s4_s") && MotionModule::frame(module_accessor) >12.0 {
-                if AttackModule:: is_attack_occur(module_accessor) {
-                        CancelModule::enable_cancel(module_accessor);
+                if AttackModule:: is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT)  &&  ! AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) {
+                    CancelModule::enable_cancel(module_accessor);
                 }
             }
                 
@@ -28,8 +28,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3) {
-                if AttackModule:: is_attack_occur(module_accessor) {
-                        CancelModule::enable_cancel(module_accessor);
+                if AttackModule:: is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT)  &&  ! AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) {
+                    CancelModule::enable_cancel(module_accessor);
                 }
             }
         }

@@ -34,7 +34,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if LIGHTNING_CANCEL_TIMER[entry_id] == -1
         && LIGHTNING_CANCEL[entry_id] == false {
 
-            if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW)  {
+            if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI)  {
                
                 StatusModule::delete_status_request_from_script(module_accessor);
 
@@ -51,11 +51,14 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
 
         if LIGHTNING_CANCEL_TIMER[entry_id] >= 0 {     
-            //EffectModule::req_follow(module_accessor, smash::phx::Hash40::new(gfxname[entry_id]), smash::phx::Hash40::new("havel"), &gfxcoords, &gfxcoords, gfxsize[entry_id], true, 0, 0, 0, 0, 0, true, true);
+            acmd!(lua_state,{
+                FLASH(0.0, 0.55, 1.0, 1.75);
+            });
 				 
             if LIGHTNING_CANCEL_TIMER[entry_id] >= 1740 {
-                if  MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw_l") || MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw_r") {
+                if  MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_hi_l") || MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_hi_r") {
                     CancelModule::enable_cancel(module_accessor);
+
                 }
                 //DamageModule::add_damage(module_accessor, -5.0, 0);  
 
@@ -91,7 +94,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
                 if DamageModule::damage(module_accessor, 0) >= 50.0 {
                     
-                    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
+                    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) {
                         CRIMSON_CANCELLING[entry_id] = 120;
                         EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("head"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 1.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0); 
                         acmd!(lua_state,{
@@ -121,7 +124,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
                 CRIMSON_CANCELLING[entry_id] -=1;
             }
-            if CRIMSON_CANCELLING[entry_id] == 0 {
+            if CRIMSON_CANCELLING[entry_id] == 0 || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DEAD {
                 acmd!(lua_state,{
                     CANCEL_FILL_SCREEN(0, 5) 
                 });
@@ -132,7 +135,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
         //RESET EACH STOCK
         
-        if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false {
+        if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false  {
             LIGHTNING_CANCEL[entry_id] = false;
             LIGHTNING_CANCEL_TIMER[entry_id] = -1;
             CRIMSON_CANCELLING[entry_id] = -1;

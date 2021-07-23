@@ -20,8 +20,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_n") && MotionModule::frame(module_accessor) >=29.0) 
             || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_n2") && MotionModule::frame(module_accessor) >=38.0)
             || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_n2") && MotionModule::frame(module_accessor) >38.0) {
-                if AttackModule:: is_attack_occur(module_accessor) {
-                        CancelModule::enable_cancel(module_accessor);
+                if AttackModule:: is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT)  &&  ! AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) {
+                    CancelModule::enable_cancel(module_accessor);
                 }
             }
                 
@@ -32,8 +32,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3) {
-                if AttackModule:: is_attack_occur(module_accessor) {
-                        CancelModule::enable_cancel(module_accessor);
+                if AttackModule:: is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT)  &&  ! AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) {
+                    CancelModule::enable_cancel(module_accessor);
                 }
             }
         }

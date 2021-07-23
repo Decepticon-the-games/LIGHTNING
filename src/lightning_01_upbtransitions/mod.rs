@@ -16,11 +16,9 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
 
         //Set up bool to make all types of aerial up bs to only be used once no matter what
         //if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_AIR
-        if (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
-        )
-
- 
-
+        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
+        || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A
+        || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G
         {
             UP_SPECIAL[ENTRY_ID] = true;
         }
@@ -37,10 +35,12 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         || (fighter_kind == *FIGHTER_KIND_MASTER 
             && (status_kind == *FIGHTER_MASTER_STATUS_KIND_SPECIAL_HI_WALL_JUMP
             || status_kind == *FIGHTER_MASTER_STATUS_KIND_SPECIAL_HI_OVERTAKE
+            || status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
             || status_kind == *FIGHTER_MASTER_STATUS_KIND_SPECIAL_HI_FAIL
             || status_kind == *FIGHTER_MASTER_STATUS_KIND_SPECIAL_HI_HIT))
         || (fighter_kind == *FIGHTER_KIND_JACK 
             && (status_kind == *FIGHTER_JACK_STATUS_KIND_SPECIAL_HI_CUT
+            || status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
             || status_kind == *FIGHTER_JACK_STATUS_KIND_SPECIAL_HI_PULL
             || status_kind == *FIGHTER_JACK_STATUS_KIND_SPECIAL_HI_THROW
             || status_kind == *FIGHTER_JACK_STATUS_KIND_SPECIAL_HI_PICKUP))

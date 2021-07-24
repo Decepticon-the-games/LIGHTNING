@@ -1,7 +1,6 @@
 
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
-use smash::app::FighterManager;
 use smash::app::*;
 use crate::lightning_01_ultrainstinct::SECRET_SENSATION;
 use crate::lightning_01_upbtransitions::UP_SPECIAL;

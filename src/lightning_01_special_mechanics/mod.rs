@@ -52,7 +52,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
         if LIGHTNING_CANCEL_TIMER[entry_id] >= 0 {     
             acmd!(lua_state,{
-                FLASH(0.0, 0.55, 1.0, 1.75);
+                //FLASH(0.0, 0.55, 1.0, 1.75);
             });
 				 
             if LIGHTNING_CANCEL_TIMER[entry_id] >= 1740 {
@@ -94,7 +94,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
                 if DamageModule::damage(module_accessor, 0) >= 50.0 {
                     
-                    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) {
+                    if ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) && ! ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
                         CRIMSON_CANCELLING[entry_id] = 120;
                         EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("head"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 1.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0); 
                         acmd!(lua_state,{

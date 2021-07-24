@@ -109,7 +109,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
                 // Setting up Secret Sensation State
 
-                if (StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_WAIT || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_FALL) && MotionModule::frame(module_accessor) <30.0
+                if ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) && ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_GUARD) && MotionModule::frame(module_accessor) <30.0
                 && DamageModule::damage(module_accessor,0) >= 150.0 {  
                     SEC_SEN_STATE[entry_id] = true;
                 }

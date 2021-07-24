@@ -16,10 +16,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if fighter_kind == *FIGHTER_KIND_PIT || fighter_kind == *FIGHTER_KIND_PITB {
             if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4{
                 if MotionModule::frame(module_accessor) >10.0 {
-                    if AttackModule:: is_attack_occur(module_accessor) {
-                        CancelModule::enable_cancel(module_accessor);
-                    }
-                }
+                     if AttackModule:: is_attack_occur(module_accessor)  &&  ! AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) {
+                    CancelModule::enable_cancel(module_accessor);
+                }}
             }
                 
                 

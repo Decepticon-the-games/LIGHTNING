@@ -22,9 +22,13 @@ pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObje
             return ret;
         }
     }
+    if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_FINAL {
+        return false;
+    }
     else {
         return ret;
     }
+  
 
 }
 pub fn install() {

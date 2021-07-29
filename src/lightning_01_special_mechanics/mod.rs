@@ -11,13 +11,13 @@ use acmd::*;
 
 pub static mut TIME_SLOW_EFFECT_VECTOR: smash::phx::Vector3f = smash::phx::Vector3f {x:-3.0,y:3.0,z:0.0};
 pub const TIME_SLOW_EFFECT_HASH: u64 = smash::hash40("sys_sp_flash");
-static mut LIGHTNING_CANCEL : [bool; 8] = [false;  8];
-static mut LIGHTNING_CANCEL_TIMER : [i32; 8] = [-1;  8];
-pub const FINAL_AURA_HASH: u64 = smash::hash40("sys_final_aura");
+//static mut LIGHTNING_CANCEL : [bool; 8] = [false;  8];
+//static mut LIGHTNING_CANCEL_TIMER : [i32; 8] = [-1;  8];
+//pub const FINAL_AURA_HASH: u64 = smash::hash40("sys_final_aura");
 static mut CRIMSON_CANCELLING : [i32; 8] = [-1;  8];
 static mut CAN_CRIMSON_CANCEL : [bool; 8] = [true; 8];
 static mut CAN_CRIMSON_CANCEL_TEMP : [bool; 8] = [true; 8];
-pub static mut SPECIAL_N_FINAL_SMASH_METER : [bool; 8] = [false; 8];
+//pub static mut SPECIAL_N_FINAL_SMASH_METER : [bool; 8] = [false; 8];
 
     
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
@@ -34,55 +34,67 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //let cat3 = ControlModule::get_command_flag_cat(module_accessor, 2);
         
         //LIGHTNING_CANCEL (LIGHTNING CANCELLING)
+
+        //if LIGHTNING_CANCEL_TIMER[entry_id] == -1
+        //&& LIGHTNING_CANCEL[entry_id] == false {
+
         
-        if WorkModule::is_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL) {
+            if WorkModule::is_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL) {
 
-            //Take Less Damage Knockback
+                //LIGHTNING_CANCEL_TIMER[entry_id] = 20; 
+                //LIGHTNING_CANCEL[entry_id] = true;
 
-            DamageModule::add_damage(module_accessor, -0.01, 0);
-
-            //if status_kind ==  *FIGHTER_STATUS_KIND_FINAL {
-            //    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_N, true);
-            //    WorkModule::set_flag(module_accessor, true, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL)
-            //}
-
-             
-				 
-            //RESET JUMP ON HIT EXCEPT UP SPECIAL OF ALL KINDS
-       
-            if situation_kind == *SITUATION_KIND_AIR {
-                if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
-                || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A
-                || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G
-                || status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_JUMP ) {
-                    if AttackModule::is_attack_occur(module_accessor) {
-                        if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP){
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
-                        }
-                    }   
+                //Take Less Damage Knockback
+                if cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N != 0 {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_N, true);
                 }
-            }
+                //DamageModule::heal(module_accessor, 0.01, 0);
+                //acmd!(lua_state,{
+                //    CANCEL_FILL_SCREEN(0, 5)
+                //});
 
-               
-            //ALL Attack move move a bit fasteer
-            
-            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S3
-            || status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3
-            || status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW3
-            || status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4
-            || status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4
-            || status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW4
-            || status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR
-            || status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N
-            || status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S
-            || status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
+                    
+                //RESET JUMP ON HIT EXCEPT UP SPECIAL OF ALL KINDS
+        
+                if situation_kind == *SITUATION_KIND_AIR {
+                    if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
+                    || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A
+                    || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G
+                    || status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_JUMP ) {
+                        if AttackModule::is_attack_occur(module_accessor) {
+                            if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP){
+                                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
+                            }
+                        }   
+                    }
+                }
+
                 
-                if ! AttackModule::is_attack(module_accessor, 0, false) {
-                  MotionModule::set_rate(module_accessor, 1.5);
-                }
+                //ALL Attack move move a bit fasteer
+                
+                if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S3
+                || status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3
+                || status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW3
+                || status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4
+                || status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4
+                || status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW4
+                || status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR
+                || status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N
+                || status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S
+                || status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
+                    
+                    if ! AttackModule::is_attack(module_accessor, 0, false) {
+                    MotionModule::set_rate(module_accessor, 1.5);
+                    }
 
-            }               
-        }
+                } 
+                
+                //if LIGHTNING_CANCEL_TIMER[entry_id] >= 0 {
+                    
+                //    LIGHTNING_CANCEL_TIMER[entry_id] -= 1;
+                //}
+            }
+        //}
         
         //_________________________________________________________________________________________________________________________________________________________________________________     
         
@@ -93,7 +105,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
                 if DamageModule::damage(module_accessor, 0) >= 50.0 {
                     
-                    if ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) && ! ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+                    if ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_HI != 0 {
                         CRIMSON_CANCELLING[entry_id] = 120;
                         EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("head"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 1.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0); 
                         acmd!(lua_state,{
@@ -137,6 +149,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if status_kind == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false  {
             CRIMSON_CANCELLING[entry_id] = -1;
             CAN_CRIMSON_CANCEL[entry_id] = true;
+            //LIGHTNING_CANCEL_TIMER[entry_id] = -1; 
+            //LIGHTNING_CANCEL[entry_id] = false;
         } 
     }
 }

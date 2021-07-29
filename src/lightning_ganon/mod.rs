@@ -23,9 +23,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }
             if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 {
                 if MotionModule::frame(module_accessor)>= 64.0 {
-                    if AttackModule::is_attack_occur(module_accessor){
+                    //if AttackModule::is_attack_occur(module_accessor){
                         CancelModule::enable_cancel(module_accessor);
-                    }
+                    //}
                 }
 
             }

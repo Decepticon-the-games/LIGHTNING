@@ -77,7 +77,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
         //AIRDASH
         if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-            if frame >= 4.0 {
+            if frame >= 3.0 {
                 
                 CancelModule::enable_cancel(module_accessor);
                 
@@ -86,7 +86,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //RESET AIRDODGE ON HIT EXCEPT UP SPECIAL OF ALL KINDS
        
         if situation_kind == *SITUATION_KIND_AIR {
-            if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI){
+            if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
+                || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A
+                || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G
+                || status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_JUMP ){
                 if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD){
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                 }   
@@ -96,10 +99,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //Get airdodge back during free fall
         if status_kind == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
             if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-               StatusModule::change_status_request_from_script(module_accessor,*FIGHTER_STATUS_KIND_ESCAPE_AIR,true); 
-            }
-            
+            StatusModule::change_status_request_from_script(module_accessor,*FIGHTER_STATUS_KIND_ESCAPE_AIR,true); 
+            }   
         }
+        
         //GRAB COMBOS
         if status_kind == *FIGHTER_STATUS_KIND_THROW && StopModule::is_damage(module_accessor) {
             CancelModule::enable_cancel(module_accessor);

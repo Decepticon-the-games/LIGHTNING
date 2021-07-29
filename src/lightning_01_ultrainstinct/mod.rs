@@ -109,8 +109,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
                 // Setting up Secret Sensation State
 
-                if ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) && ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_GUARD) && MotionModule::frame(module_accessor) <30.0
-                && DamageModule::damage(module_accessor,0) >= 150.0 {  
+                if ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW != 0 && DamageModule::damage(module_accessor,0) >= 150.0 
+                //MotionModule::motion_kind(module_accessor) == smash::hash40("damage_hi_2") || MotionModule::motion_kind(module_accessor) == smash::hash40("damage_air_3")
+                && MotionModule::frame(module_accessor) <=30.0
+                
+                { 
                     SEC_SEN_STATE[entry_id] = true;
                 }
                 else if SECRET_SENSATION[entry_id] {
@@ -126,7 +129,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     DamageModule::set_reaction_mul(module_accessor, 1.0);
                     SEC_SEN_STATE[entry_id] = false;
                     acmd!(lua_state,{
-                        WHOLE_HIT(HIT_STATUS_NORMAL)
+                        WHOLE_HIT(HIT_STATUS_XLU)
                     });
                 }
 

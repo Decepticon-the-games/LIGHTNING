@@ -18,6 +18,7 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
         || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A
         || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G
+        || status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_JUMP
         {
             UP_SPECIAL[ENTRY_ID] = true;
         }

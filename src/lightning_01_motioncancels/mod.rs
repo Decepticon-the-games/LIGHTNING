@@ -1956,6 +1956,70 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("throw_b") && frame >=18.0 )
                     ||(motion_kind == smash::hash40("throw_hi") && frame >=17.0 )
                     ||(motion_kind == smash::hash40("throw_lw") && frame >=19.0 )
+                    
+                    || (motion_kind == smash::hash40("special_lw1") && frame >6.0 )
+                    || (motion_kind == smash::hash40("special_air_lw1") && frame >6.0 )
+
+                    || (motion_kind == smash::hash40("special_lw2") && frame >6.0 )
+                    || (motion_kind == smash::hash40("special_air_lw2") && frame >6.0 )
+
+                    || (motion_kind == smash::hash40("special_lw3") && frame >6.0 )
+                    || (motion_kind == smash::hash40("special_air_lw3") && frame >6.0 )
+
+                    || (motion_kind == smash::hash40("special_lw4") && frame >6.0 )
+                    || (motion_kind == smash::hash40("special_air_lw4") && frame >6.0 )
+
+                    || (motion_kind == smash::hash40("special_lw5") && frame >6.0 )
+                    || (motion_kind == smash::hash40("special_air_lw5") && frame >6.0 )
+                    
+                    || (motion_kind == smash::hash40("special_lw6") && frame >6.0 )
+                    || (motion_kind == smash::hash40("special_air_lw6") && frame >6.0 )
+
+                    || (motion_kind == smash::hash40("special_lw7") && frame >7.0 )
+                    || (motion_kind == smash::hash40("special_air_lw7") && frame >7.0 )
+
+                    || (motion_kind == smash::hash40("special_lw8") && frame >20.0 )
+                    || (motion_kind == smash::hash40("special_air_lw8") && frame >20.0 )
+
+                    || (motion_kind == smash::hash40("special_lw9") && frame >22.0 )
+                    || (motion_kind == smash::hash40("special_air_lw9") && frame >22.0 )
+
+                    || (motion_kind == smash::hash40("special_lw10") && frame >6.0 )
+                    || (motion_kind == smash::hash40("special_air_lw10") && frame >6.0 )
+
+                    || (motion_kind == smash::hash40("special_lw11") && frame >11.0 )
+                    || (motion_kind == smash::hash40("special_air_lw11") && frame >11.0 )
+
+                    || (motion_kind == smash::hash40("special_lw12") && frame >11.0 )
+                    || (motion_kind == smash::hash40("special_air_lw12") && frame >11.0 )
+
+                    || (motion_kind == smash::hash40("special_lw13") && frame >11.0 )
+                    || (motion_kind == smash::hash40("special_air_lw13") && frame >11.0 )
+                    
+                    || (motion_kind == smash::hash40("special_lw14") && frame >6.0 )
+                    || (motion_kind == smash::hash40("special_air_lw14") && frame >6.0 )
+
+                    || (motion_kind == smash::hash40("special_lw15") && frame >0.0 )
+                    || (motion_kind == smash::hash40("special_air_lw15") && frame >0.0 )
+
+                    || (motion_kind == smash::hash40("special_lw16") && frame >0.0 )
+                    || (motion_kind == smash::hash40("special_air_lw16") && frame >0.0 )
+
+                    || (motion_kind == smash::hash40("special_lw17") && frame >11.0 )
+                    || (motion_kind == smash::hash40("special_air_lw17") && frame >11.0 )
+
+                    || (motion_kind == smash::hash40("special_lw18") && frame >11.0 )
+                    || (motion_kind == smash::hash40("special_air_lw18") && frame >11.0 )
+
+                    || (motion_kind == smash::hash40("special_lw19") && frame >12.0 )
+                    || (motion_kind == smash::hash40("special_air_lw19") && frame >12.0 )
+
+                    || (motion_kind == smash::hash40("special_lw20") && frame >40.0 )
+                    || (motion_kind == smash::hash40("special_air_lw20") && frame >40.0 )
+
+                    || (motion_kind == smash::hash40("special_lw21") && frame >6.0 )
+                    || (motion_kind == smash::hash40("special_air_lw21") && frame >6.0 )
+
                 ) {
                 CancelModule::enable_cancel(module_accessor);
                 }
@@ -2181,6 +2245,55 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 ) {
                     CancelModule::enable_cancel(module_accessor);
                 }
+            //if fighter_kind == *FIGHTER_KIND_DEMON
+            //&& (
+            //    ((motion_kind == smash::hash40("attack_s3_s") || motion_kind == smash::hash40("attack_s3_hi") || motion_kind == smash::hash40("attack_s3_lw")) && frame > 16.0 )
+            //    ||(motion_kind == smash::hash40("attack_hi3") && frame >10.0 )
+            //    ||(motion_kind == smash::hash40("attack_hi3_2") && frame >16.0 )
+            //    ||(motion_kind == smash::hash40("attack_lw3") && frame >18.0 )
+            //    ||(motion_kind == smash::hash40("attack_dash") && frame >19.0 )
+            //    ||(motion_kind == smash::hash40("attack_s4") && frame >26.0 )
+            //    ||(motion_kind == smash::hash40("attack_s4_transform") && frame >26.0 )
+            //    ||(motion_kind == smash::hash40("attack_hi4") && frame >16.0 )
+            //    ||(motion_kind == smash::hash40("attack_hi4_transform") && frame >22.0 )
+            //    ||(motion_kind == smash::hash40("attack_lw4") && frame >19.0 )
+            //    ||(motion_kind == smash::hash40("attack_lw4_transform") && frame >22.0 )
+            //    ||(motion_kind == smash::hash40("attack_air_n") && frame >16.0 )
+            //    ||(motion_kind == smash::hash40("attack_air_f") && frame >14.0 )
+            //    ||(motion_kind == smash::hash40("attack_air_b") && frame >18.0 )
+            //    ||(motion_kind == smash::hash40("attack_air_hi") && frame >09.0 )
+            //    ||(motion_kind == smash::hash40("attack_air_lw") && frame >18.0 )
+            //    ||(motion_kind == smash::hash40("special_n") && frame >43.0 )
+            //    ||(motion_kind == smash::hash40("special_air_n") && frame >43.0 )
+            //    ||(motion_kind == smash::hash40("special_s") && frame >22.0 )
+            //    ||(motion_kind == smash::hash40("special_air_s") && frame >22.0 )
+            //    ||(motion_kind == smash::hash40("special_lw") && frame >0.0 )
+            //    ||(motion_kind == smash::hash40("special_air_lw") && frame >0.0 )
+            //    ||(motion_kind == smash::hash40("throw_f") && frame >=42.0 )
+            //    ||(motion_kind == smash::hash40("throw_b") && frame >=46.0 )
+            //    ||(motion_kind == smash::hash40("throw_hi") && frame >=14.0 )
+            //    ||(motion_kind == smash::hash40("throw_lw") && frame >=35.0 )
+            //    ||(motion_kind == smash::hash40("attack_stand1") && frame >14.0 )
+            //    ||(motion_kind == smash::hash40("attack_stand2_1") && frame >20.0 )
+            //    ||(motion_kind == smash::hash40("attack_stand2_2") && frame >11.0 )
+            //    ||(motion_kind == smash::hash40("attack_stand2_3") && frame >16.0 )
+            //    ||(motion_kind == smash::hash40("attack_stand2_4") && frame >15.0 )
+            //    ||(motion_kind == smash::hash40("attack_stand3_1") && frame >10.0 )
+            //    ||(motion_kind == smash::hash40("attack_stand4") && frame >14.0 )
+            //    ||(motion_kind == smash::hash40("attack_stand5") && frame >12.0 )
+            //    ||(motion_kind == smash::hash40("attack_stand6") && frame >16.0 )
+            //    ||(motion_kind == smash::hash40("attack_squat1") && frame >18.0 )
+            //    ||(motion_kind == smash::hash40("attack_squat2") && frame >14.0 )
+            //    ||(motion_kind == smash::hash40("attack_squat3") && frame >15.0 )
+            //    ||(motion_kind == smash::hash40("attack_squat4") && frame >13.0 )
+            //    ||(motion_kind == smash::hash40("attack_step2") && frame >13.0 )
+            //    ||(motion_kind == smash::hash40("attack_step2f") && frame >14.0 )
+            //    ||(motion_kind == smash::hash40("attack_step2l") && frame >27.0 )
+            //    ||(motion_kind == smash::hash40("attack_step2s") && frame >35.0 )
+
+            //) {
+            //    CancelModule::enable_cancel(module_accessor);
+            //}
             if fighter_kind == *FIGHTER_KIND_MIIFIGHTER
                 && (
                     ((motion_kind == smash::hash40("attack_s3_s") || motion_kind == smash::hash40("attack_s3_hi") || motion_kind == smash::hash40("attack_s3_lw")) && frame > 8.0 )

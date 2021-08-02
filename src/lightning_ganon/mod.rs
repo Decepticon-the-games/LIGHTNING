@@ -42,15 +42,16 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
 
             }    
-            if status_kind == *FIGHTER_GANON_STATUS_KIND_SPECIAL_S_CATCH {
+            if MotionModule::motion_kind(module_accessor)== smash::hash40("special_s_catch") {
                 if MotionModule::frame(module_accessor)>= 40.0 {
-                    CancelModule::enable_cancel(module_accessor);
-                    
-                }
-                
-
+                    CancelModule::enable_cancel(module_accessor);   
+                }               
             }        
-                
+            if MotionModule::motion_kind(module_accessor)== smash::hash40("special_air_s_catch") {
+                if MotionModule::frame(module_accessor)>= 3.0 {
+                    CancelModule::enable_cancel(module_accessor);   
+                }               
+            }     
             
             else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
             && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)

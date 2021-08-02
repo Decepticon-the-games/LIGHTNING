@@ -1,5 +1,6 @@
 #![feature(concat_idents)]
 #![feature(proc_macro_hygiene)]
+#![feature(asm)]
 
 mod hooks;
 mod lightning_01_common;

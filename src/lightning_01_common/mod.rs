@@ -15,7 +15,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let motion_kind = MotionModule::motion_kind(module_accessor);       
         let frame = MotionModule::frame(module_accessor);
         let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
-        //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
+        let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
         let jump_guard_dash_upspecial_pressed = ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_JUMP) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_GUARD) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (situation_kind == *SITUATION_KIND_AIR && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0);
     
         //CANCEL ON HIT (EXCEPT UP SPECIALS)
@@ -90,7 +90,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A
                 || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G
                 || status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_JUMP ){
-                if AttackModule::is_attack_occur(module_accessor) && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD){
+                if AttackModule::is_attack_occur(module_accessor) && (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD != 0) {
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                 }   
             }
@@ -98,7 +98,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
         //Get airdodge back during free fall
         if status_kind == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
-            if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+            if cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD != 0 {
             StatusModule::change_status_request_from_script(module_accessor,*FIGHTER_STATUS_KIND_ESCAPE_AIR,true); 
             }   
         }

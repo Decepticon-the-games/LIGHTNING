@@ -1,8 +1,10 @@
 use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
+use smashline::*;
 
 // Use this for general per-frame fighter-level hooks
+#[fighter_frame_callback]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
@@ -12,7 +14,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let motion_kind = MotionModule::motion_kind(module_accessor);       
         let frame = MotionModule::frame(module_accessor);
         let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
-        let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
+        // let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
         //let lr = PostureModule::lr(module_accessor);
         let jump_guard_dash_upspecial_pressed = ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_JUMP) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_GUARD) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (situation_kind == *SITUATION_KIND_AIR && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0);
     
@@ -2419,5 +2421,5 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
 
 pub fn install() {
-    acmd::add_custom_hooks!(once_per_fighter_frame);
+    smashline::install_agent_frame_callbacks!(once_per_fighter_frame);
 }

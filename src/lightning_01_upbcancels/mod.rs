@@ -1,8 +1,10 @@
 use smash::app::lua_bind::*;
 use smash::lua2cpp::{L2CFighterCommon};
 use smash::lib::lua_const::*;
+use smashline::*;
 
 // Use this for general per-frame fighter-level hooks
+#[fighter_frame_callback]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
@@ -260,5 +262,5 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
 
 pub fn install() {
-    acmd::add_custom_hooks!(once_per_fighter_frame);
+    smashline::install_agent_frame_callbacks!(once_per_fighter_frame);
 }

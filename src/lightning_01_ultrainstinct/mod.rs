@@ -4,7 +4,8 @@ use smash::app::FighterManager;
 use smash::app::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::phx::Vector2f;
-use acmd::*;
+use smashline::*;
+use smash_script::*;
 use skyline::hooks::{getRegionAddress, Region};
 
 //CREATED BY WUBOY, THANK YOU!!
@@ -94,6 +95,7 @@ move_type_again: bool) -> u64 {
     original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)
 }
 
+#[fighter_frame_callback]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = sv_system::battle_object_module_accessor(fighter.lua_state_agent);
@@ -101,7 +103,6 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let fighter_kind = utility::get_kind(module_accessor);
         //let status_kind = StatusModule::status_kind(module_accessor);
         //let situation_kind = StatusModule::situation_kind(module_accessor);
-        let lua_state = fighter.lua_state_agent; 
        
         
         //if fighter_kind == *FIGHTER_KIND_ALL {
@@ -111,15 +112,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 if ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW != 0 && DamageModule::damage(module_accessor,0) >= 150.0 
                 //MotionModule::motion_kind(module_accessor) == smash::hash40("damage_hi_2") || MotionModule::motion_kind(module_accessor) == smash::hash40("damage_air_3")
-                && MotionModule::frame(module_accessor) <=30.0
-                
-                { 
+                && MotionModule::frame(module_accessor) <=30.0 { 
                     SEC_SEN_STATE[entry_id] = true;
                 }
                 else if SECRET_SENSATION[entry_id] {
-                    acmd!(lua_state,{
-                        WHOLE_HIT(HIT_STATUS_XLU)
-                    });
+                    macros::WHOLE_HIT(fighter, *HIT_STATUS_XLU);
                     DamageModule::set_damage_mul(module_accessor, 0.0);
                     DamageModule::set_reaction_mul(module_accessor, 0.0);
                 }
@@ -128,9 +125,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     DamageModule::set_damage_mul(module_accessor, 1.0);
                     DamageModule::set_reaction_mul(module_accessor, 1.0);
                     SEC_SEN_STATE[entry_id] = false;
-                    acmd!(lua_state,{
-                        WHOLE_HIT(HIT_STATUS_XLU)
-                    });
+                    macros::WHOLE_HIT(fighter, *HIT_STATUS_XLU);
                 }
 
                 if SEC_SEN_STATE[entry_id] {
@@ -150,18 +145,13 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 if SECRET_SENSATION[entry_id] {
                     
                     JostleModule::set_status(module_accessor, false); // Turns off body blocking for Ryu every frame Secret Sensation is true
-                    acmd!(lua_state,{
-                        WHOLE_HIT(HIT_STATUS_XLU) // Makes Ryu Invincible
-                    });
+                    macros::WHOLE_HIT(fighter, *HIT_STATUS_XLU); // Makes Ryu Invincible
                     DamageModule::set_damage_lock(module_accessor, true); // Makes sure Ryu doesn't take damage during the dodge
                     DamageModule::set_no_reaction_no_effect(module_accessor, true); // Makes sure Ryu doesn't take knockback.
                     if CAMERA[entry_id] == false { // Exists so all of this code will only happen once.
-                        acmd!(lua_state,{
-
-                            CAM_ZOOM_IN_arg5(3.0, 0.0, 1.5, 0.0, 0.0) // Sets the camera
-                            SLOW_OPPONENT( 100.0, 32.0) // Slows the opponent down by 100x for 32 frames
-                            FILL_SCREEN_MODEL_COLOR( 0, 12, 0.1, 0.1, 0.1, 0, 0.001, 0.011, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, 205);
-                        });
+                        macros::CAM_ZOOM_IN_arg5(fighter, 3.0, 0.0, 1.5, 0.0, 0.0); // Sets the camera
+                        macros::SLOW_OPPONENT(fighter, 100.0, 32.0); // Slows the opponent down by 100x for 32 frames
+                        macros::FILL_SCREEN_MODEL_COLOR(fighter, 0, 12, 0.1, 0.1, 0.1, 0, 0.001, 0.011, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, 205);
                         SlowModule::set_whole(module_accessor, 4, 0); // Slows ***everything*** down by a 4x. This includes the above slowdown, which probably means I should shorten the above length of time but eh
                         RYU_X[entry_id] = PostureModule::pos_x(module_accessor); // Gets Ryu's position
                         RYU_Y[entry_id] = PostureModule::pos_y(module_accessor);
@@ -241,12 +231,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                         SECRET_SENSATION[entry_id] = false;
                         CAMERA[entry_id] = false;
                         WorkModule::on_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK); // These three lines are here to make sure Ryu doesn't just fall like a rock after movinag into the air.
-                        acmd!(lua_state,{
-                            SET_SPEED_EX(0, 0.5, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN)
-                            CAM_ZOOM_OUT() // Resets the camera.
-                            CANCEL_FILL_SCREEN(0, 5) // Clears out the background screen darken effect.
-                        });
-
+                        macros::SET_SPEED_EX(fighter, 0, 0.5, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+                        macros::CAM_ZOOM_OUT(fighter); // Resets the camera.
+                        macros::CANCEL_FILL_SCREEN(fighter, 0, 5); // Clears out the background screen darken effect.
                         WorkModule::off_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
                         PostureModule::reverse_lr(module_accessor);
                         if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_AIR {
@@ -272,6 +259,6 @@ pub fn install() {
             NOTIFY_LOG_EVENT_COLLISION_HIT_OFFSET = offset;
         }
     }
-    acmd::add_custom_hooks!(once_per_fighter_frame);
+    smashline::install_agent_frame_callbacks!(once_per_fighter_frame);
     skyline::install_hook!(notify_log_event_collision_hit_replace);
 }

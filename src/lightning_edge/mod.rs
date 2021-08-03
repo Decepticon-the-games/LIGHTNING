@@ -1,31 +1,29 @@
 use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
+use smashline::*;
 use smash::hash40;
 
 // Use this for general per-frame fighter-level hooks
+#[fighter_frame( agent = FIGHTER_KIND_EDGE )]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let fighter_kind = smash::app::utility::get_kind(module_accessor);
         let status_kind = StatusModule::status_kind(module_accessor);
         //let situation_kind = StatusModule::situation_kind(module_accessor);
         //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         
-        
-        if fighter_kind == *FIGHTER_KIND_EDGE {
-            if MotionModule::motion_kind(module_accessor) == hash40("special_hi1_end") && MotionModule::frame(module_accessor) >1.0 {
+        if MotionModule::motion_kind(module_accessor) == hash40("special_hi1_end") && MotionModule::frame(module_accessor) >1.0 {
+            CancelModule::enable_cancel(module_accessor);
+        }
+            
+        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
+        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
+        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
+        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3) {
+            if AttackModule:: is_attack_occur(module_accessor)  &&  ! AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) {
                 CancelModule::enable_cancel(module_accessor);
-            }
-                
-            else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
-            && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
-            && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
-            && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
-            && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3) {
-                if AttackModule:: is_attack_occur(module_accessor)  &&  ! AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) {
-                    CancelModule::enable_cancel(module_accessor);
-                }
             }
         }
         
@@ -33,5 +31,5 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 }
 
 pub fn install() {
-    acmd::add_custom_hooks!(once_per_fighter_frame);
+    smashline::install_agent_frames!(once_per_fighter_frame);
 }

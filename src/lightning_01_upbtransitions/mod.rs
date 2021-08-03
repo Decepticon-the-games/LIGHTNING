@@ -1,10 +1,12 @@
 use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
-use acmd;
+use smashline::*;
 
 pub static mut UP_SPECIAL : [bool; 8] = [false; 8];
 static mut ENTRY_ID : usize = 0;
+
+#[fighter_frame_callback]
 pub fn set_bool(fighter: &mut L2CFighterCommon) {
     unsafe {
         let lua_state = fighter.lua_state_agent;
@@ -64,5 +66,5 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
 
 
 pub fn install() {
-    acmd::add_custom_hooks!(set_bool); 
+    smashline::install_agent_frame_callbacks!(set_bool);
 }

@@ -2,16 +2,16 @@
 use smash::app::lua_bind::*;
 use smash::lua2cpp::{L2CFighterCommon, L2CFighterBase};
 use smash::lib::lua_const::*;
-use acmd;
+use smashline::*;
 
 // Use this for general per-frame fighter-level hooks
+#[fighter_frame_callback]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
-        let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let fighter_kind = smash::app::utility::get_kind(module_accessor);
-        let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
-        let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
-        let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
+        let fighter_kind = smash::app::utility::get_kind(fighter.module_accessor);
+        let status_kind = smash::app::lua_bind::StatusModule::status_kind(fighter.module_accessor);
+        let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(fighter.module_accessor);
+        let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
         
         //DISABLE UP SPECIAL/PUMMEL INFLICTION CANCEL
         if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI)
@@ -34,17 +34,17 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 //Side Special
                 if status_kind == *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S3 {
 
-                    if MotionModule::frame(module_accessor) >=25.0  {                       
-                        if AttackModule:: is_attack_occur(module_accessor){
-                            CancelModule::enable_cancel(module_accessor);
+                    if MotionModule::frame(fighter.module_accessor) >=25.0  {                       
+                        if AttackModule:: is_attack_occur(fighter.module_accessor){
+                            CancelModule::enable_cancel(fighter.module_accessor);
                         }
                     }
                 }
                 //Side Smash
                 if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 {
-                    if MotionModule::frame(module_accessor) >=28.0  {                       
-                        if AttackModule:: is_attack_occur(module_accessor){
-                            CancelModule::enable_cancel(module_accessor);
+                    if MotionModule::frame(fighter.module_accessor) >=28.0  {                       
+                        if AttackModule:: is_attack_occur(fighter.module_accessor){
+                            CancelModule::enable_cancel(fighter.module_accessor);
                         }
                     }
                 }
@@ -62,18 +62,18 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 //Up Smash
                 if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
 
-                    if MotionModule::frame(module_accessor) >= 40.0 {
-                        if AttackModule:: is_attack_occur(module_accessor){
-                            CancelModule::enable_cancel(module_accessor);
+                    if MotionModule::frame(fighter.module_accessor) >= 40.0 {
+                        if AttackModule:: is_attack_occur(fighter.module_accessor){
+                            CancelModule::enable_cancel(fighter.module_accessor);
                         }
                     }
                 }
                 //Side Smash
                 if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 {
 
-                    if MotionModule::frame(module_accessor) >= 36.0 {
-                        if AttackModule:: is_attack_occur(module_accessor){
-                            CancelModule::enable_cancel(module_accessor);
+                    if MotionModule::frame(fighter.module_accessor) >= 36.0 {
+                        if AttackModule:: is_attack_occur(fighter.module_accessor){
+                            CancelModule::enable_cancel(fighter.module_accessor);
                         }
                     }
                 }
@@ -86,9 +86,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
                 if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
                     
-                    if MotionModule::frame(module_accessor) == 15.0 {
-                        if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_HI3, true);
+                    if MotionModule::frame(fighter.module_accessor) == 15.0 {
+                        if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+                            StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ATTACK_HI3, true);
                         }
                     }
                 }
@@ -113,24 +113,24 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 //Attack cancel Up Special
                 if status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G {
 
-                    if MotionModule::frame(module_accessor) >=37.0{
-                        if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK){
-                            CancelModule::enable_cancel(module_accessor);
+                    if MotionModule::frame(fighter.module_accessor) >=37.0{
+                        if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK){
+                            CancelModule::enable_cancel(fighter.module_accessor);
                         }
                     }
 
                 //Fix Up Special 
-                    if MotionModule::frame(module_accessor) >=38.0 {
-                        if AttackModule:: is_attack_occur(module_accessor){
-                            CancelModule::enable_cancel(module_accessor);
+                    if MotionModule::frame(fighter.module_accessor) >=38.0 {
+                        if AttackModule:: is_attack_occur(fighter.module_accessor){
+                            CancelModule::enable_cancel(fighter.module_accessor);
                         }
                     }
                 }
                 if status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A {
 
-                    if MotionModule::frame(module_accessor) >=45.0 {
-                        if AttackModule:: is_attack_occur(module_accessor){
-                            CancelModule::enable_cancel(module_accessor);
+                    if MotionModule::frame(fighter.module_accessor) >=45.0 {
+                        if AttackModule:: is_attack_occur(fighter.module_accessor){
+                            CancelModule::enable_cancel(fighter.module_accessor);
                         }
                     }
                 }
@@ -153,8 +153,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 if status_kind == *FIGHTER_MARTH_STATUS_KIND_SPECIAL_S4 {
             
-                    if AttackModule:: is_attack_occur(module_accessor)  &&  ! AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) {
-                    CancelModule::enable_cancel(module_accessor);
+                    if AttackModule:: is_attack_occur(fighter.module_accessor)  &&  ! AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                    CancelModule::enable_cancel(fighter.module_accessor);
                 } 
                 }
             }
@@ -167,8 +167,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 if status_kind == *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4 {
             
-                    if AttackModule:: is_attack_occur(module_accessor)  &&  ! AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) {
-                    CancelModule::enable_cancel(module_accessor);
+                    if AttackModule:: is_attack_occur(fighter.module_accessor)  &&  ! AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                    CancelModule::enable_cancel(fighter.module_accessor);
                 }                
                 }
             }
@@ -188,18 +188,18 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
             
-                    if MotionModule::frame(module_accessor) >=28.0 {
-                        if AttackModule:: is_attack_occur(module_accessor){
-                            CancelModule::enable_cancel(module_accessor);
+                    if MotionModule::frame(fighter.module_accessor) >=28.0 {
+                        if AttackModule:: is_attack_occur(fighter.module_accessor){
+                            CancelModule::enable_cancel(fighter.module_accessor);
                         }
                     } 
                                   
                 }
                 if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 {
             
-                    if MotionModule::frame(module_accessor) >=26.0 {
-                        if AttackModule:: is_attack_occur(module_accessor){
-                            CancelModule::enable_cancel(module_accessor);
+                    if MotionModule::frame(fighter.module_accessor) >=26.0 {
+                        if AttackModule:: is_attack_occur(fighter.module_accessor){
+                            CancelModule::enable_cancel(fighter.module_accessor);
                         }
                     } 
                                   
@@ -231,9 +231,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 if status_kind == *FIGHTER_STATUS_KIND_ATTACK_DASH {
                     if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
                         
-                        if MotionModule::frame(module_accessor) >=7.0 {
-                            if AttackModule:: is_attack_occur(module_accessor){
-                                CancelModule::enable_cancel(module_accessor);
+                        if MotionModule::frame(fighter.module_accessor) >=7.0 {
+                            if AttackModule:: is_attack_occur(fighter.module_accessor){
+                                CancelModule::enable_cancel(fighter.module_accessor);
                             }
                         }
                     }
@@ -250,17 +250,17 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
                     
-                    if MotionModule::frame(module_accessor) >=30.0 {
-                        if AttackModule:: is_attack_occur(module_accessor){
-                            CancelModule::enable_cancel(module_accessor);
+                    if MotionModule::frame(fighter.module_accessor) >=30.0 {
+                        if AttackModule:: is_attack_occur(fighter.module_accessor){
+                            CancelModule::enable_cancel(fighter.module_accessor);
                         }
                     }
                 }
                 if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
                     
-                    if MotionModule::frame(module_accessor) >=23.0 {
-                        if AttackModule:: is_attack_occur(module_accessor){
-                            CancelModule::enable_cancel(module_accessor);
+                    if MotionModule::frame(fighter.module_accessor) >=23.0 {
+                        if AttackModule:: is_attack_occur(fighter.module_accessor){
+                            CancelModule::enable_cancel(fighter.module_accessor);
                         }
                     }
                 }
@@ -284,9 +284,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             else if fighter_kind == *FIGHTER_KIND_JACK 
             && status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 {
                 if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
-                    if MotionModule::frame(module_accessor) >=23.0 {
-                        if AttackModule:: is_attack_occur(module_accessor){
-                            CancelModule::enable_cancel(module_accessor);
+                    if MotionModule::frame(fighter.module_accessor) >=23.0 {
+                        if AttackModule:: is_attack_occur(fighter.module_accessor){
+                            CancelModule::enable_cancel(fighter.module_accessor);
                         }
                     }
                 }
@@ -305,13 +305,13 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             //------------------------------------------------------------------------------------------------ 
                 //Cancel On Hit
             //-----------------------------------------------------------------------------------------------
-            //else if AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) 
-            //|| AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_SHIELD){
-            //    CancelModule::enable_cancel(module_accessor);
+            //else if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) 
+            //|| AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD){
+            //    CancelModule::enable_cancel(fighter.module_accessor);
                 
             //}
-            else if AttackModule:: is_attack_occur(module_accessor){
-                CancelModule::enable_cancel(module_accessor);
+            else if AttackModule:: is_attack_occur(fighter.module_accessor){
+                CancelModule::enable_cancel(fighter.module_accessor);
             }
             
 
@@ -322,8 +322,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
         //&& situation_kind == *SITUATION_KIND_AIR {
         //            
-        //    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD){
-        //        StatusModule::change_status_request_from_script(module_accessor,*FIGHTER_STATUS_KIND_ESCAPE_AIR, true);
+        //    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD){
+        //        StatusModule::change_status_request_from_script(fighter.module_accessor,*FIGHTER_STATUS_KIND_ESCAPE_AIR, true);
         //    }   
         //}
         
@@ -335,22 +335,22 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             
 
         //NO JAB CHAINS (CANCEL WITH JUMP/GRAB)
-        if MotionModule::motion_kind(module_accessor)== smash::hash40("attack_11")
-        || MotionModule::motion_kind(module_accessor)== smash::hash40("attack_12")
-        || MotionModule::motion_kind(module_accessor)== smash::hash40("attack_13")
-        || MotionModule::motion_kind(module_accessor)== smash::hash40("attack_100")
-        || MotionModule::motion_kind(module_accessor)== smash::hash40("attack_100_sub")
-        || MotionModule::motion_kind(module_accessor)== smash::hash40("attack_100_end") {
+        if MotionModule::motion_kind(fighter.module_accessor)== smash::hash40("attack_11")
+        || MotionModule::motion_kind(fighter.module_accessor)== smash::hash40("attack_12")
+        || MotionModule::motion_kind(fighter.module_accessor)== smash::hash40("attack_13")
+        || MotionModule::motion_kind(fighter.module_accessor)== smash::hash40("attack_100")
+        || MotionModule::motion_kind(fighter.module_accessor)== smash::hash40("attack_100_sub")
+        || MotionModule::motion_kind(fighter.module_accessor)== smash::hash40("attack_100_end") {
             
-            if AttackModule::is_attack_occur(module_accessor) {
+            if AttackModule::is_attack_occur(fighter.module_accessor) {
                 
                 if status_kind == *FIGHTER_STATUS_KIND_ATTACK
                 || status_kind == *FIGHTER_STATUS_KIND_ATTACK_100 {
-                    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
-                        change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
+                    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
+                        change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
                     }
-                    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CATCH) {
-                        change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_CATCH, true);
+                    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH) {
+                        change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_CATCH, true);
                     }
                 }  
             } 
@@ -384,27 +384,27 @@ pub fn set_rebound_hook(module_accessor: &mut smash::app::BattleObjectModuleAcce
 #[skyline::hook(replace=smash::app::lua_bind::AttackModule::clear_all)]
 unsafe fn clear_all_hook(module_accessor: &mut smash::app::BattleObjectModuleAccessor) -> bool {
     
-    //if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_AIR {
-    //    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-    //        //StatusModule::change_status_request_from_script(module_accessor,*FIGHTER_STATUS_KIND_ESCAPE_AIR, true);
-    //       CancelModule::enable_cancel(module_accessor);
+    //if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_AIR {
+    //    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+    //        //StatusModule::change_status_request_from_script(fighter.module_accessor,*FIGHTER_STATUS_KIND_ESCAPE_AIR, true);
+    //       CancelModule::enable_cancel(fighter.module_accessor);
     //   }  
-    //    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
-    //        //StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
-    //        CancelModule::enable_cancel(module_accessor);
+    //    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
+    //        //StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
+    //        CancelModule::enable_cancel(fighter.module_accessor);
     //    } 
     //}   
 
-    //if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND {
+    //if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_GROUND {
     //        
-    //    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
-    //       StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
+    //    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
+    //       StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
     //        
     //        
     //    }
     //}
 
-    //if ! StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_HI {
+    //if ! StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_HI {
        CancelModule::enable_cancel(module_accessor);
     //} 
         
@@ -412,21 +412,9 @@ unsafe fn clear_all_hook(module_accessor: &mut smash::app::BattleObjectModuleAcc
     original!()(module_accessor)
     
 }
-// Use this for general per-frame weapon-level hooks
-pub fn once_per_weapon_frame(fighter_base : &mut L2CFighterBase) {
-    unsafe {
-        let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter_base.lua_state_agent);
-        let frame = smash::app::lua_bind::MotionModule::frame(module_accessor) as i32;
-
-        if frame % 10 == 0 {
-            println!("[Weapon Hook] Frame : {}", frame);
-        }
-    }
-}
 
 pub fn install() {
-    acmd::add_custom_hooks!(once_per_fighter_frame);
-    //acmd::add_custom_weapon_hooks!(once_per_weapon_frame);
+    smashline::install_agent_frame_callbacks!(once_per_fighter_frame);
     //skyline::install_hook!(set_rebound_hook);
     //skyline::install_hook!(clear_all_hook);
 }

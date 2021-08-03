@@ -1,9 +1,8 @@
-use smash::app::*;
+// use smash::app::*;
 use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
-use acmd::*;
-
+use smashline::*;
 
 // CREATED BY PHAZOGANON, THANK YOU :)
 
@@ -19,7 +18,7 @@ static mut CAN_CRIMSON_CANCEL : [bool; 8] = [true; 8];
 static mut CAN_CRIMSON_CANCEL_TEMP : [bool; 8] = [true; 8];
 //pub static mut SPECIAL_N_FINAL_SMASH_METER : [bool; 8] = [false; 8];
 
-    
+#[fighter_frame_callback]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
@@ -157,5 +156,5 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
 
 pub fn install() {
-    acmd::add_custom_hooks!(once_per_fighter_frame);
+    smashline::install_agent_frame_callbacks!(once_per_fighter_frame);
 }

@@ -16,7 +16,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let frame = MotionModule::frame(fighter.module_accessor);
         let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
         let cat2 = ControlModule::get_command_flag_cat(fighter.module_accessor, 1);
-        let jump_guard_dash_upspecial_pressed = ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (situation_kind == *SITUATION_KIND_AIR && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0);
+        let jump_guard_dash_upspecial_pressed = ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0|| (situation_kind == *SITUATION_KIND_AIR && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0);
     
         //CANCEL ON HIT (EXCEPT UP SPECIALS)
         if !(status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
@@ -24,6 +24,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
+        && ! (status_kind == *FIGHTER_STATUS_KIND_THROW)
         {
         
             if ! (fighter_kind == *FIGHTER_KIND_CAPTAIN
@@ -77,7 +78,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
         //AIRDASH
         if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-            if frame >= 3.0 {
+            if frame >= 1.0 {
                 
                 CancelModule::enable_cancel(fighter.module_accessor);
                 
@@ -104,8 +105,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         }
         
         //GRAB COMBOS
-        if status_kind == *FIGHTER_STATUS_KIND_THROW && StopModule::is_damage(fighter.module_accessor) {
-            CancelModule::enable_cancel(fighter.module_accessor);
+        if status_kind == *FIGHTER_STATUS_KIND_THROW && AttackModule::is_attack_occur(fighter.module_accessor) {
+            if ! ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0) {
+                CancelModule::enable_cancel(fighter.module_accessor);
+            }
         }
         
        

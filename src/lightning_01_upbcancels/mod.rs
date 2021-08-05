@@ -58,19 +58,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                         
                     
                 }
-                if frame == 10.0 {
-                    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-                        //if ! cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0{
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                        //}
-                    }
                 
-                    //if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-                    //    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_HI, false);
-                    //}
-                        
-                    
-                }
                 if frame >= 28.0 {
                     CancelModule::enable_cancel(module_accessor);
                     

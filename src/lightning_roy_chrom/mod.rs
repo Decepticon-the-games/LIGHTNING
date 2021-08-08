@@ -19,7 +19,7 @@ pub fn once_per_fighter_frame_roy(fighter : &mut L2CFighterCommon) {
 
             if status_kind == *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4 {
         
-                if AttackModule:: is_attack_occur(module_accessor)  &&  ! AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) {
+                if AttackModule:: is_attack_occur(module_accessor) {
                 CancelModule::enable_cancel(module_accessor);
             } 
             }
@@ -31,7 +31,7 @@ pub fn once_per_fighter_frame_roy(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-            if AttackModule:: is_attack_occur(module_accessor)  &&  ! AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) {
+            if AttackModule:: is_attack_occur(module_accessor) {
                 CancelModule::enable_cancel(module_accessor);
             }
         }
@@ -58,7 +58,7 @@ pub fn once_per_fighter_frame_chrom(fighter : &mut L2CFighterCommon) {
 
             if status_kind == *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4 {
         
-                if AttackModule:: is_attack_occur(module_accessor)  &&  ! AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) {
+                if AttackModule:: is_attack_occur(module_accessor) {
                 CancelModule::enable_cancel(module_accessor);
             } 
             }
@@ -70,7 +70,7 @@ pub fn once_per_fighter_frame_chrom(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-            if AttackModule:: is_attack_occur(module_accessor)  &&  ! AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT) {
+            if AttackModule:: is_attack_occur(module_accessor) {
                 CancelModule::enable_cancel(module_accessor);
             }
         }

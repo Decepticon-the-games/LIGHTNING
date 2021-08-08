@@ -110,7 +110,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
                 // Setting up Secret Sensation State
 
-                if DamageModule::damage(module_accessor,0) >= 150.0 && MotionModule::motion_kind(module_accessor) == smash::hash40("squat") && MotionModule::frame(module_accessor) <=30.0 {
+                if DamageModule::damage(module_accessor,0) >= 150.0 && MotionModule::motion_kind(module_accessor) == smash::hash40("squat_wait") && MotionModule::frame(module_accessor) <= 30.0 {
                     
                     
                     SEC_SEN_STATE[entry_id] = true;
@@ -127,11 +127,12 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     DamageModule::set_damage_mul(module_accessor, 1.0);
                     DamageModule::set_reaction_mul(module_accessor, 1.0);
                     SEC_SEN_STATE[entry_id] = false;
-                    macros::WHOLE_HIT(fighter, *HIT_STATUS_XLU);
+                    macros::WHOLE_HIT(fighter, *HIT_STATUS_NORMAL);
                 }
 
                 if SEC_SEN_STATE[entry_id] {
-                    DamageModule::set_damage_mul(module_accessor, 0.0);
+                    //macros::WHOLE_HIT(fighter, *HIT_STATUS_INVINCIBLE);
+                    DamageModule::set_damage_mul(module_accessor, 1.0);
                     DamageModule::set_reaction_mul(module_accessor, 0.0);
                 }
 
@@ -141,6 +142,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     SECRET_SENSATION[entry_id] = false;
                     SEC_SEN_STATE[entry_id] = false;
                 }
+              
                 
                 // Secret Sensation???
                 

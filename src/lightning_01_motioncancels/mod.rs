@@ -336,7 +336,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("special_n") && frame > 66.0 )
                     || (motion_kind == smash::hash40("special_air_n") && frame >66.0 )
                     || (motion_kind == smash::hash40("special_s") && frame > 0.0 )
-                    || (motion_kind == smash::hash40("special_air_s_end") && frame >44.0 )
+                    || (motion_kind == smash::hash40("special_air_s_start") && frame >44.0 )
                     ||(motion_kind == smash::hash40("special_hi") && frame >30.0 )
                     ||(motion_kind == smash::hash40("special_air_hi") && frame >30.0 )
                     || (motion_kind == smash::hash40("special_lw") && frame > 33.0 )

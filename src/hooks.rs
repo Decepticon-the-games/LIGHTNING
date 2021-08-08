@@ -14,16 +14,16 @@ pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObje
     if SECRET_SENSATION[entry_id] {
         return false;
     }
-    if UP_SPECIAL[entry_id] {
-        if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI {
+    if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_FINAL {
+        return false;
+    }
+    if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI {
+        if UP_SPECIAL[entry_id] {
             return false;
         }
         else {
             return ret;
         }
-    }
-    if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_FINAL {
-        return false;
     }
     else {
         return ret;

@@ -82,10 +82,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 || status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S
                 || status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
                     
-                    //if ! AttackModule::is_attack(module_accessor, 0, true) {
-                    MotionModule::set_rate(module_accessor, 1.5);
-                    //}
-                    if AttackModule::is_attack(module_accessor, 0, true) {
+                    if ! AttackModule::is_attack(module_accessor, 0, false) {
+                        MotionModule::set_rate(module_accessor, 1.3);
+                    }
+                    if AttackModule::is_attack(module_accessor, 0, false) {
                         MotionModule::set_rate(module_accessor, 1.0);
                     }
 

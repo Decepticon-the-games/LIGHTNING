@@ -110,11 +110,12 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
                 // Setting up Secret Sensation State
 
-                if DamageModule::damage(module_accessor,0) >= 150.0 
-                && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW)
-                //&& (MotionModule::motion_kind(module_accessor) == smash::hash40("damage_hi_2") || MotionModule::motion_kind(module_accessor) == smash::hash40("damage_air_3"))
-                && MotionModule::frame(module_accessor) <=30.0 { 
+                if DamageModule::damage(module_accessor,0) >= 150.0 && MotionModule::motion_kind(module_accessor) == smash::hash40("squat") && MotionModule::frame(module_accessor) <=30.0 {
+                    
+                    
                     SEC_SEN_STATE[entry_id] = true;
+               
+                               
                 }
                 else if SECRET_SENSATION[entry_id] {
                     macros::WHOLE_HIT(fighter, *HIT_STATUS_XLU);

@@ -153,7 +153,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 if status_kind == *FIGHTER_MARTH_STATUS_KIND_SPECIAL_S4 {
             
-                    if AttackModule:: is_attack_occur(fighter.module_accessor)  &&  ! AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                    if AttackModule:: is_attack_occur(fighter.module_accessor) {
                     CancelModule::enable_cancel(fighter.module_accessor);
                 } 
                 }
@@ -167,7 +167,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 if status_kind == *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4 {
             
-                    if AttackModule:: is_attack_occur(fighter.module_accessor)  &&  ! AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                    if AttackModule:: is_attack_occur(fighter.module_accessor) {
                     CancelModule::enable_cancel(fighter.module_accessor);
                 }                
                 }

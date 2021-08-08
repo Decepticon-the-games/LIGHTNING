@@ -32,7 +32,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-            if AttackModule:: is_attack_occur(module_accessor) {
+            if AttackModule:: is_attack_occur(fighter.module_accessor) {
                 CancelModule::enable_cancel(module_accessor);
             }
         }
@@ -40,7 +40,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 
         || status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4
         || status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW4 {
-            if AttackModule:: is_attack_occur(module_accessor) {
+            if AttackModule:: is_attack_occur(fighter.module_accessor) {
                 if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0) {
                     CancelModule::enable_cancel(module_accessor);
                 }

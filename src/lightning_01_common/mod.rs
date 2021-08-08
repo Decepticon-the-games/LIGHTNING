@@ -54,7 +54,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 
             ){
-                if AttackModule:: is_attack_occur(fighter.module_accessor)  &&  ! AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                if AttackModule:: is_attack_occur(fighter.module_accessor) {
                     CancelModule::enable_cancel(fighter.module_accessor);
                 }
             }  
@@ -90,7 +90,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
                 || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A
                 || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G
-                || status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_JUMP ){
+                || status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_JUMP
+                || status_kind == *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_CLING
+                || status_kind == *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_HI_CLING
+                ){
+                    
                 if AttackModule::is_attack_occur(fighter.module_accessor) && (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD != 0) {
                     StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                 }   

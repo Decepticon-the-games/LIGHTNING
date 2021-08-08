@@ -14,14 +14,14 @@ pub fn once_per_fighter_frame_pit(fighter : &mut L2CFighterCommon) {
         
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4{
             if MotionModule::frame(module_accessor) >10.0 {
-                    if AttackModule:: is_attack_occur(module_accessor) {
+                    if AttackModule:: is_attack_occur(fighter.module_accessor) {
                 CancelModule::enable_cancel(module_accessor);
             }}
         }
             
             
     
-        else if AttackModule:: is_attack_occur(module_accessor) {
+        else if AttackModule:: is_attack_occur(fighter.module_accessor) {
             CancelModule::enable_cancel(module_accessor);
             
         }
@@ -38,14 +38,14 @@ pub fn once_per_fighter_frame_pitb(fighter : &mut L2CFighterCommon) {
         
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4{
             if MotionModule::frame(module_accessor) >10.0 {
-                    if AttackModule:: is_attack_occur(module_accessor) {
+                    if AttackModule:: is_attack_occur(fighter.module_accessor) {
                 CancelModule::enable_cancel(module_accessor);
             }}
         }
             
             
     
-        else if AttackModule:: is_attack_occur(module_accessor) {
+        else if AttackModule:: is_attack_occur(fighter.module_accessor) {
             CancelModule::enable_cancel(module_accessor);
             
         }

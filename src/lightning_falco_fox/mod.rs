@@ -35,7 +35,7 @@ pub fn once_per_fighter_frame_falco(fighter : &mut L2CFighterCommon) {
             }
         }
         if MotionModule::motion_kind(module_accessor) == smash::hash40("special_s") {
-            if AttackModule:: is_attack_occur(module_accessor) {
+            if AttackModule:: is_attack_occur(fighter.module_accessor) {
                 if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK)
                 || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
                     CancelModule::enable_cancel(module_accessor);
@@ -49,7 +49,7 @@ pub fn once_per_fighter_frame_falco(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-            if AttackModule:: is_attack_occur(module_accessor) {
+            if AttackModule:: is_attack_occur(fighter.module_accessor) {
                 CancelModule::enable_cancel(module_accessor);
             }
         }
@@ -97,7 +97,7 @@ pub fn once_per_fighter_frame_fox(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-            if AttackModule:: is_attack_occur(module_accessor) {
+            if AttackModule:: is_attack_occur(fighter.module_accessor) {
                 CancelModule::enable_cancel(module_accessor);
             }
         }

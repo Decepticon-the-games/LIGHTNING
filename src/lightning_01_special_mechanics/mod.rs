@@ -44,9 +44,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 //LIGHTNING_CANCEL[entry_id] = true;
 
                 //Take Less Damage Knockback
-                if cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N != 0 {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_N, true);
-                }
+                
+                //if cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N != 0 {
+                //    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_N, true);
+                //}
                 //DamageModule::heal(module_accessor, 0.01, 0);
                 //acmd!(lua_state,{
                 //    CANCEL_FILL_SCREEN(0, 5)

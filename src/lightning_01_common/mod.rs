@@ -78,7 +78,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
         //AIRDASH
         if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-            if frame >= 1.0 {
+            if frame >= 4.0 {
                 
                 CancelModule::enable_cancel(fighter.module_accessor);
                 

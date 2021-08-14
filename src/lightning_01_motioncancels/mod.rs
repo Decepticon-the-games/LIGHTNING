@@ -14,9 +14,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let motion_kind = MotionModule::motion_kind(module_accessor);       
         let frame = MotionModule::frame(module_accessor);
         let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
-        // let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
+        let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
         //let lr = PostureModule::lr(module_accessor);
-        let jump_guard_dash_upspecial_pressed = ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_JUMP) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_GUARD) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (situation_kind == *SITUATION_KIND_AIR && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0);
+        let jump_guard_dash_upspecial_pressed = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (situation_kind == *SITUATION_KIND_AIR && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0);
     
         
         if jump_guard_dash_upspecial_pressed {

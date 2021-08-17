@@ -22,7 +22,12 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }
             }
         }
-        
+        // Cancel first hit/last hit of Down Special
+        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW && (MotionModule::frame(module_accessor) ==11.0 || MotionModule::frame(module_accessor) >=37.0)
+        && AttackModule:: is_attack_occur(fighter.module_accessor) {
+            CancelModule::enable_cancel(module_accessor);
+        }
+
         else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)

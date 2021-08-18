@@ -17,10 +17,17 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
 
         //Set up bool to make all types of aerial up bs to only be used once no matter what
         //if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_AIR
-        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
+        if (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
         || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A
         || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G
         || status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_JUMP
+        || status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_HI2_ATTACK
+        || status_kind == *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_HI1_JUMP
+        || status_kind == *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_HI2_RUSH
+        || status_kind == *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_HI3_HOLD
+        || status_kind == *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI2_JUMP
+        || status_kind == *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH
+        ) && MotionModule::frame(module_accessor) == 2.0
         {
             UP_SPECIAL[ENTRY_ID] = true;
         }

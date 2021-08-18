@@ -22,6 +22,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if !(status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
+        && ! (status_kind == *FIGHTER_TANTAN_STATUS_KIND_ATTACK_COMBO)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW)
@@ -51,6 +52,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 ||fighter_kind == *FIGHTER_KIND_SIMON
                 ||fighter_kind == *FIGHTER_KIND_RICHTER
                 ||fighter_kind == *FIGHTER_KIND_ZELDA
+                //||fighter_kind == *FIGHTER_KIND_DEMON
 
                 
             ){
@@ -74,6 +76,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
             }
             
+        }
+        if status_kind == *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR && frame >1.0 {
+            CancelModule::enable_cancel(fighter.module_accessor);
         }
         
         //AIRDASH
@@ -130,14 +135,21 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if motion_kind== smash::hash40("attack_11")
         || motion_kind== smash::hash40("attack_12")
         || motion_kind== smash::hash40("attack_13")
+        || motion_kind== smash::hash40("attack_14")
+        || motion_kind== smash::hash40("attack_15")
+        || motion_kind== smash::hash40("attack_16")
+        || motion_kind== smash::hash40("attack_17")
+        || motion_kind== smash::hash40("attack_18")
+        || motion_kind== smash::hash40("attack_19")
         || motion_kind== smash::hash40("attack_100")
         || motion_kind== smash::hash40("attack_100_sub")
         || motion_kind== smash::hash40("attack_100_end") {
             
             if AttackModule::is_attack_occur(fighter.module_accessor) {
                 
-                if status_kind == *FIGHTER_STATUS_KIND_ATTACK
-                || status_kind == *FIGHTER_STATUS_KIND_ATTACK_100 {
+                //if status_kind == *FIGHTER_STATUS_KIND_ATTACK
+                //|| status_kind == *FIGHTER_STATUS_KIND_ATTACK_100
+                //|| status_kind == *FIGHTER_TANTAN_STATUS_KIND_ATTACK_COMBO {
                     if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
                         StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
                     }
@@ -147,7 +159,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     if ControlModule::get_command_flag_cat(fighter.module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH != 0 {
                         CancelModule::enable_cancel(fighter.module_accessor);
                     }
-                }  
+                //}  
             } 
         }
     }

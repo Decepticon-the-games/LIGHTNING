@@ -1477,7 +1477,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >34.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >31.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >23.0 )
-                    ||(motion_kind == smash::hash40("attack_air_f") && frame >93.0 )
+                    ||(motion_kind == smash::hash40("attack_air_f") && frame >9.0 )
                     ||(motion_kind == smash::hash40("attack_air_b") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_air_hi") && frame >21.0 )
                     ||(motion_kind == smash::hash40("attack_air_lw") && frame >26.0 )

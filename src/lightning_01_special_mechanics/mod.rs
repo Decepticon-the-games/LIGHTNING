@@ -29,7 +29,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //let mut gfxname: [&str; 8] = ["sys_final_aura"; 8];
         //let gfxcoords  = smash::phx::Vector3f { x: 0.0, y: 0.0, z: 0.0 };
         //let mut gfxsize: [f32; 8] = [0.15; 8];
-        let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
+        //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         //let cat3 = ControlModule::get_command_flag_cat(module_accessor, 2);
         
         //LIGHTNING_CANCEL (LIGHTNING CANCELLING)

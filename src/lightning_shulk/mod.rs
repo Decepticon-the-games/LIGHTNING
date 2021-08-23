@@ -10,7 +10,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
         //let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
-        //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
+        let frame = MotionModule::frame(fighter.module_accessor);
+        let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+        let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         
         
 
@@ -32,16 +34,18 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         }
         
 
-        //if status_kind == *FIGHTER_STATUS_KIND_THROW {
+        if status_kind == *FIGHTER_STATUS_KIND_THROW {
 
-        //    if AttackModule::is_attack_occur(module_accessor) {
-        //       if ! (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0 {
-        //            CancelModule::enable_cancel(module_accessor);
-        //       }
-        //    } 
-            
-            
-        //}
+            if (motion_kind == smash::hash40("throw_f") && frame >=16.0 )
+            ||(motion_kind == smash::hash40("throw_b") && frame >=20.0 )
+            ||(motion_kind == smash::hash40("throw_hi") && frame >=22.0 )
+            ||(motion_kind == smash::hash40("throw_lw") && frame >=25.0 ) 
+            {
+               if cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N != 0 {
+                    CancelModule::enable_cancel(module_accessor);
+                }
+            }  
+        }
         
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && MotionModule::frame(module_accessor) >20.0 {
             CancelModule::enable_cancel(module_accessor);

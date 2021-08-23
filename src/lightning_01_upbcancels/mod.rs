@@ -100,7 +100,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }
             else if status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A {
 
-                if MotionModule::frame(module_accessor) == 45.0 {
+                if MotionModule::frame(module_accessor) >= 45.0 {
                     if ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_ATTACK){
                         CancelModule::enable_cancel(module_accessor);
                     }

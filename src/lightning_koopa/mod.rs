@@ -30,6 +30,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
         else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW)
+        && ! (status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G)
+        && ! (status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)

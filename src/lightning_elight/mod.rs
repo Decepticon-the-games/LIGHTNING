@@ -13,11 +13,16 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
         //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         
-        //Fix Neutral B
-        if (MotionModule::motion_kind(module_accessor) == smash::hash40("special_n") && MotionModule::frame(module_accessor) >=29.0) 
-        || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_n") && MotionModule::frame(module_accessor) >=29.0) 
-        || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_n2") && MotionModule::frame(module_accessor) >=38.0)
-        || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_n2") && MotionModule::frame(module_accessor) >38.0) {
+        //Fix Neutral B/Side B
+        if (MotionModule::motion_kind(module_accessor) == smash::hash40("special_n2") && MotionModule::frame(module_accessor) >=29.0) 
+        || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_n2") && MotionModule::frame(module_accessor) >=29.0) 
+        || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_n") && MotionModule::frame(module_accessor) >=38.0)
+        || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_n") && MotionModule::frame(module_accessor) >38.0)
+        || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_s_start") && MotionModule::frame(module_accessor) >40.0)
+        || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_s_start") && MotionModule::frame(module_accessor) >40.0)
+
+
+        {
             if AttackModule:: is_attack_occur(fighter.module_accessor) {
                 CancelModule::enable_cancel(module_accessor);
             }
@@ -26,6 +31,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             
     
         else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        && ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N)
+        && ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)

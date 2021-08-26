@@ -2,8 +2,9 @@
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::app::*;
-use crate::lightning_01_ultrainstinct::SECRET_SENSATION;
-use crate::lightning_01_upbtransitions::UP_SPECIAL;
+//use crate::lightning_01_ultrainstinct::SECRET_SENSATION;
+use crate::lightning_01_ultrainstinct_new::CAMERA;
+use crate::lightning_01_upbtransitions::DISABLE_UP_SPECIAL;
 
 #[skyline::hook(replace = smash::app::lua_bind::WorkModule::is_enable_transition_term )]
 pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObjectModuleAccessor, term: i32) -> bool {
@@ -11,20 +12,21 @@ pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObje
     let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 
     
-    if SECRET_SENSATION[entry_id] {
+    if CAMERA[entry_id] {
         return false;
     }
     if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_FINAL {
         return false;
     }
-    if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI {
-        if UP_SPECIAL[entry_id] {
+    if DISABLE_UP_SPECIAL[entry_id] {
+        if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI {
             return false;
         }
         else {
             return ret;
         }
     }
+    
     else {
         return ret;
     }

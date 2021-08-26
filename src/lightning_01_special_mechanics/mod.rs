@@ -3,6 +3,9 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smashline::*;
+use crate::lightning_01_up_special_callbacks::UP_SPECIAL_ANIMATION;
+
+static mut ENTRY_ID : usize = 0;
 
 // CREATED BY PHAZOGANON, THANK YOU :)
 
@@ -26,6 +29,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let lua_state = fighter.lua_state_agent; 
         let status_kind = StatusModule::status_kind(module_accessor);
         let situation_kind = StatusModule::situation_kind(module_accessor);
+        ENTRY_ID = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+
         //let mut gfxname: [&str; 8] = ["sys_final_aura"; 8];
         //let gfxcoords  = smash::phx::Vector3f { x: 0.0, y: 0.0, z: 0.0 };
         //let mut gfxsize: [f32; 8] = [0.15; 8];
@@ -45,9 +50,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 //Take Less Damage Knockback
                 
-                //if cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N != 0 {
-                //    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_N, true);
-                //}
+                if status_kind == *FIGHTER_STATUS_KIND_FINAL {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_N, true);
+                }
                 //DamageModule::heal(module_accessor, 0.01, 0);
                 //acmd!(lua_state,{
                 //    CANCEL_FILL_SCREEN(0, 5)
@@ -57,10 +62,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 //RESET JUMP ON HIT EXCEPT UP SPECIAL OF ALL KINDS
         
                 if situation_kind == *SITUATION_KIND_AIR {
-                    if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
-                    || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A
-                    || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G
-                    || status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_JUMP ) {
+                    if UP_SPECIAL_ANIMATION[ENTRY_ID] == false {
                         if AttackModule::is_attack_occur(module_accessor) {
                             if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP){
                                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
@@ -109,7 +111,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
                 if DamageModule::damage(module_accessor, 0) >= 50.0 {
                     
-                    if ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_HI != 0 {
+                    if ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW != 0 {
                         CRIMSON_CANCELLING[entry_id] = 120;
                         EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("head"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 1.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0); 
                         acmd!(lua_state,{
@@ -130,7 +132,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }
 
             if CRIMSON_CANCELLING[entry_id] >= 60 {
-                if  MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_hi_l") || MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_hi_r") {
+                if  ! ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) {
                     CancelModule::enable_cancel(module_accessor);
                 }
             }
@@ -142,6 +144,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if CRIMSON_CANCELLING[entry_id] == 0 || status_kind == *FIGHTER_STATUS_KIND_DEAD {
                 acmd!(lua_state,{
                     CANCEL_FILL_SCREEN(0, 5) 
+                    SLOW_OPPONENT(0,0)
                 });
                 CAN_CRIMSON_CANCEL = CAN_CRIMSON_CANCEL_TEMP;
             }

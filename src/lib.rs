@@ -96,7 +96,7 @@ mod lightning_zelda;
 
 
 
-#[skyline::main(name = "acmd_test")]
+#[skyline::main(name = "lightning")]
 pub fn main() {
 hooks::install();
 lightning_01_common::install();

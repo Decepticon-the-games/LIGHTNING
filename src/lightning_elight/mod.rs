@@ -18,16 +18,18 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_n2") && MotionModule::frame(module_accessor) >44.0) 
         || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_n") && MotionModule::frame(module_accessor) >35.0)
         || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_n") && MotionModule::frame(module_accessor) >35.0)
-        || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_s_start") && MotionModule::frame(module_accessor) >40.0)
-        || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_s_start") && MotionModule::frame(module_accessor) >40.0)
-
-
         {
             if AttackModule:: is_attack_occur(fighter.module_accessor) {
                 CancelModule::enable_cancel(module_accessor);
             }
         }
-            
+
+        if (MotionModule::motion_kind(module_accessor) == smash::hash40("special_s_start") && MotionModule::frame(module_accessor) >16.0)
+        || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_s_start") && MotionModule::frame(module_accessor) >16.0)    
+        {
+            CancelModule::enable_cancel(module_accessor);
+        
+        }
             
     
         else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)

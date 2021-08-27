@@ -3,6 +3,8 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smashline::*;
+use crate::lightning_01_up_special_callbacks::UP_SPECIAL_ANIMATION;
+use crate::lightning_01_up_special_callbacks::ENTRY_ID;
 
 // Use this for general per-frame fighter-level hooks
 #[fighter_frame_callback]
@@ -17,6 +19,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let cat2 = ControlModule::get_command_flag_cat(fighter.module_accessor, 1);
         let jump_guard_dash_upspecial_pressed = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || (situation_kind == *SITUATION_KIND_GROUND && (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD) != 0) || (situation_kind == *SITUATION_KIND_AIR && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (situation_kind == *SITUATION_KIND_AIR && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0);
         let jump_button_pressed = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0;
+
         
         //CANCEL ON HIT (EXCEPT UP SPECIALS)
         if !(status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
@@ -93,18 +96,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //RESET AIRDODGE ON HIT EXCEPT UP SPECIAL OF ALL KINDS
        
         if situation_kind == *SITUATION_KIND_AIR {
-            if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
-            || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A
-            || status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G
-            || status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_JUMP
-            || status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_HI2_ATTACK
-            || status_kind == *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_HI1_JUMP
-            || status_kind == *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_HI2_RUSH
-            || status_kind == *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_HI3_HOLD
-            || status_kind == *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI2_JUMP
-            || status_kind == *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH
-            {
-                    
+            if UP_SPECIAL_ANIMATION[ENTRY_ID] == false {       
                 if AttackModule::is_attack_occur(fighter.module_accessor) && (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD != 0) {
                     StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                 }   

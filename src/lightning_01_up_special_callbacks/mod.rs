@@ -1,12 +1,12 @@
 
 use smash::app::lua_bind::*;
-use smash::lua2cpp::{L2CFighterCommon, L2CFighterBase};
+use smash::lua2cpp::{L2CFighterCommon};
 use smash::lib::lua_const::*;
 use smashline::*;
 
 
 pub static mut UP_SPECIAL_ANIMATION : [bool; 8] = [false; 8];
-static mut ENTRY_ID : usize = 0;
+pub static mut ENTRY_ID : usize = 0;
 
 #[fighter_frame_callback]
 pub fn set_bool(fighter: &mut L2CFighterCommon) {

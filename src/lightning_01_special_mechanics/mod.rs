@@ -4,8 +4,7 @@ use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smashline::*;
 use crate::lightning_01_up_special_callbacks::UP_SPECIAL_ANIMATION;
-
-static mut ENTRY_ID : usize = 0;
+use crate::lightning_01_up_special_callbacks::ENTRY_ID;
 
 // CREATED BY PHAZOGANON, THANK YOU :)
 
@@ -29,7 +28,6 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let lua_state = fighter.lua_state_agent; 
         let status_kind = StatusModule::status_kind(module_accessor);
         let situation_kind = StatusModule::situation_kind(module_accessor);
-        ENTRY_ID = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 
         //let mut gfxname: [&str; 8] = ["sys_final_aura"; 8];
         //let gfxcoords  = smash::phx::Vector3f { x: 0.0, y: 0.0, z: 0.0 };

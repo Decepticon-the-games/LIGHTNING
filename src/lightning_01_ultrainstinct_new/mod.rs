@@ -141,7 +141,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 if CAMERA[entry_id] == false { // Exists so all of this code will only happen once.
                     macros::PLAY_SE(fighter, Hash40::new("se_ryu_6c_exec"));
                     macros::CAM_ZOOM_IN_arg5(fighter, 3.0, 0.0, 1.5, 0.0, 0.0); // Sets the camera
-                    macros::SLOW_OPPONENT(fighter, 100.0, 32.0); // Slows the opponent down by 100x for 32 frames
+                    macros::SLOW_OPPONENT(fighter, 100.0, 30.0); // Slows the opponent down by 100x for 32 frames
                     SlowModule::set_whole(boma, 4, 0); // Slows ***everything*** down by a 4x. This includes the above slowdown, which probably means I should shorten the above length of time but eh
                     macros::FILL_SCREEN_MODEL_COLOR(fighter, 0, 12, 0.1, 0.1, 0.1, 0, 0.001, 0.011, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, 205);
                     RYU_X[entry_id] = PostureModule::pos_x(boma); // Gets Ryu's position

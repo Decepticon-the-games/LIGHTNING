@@ -92,6 +92,7 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         || motion_kind == smash::hash40("special_air_hi2_squat")
 
         || motion_kind == smash::hash40("special_air_hi3_start")
+        || motion_kind == smash::hash40("special_hi_hold_air")
         {
             UP_SPECIAL_ANIMATION[ENTRY_ID] = true;
         }

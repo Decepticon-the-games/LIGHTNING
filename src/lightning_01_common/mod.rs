@@ -81,6 +81,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }
             
         }
+        //REMOVE LANDING LAG
         if (status_kind == *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR || status_kind == *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL) && frame >1.0 {
             CancelModule::enable_cancel(fighter.module_accessor);
         }
@@ -106,7 +107,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //Get airdodge back during free fall
         if status_kind == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
             if cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD != 0 {
-            StatusModule::change_status_request_from_script(fighter.module_accessor,*FIGHTER_STATUS_KIND_ESCAPE_AIR,true); 
+            // StatusModule::change_status_request_from_script(fighter.module_accessor,*FIGHTER_STATUS_KIND_ESCAPE_AIR,true); 
             }   
         }
         

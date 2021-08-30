@@ -241,8 +241,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("special_air_n_loop") && frame >1.0 )
                     || (motion_kind == smash::hash40("special_s") && frame > 28.0 )
                     || (motion_kind == smash::hash40("special_air_s") && frame >28.0 )
-                    ||(motion_kind == smash::hash40("special_hi") && frame >72.0 )
-                    ||(motion_kind == smash::hash40("special_air_hi") && frame >72.0 )
+                    ||(motion_kind == smash::hash40("special_hi") && frame >29.0 )
+                    ||(motion_kind == smash::hash40("special_air_hi") && frame >29.0 )
                     || (motion_kind == smash::hash40("special_lw") && frame == 0.0 )
                     || (motion_kind == smash::hash40("special_air_lw") && frame == 0.0 )
                     ||(motion_kind == smash::hash40("throw_f") && frame >=11.0 )
@@ -251,7 +251,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("throw_lw") && frame >=26.0 )
                 ) {
                     CancelModule::enable_cancel(module_accessor);
-                    if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
+                    if status_kind == *FIGHTER_FOX_STATUS_KIND_SPECIAL_HI_RUSH && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
                         StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                     }
                 } 
@@ -655,8 +655,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("special_air_n_loop") && frame >8.0 )
                     ||(motion_kind == smash::hash40("special_s") && frame >1.0 )
                     ||(motion_kind == smash::hash40("special_air_s") && frame >1.0 )
-                    ||(motion_kind == smash::hash40("special_hi") && frame >61.0 )
-                    ||(motion_kind == smash::hash40("special_air_hi") && frame >61.0 )
+                    ||(motion_kind == smash::hash40("special_hi") && frame >20.0 )
+                    ||(motion_kind == smash::hash40("special_air_hi") && frame >20.0 )
                     ||(motion_kind == smash::hash40("special_lw") && frame >14.0 )
                     ||(motion_kind == smash::hash40("special_air_lw") && frame >14.0 )
                     ||(motion_kind == smash::hash40("throw_f") && frame >=12.0 )
@@ -665,7 +665,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("throw_lw") && frame >=33.0 )
                 ) {
                     CancelModule::enable_cancel(module_accessor);
-                    if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
+                    if status_kind == *FIGHTER_FALCO_STATUS_KIND_SPECIAL_HI_RUSH && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
                         StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                     }
                 } 
@@ -1455,8 +1455,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("special_air_n") && frame >16.0 )
                     ||(motion_kind == smash::hash40("special_s_end") && frame >1.0 )
                     ||(motion_kind == smash::hash40("special_air_s_end") && frame >1.0 )
-                    || (motion_kind == smash::hash40("special_hi") && frame > 38.0 )
-                    || (motion_kind == smash::hash40("special_air_hi") && frame >38.0 )
+                    || (motion_kind == smash::hash40("special_hi") && frame > 26.0 )
+                    || (motion_kind == smash::hash40("special_air_hi") && frame >26.0 )
                     ||(motion_kind == smash::hash40("special_lw") && frame >8.0 )
                     ||(motion_kind == smash::hash40("special_air_lw") && frame >8.0 )
                     ||(motion_kind == smash::hash40("throw_f") && frame >=11.0 )
@@ -1465,7 +1465,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("throw_lw") && frame >=26.0 )
                 ) {
                     CancelModule::enable_cancel(module_accessor);
-                    if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
+                    if status_kind == *FIGHTER_WOLF_STATUS_KIND_SPECIAL_HI_RUSH && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
                         StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                     }
                 } 

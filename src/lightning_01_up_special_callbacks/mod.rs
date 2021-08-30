@@ -13,7 +13,7 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
     unsafe {
         let lua_state = fighter.lua_state_agent;
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(lua_state);
-        //let fighter_kind = smash::app::utility::get_kind(module_accessor);
+        let fighter_kind = smash::app::utility::get_kind(module_accessor);
         //let status_kind = StatusModule::status_kind(module_accessor);
         let motion_kind = MotionModule::motion_kind(module_accessor);      
         ENTRY_ID = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
@@ -92,7 +92,8 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         || motion_kind == smash::hash40("special_air_hi2_squat")
 
         || motion_kind == smash::hash40("special_air_hi3_start")
-        || motion_kind == smash::hash40("special_hi_hold_air")
+        
+        || ((fighter_kind == *FIGHTER_KIND_FALCO || fighter_kind == *FIGHTER_KIND_FOX || fighter_kind == *FIGHTER_KIND_WOLF) && motion_kind == smash::hash40("special_hi"))
         {
             UP_SPECIAL_ANIMATION[ENTRY_ID] = true;
         }

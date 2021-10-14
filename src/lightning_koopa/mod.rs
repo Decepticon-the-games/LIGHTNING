@@ -18,8 +18,17 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             //Fix Up Special 
             if MotionModule::frame(module_accessor) >=38.0 {
                 if AttackModule:: is_attack_occur(fighter.module_accessor) {
-                CancelModule::enable_cancel(module_accessor);
+                    CancelModule::enable_cancel(module_accessor);
+                }
             }
+        }
+        if status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A {
+
+            //Fix Up Special 
+            if MotionModule::frame(module_accessor) >=45.0 {
+                if AttackModule:: is_attack_occur(fighter.module_accessor) {
+                    CancelModule::enable_cancel(module_accessor);
+                }
             }
         }
         // Cancel first hit/last hit of Down Special

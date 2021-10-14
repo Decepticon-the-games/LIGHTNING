@@ -14,8 +14,8 @@ pub fn once_per_fighter_frame_samus(fighter : &mut L2CFighterCommon) {
             
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
             
-            if MotionModule::frame(module_accessor) == 15.0 {
-                if AttackModule::is_attack_occur(fighter.module_accessor) {
+            if MotionModule::frame(module_accessor) == 26.0 {
+                if AttackModule::is_attack_occur(module_accessor) {
                     CancelModule::enable_cancel(module_accessor);
                 }
             }
@@ -26,8 +26,9 @@ pub fn once_per_fighter_frame_samus(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-            if AttackModule:: is_attack_occur(fighter.module_accessor) {
+        && ! (status_kind == *FIGHTER_STATUS_KIND_THROW)
+        && ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI) {
+            if AttackModule:: is_attack_occur(module_accessor) {
                 CancelModule::enable_cancel(module_accessor);
             }
         }
@@ -44,8 +45,8 @@ pub fn once_per_fighter_frame_samusd(fighter : &mut L2CFighterCommon) {
             
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
             
-            if MotionModule::frame(module_accessor) == 15.0 {
-                if AttackModule::is_attack_occur(fighter.module_accessor) {
+            if MotionModule::frame(module_accessor) == 26.0 {
+                if AttackModule::is_attack_occur(module_accessor) {
                     CancelModule::enable_cancel(module_accessor);
                 }
             }
@@ -56,8 +57,9 @@ pub fn once_per_fighter_frame_samusd(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-            if AttackModule:: is_attack_occur(fighter.module_accessor) {
+        && ! (status_kind == *FIGHTER_STATUS_KIND_THROW)
+        && ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI) {
+            if AttackModule:: is_attack_occur(module_accessor) {
                 CancelModule::enable_cancel(module_accessor);
             }
         }

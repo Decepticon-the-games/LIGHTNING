@@ -19,7 +19,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || status_kind == *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S2
         || status_kind == *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S3
         || status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 
-        || ! status_kind == *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S2 {   
+        || ! status_kind == *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S2
+        || status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {   
             
             //FIX Side Special cancel
             if status_kind == *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S3 {
@@ -44,6 +45,13 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     if AttackModule:: is_attack_occur(module_accessor){
                         CancelModule::enable_cancel(module_accessor);
                     }
+                }
+            }
+            //FIX UP B
+            if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
+               
+                if frame >= 28.0 {
+                    CancelModule::enable_cancel(module_accessor); 
                 }
             }
         }

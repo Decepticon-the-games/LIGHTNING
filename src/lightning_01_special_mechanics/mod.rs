@@ -62,13 +62,24 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 if situation_kind == *SITUATION_KIND_AIR {
                     if UP_SPECIAL_ANIMATION[ENTRY_ID] == false {
                         if AttackModule::is_attack_occur(module_accessor) {
-                            if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP){
+                            if (cat1 & *FIGHTER_PAD_CMD_CAT2_FLAG_JUMP != 0) {
                                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
+                            }
+                            if (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD != 0) {
+                                StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                             }
                         }   
                     }
                 }
-
+                //RESET AIRDODGE ON HIT EXCEPT UP SPECIAL OF ALL KINDS
+                    
+                if situation_kind == *SITUATION_KIND_AIR {
+                    if UP_SPECIAL_ANIMATION[ENTRY_ID] == false {       
+                        if AttackModule::is_attack_occur(fighter.module_accessor) && (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD != 0) {
+                            //StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+                        }   
+                    }
+                }
                 
                 //ALL Attack move move a bit fasteer
                 
@@ -130,7 +141,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }
 
             if CRIMSON_CANCELLING[entry_id] >= 60 {
-                if  ! ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) {
+                if  MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw") 
+                && ! (ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW)) {
                     CancelModule::enable_cancel(module_accessor);
                 }
             }

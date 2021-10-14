@@ -104,10 +104,10 @@ fn params_main(params_info: &ParamsInfo<'_>) {
 
     //BATTLE_OBJECT.PRC//
 
-    if let Ok(battle_object) = params_info.get::<BattleObjectParams>() {
-        //More base hitlag frames, to accommodate speed so combos are more visible (pluse aesthetic)
-        battle_object.hitstop_frame_add = 15;
-    }
+    //if let Ok(battle_object) = params_info.get::<BattleObjectParams>() {
+    //    //More base hitlag frames, to accommodate speed so combos are more visible (pluse aesthetic)
+    //    battle_object.hitstop_frame_add = 15;
+    //}
 }
 
 // in main

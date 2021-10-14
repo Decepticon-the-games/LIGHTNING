@@ -52,23 +52,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                             StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, false);
                         }
                     }
-                    //if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-                    //    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_HI, false);
-                    //}
-                        
-                    
-                }
-                
-                if frame >= 28.0 {
-                    CancelModule::enable_cancel(module_accessor);
-                    
                 }
             }
         }
         //if fighter_kind == *FIGHTER_KIND_DEDEDE
-        if fighter_kind == *FIGHTER_KIND_DIDDY {
-
-        }
+        //if fighter_kind == *FIGHTER_KIND_DIDDY
         //if fighter_kind == *FIGHTER_KIND_DOLLY
         //if fighter_kind == *FIGHTER_KIND_DONKEY
         //if fighter_kind == *FIGHTER_KIND_DUCKHUNT
@@ -87,28 +75,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //if fighter_kind == *FIGHTER_KIND_KAMUI
         //if fighter_kind == *FIGHTER_KIND_KEN
         //if fighter_kind == *FIGHTER_KIND_KIRBY
-        if fighter_kind == *FIGHTER_KIND_KOOPA {
-
-            //Attack cancel Up Special
-            if status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G {
-
-                if MotionModule::frame(module_accessor) >=37.0{
-                    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK){
-                        CancelModule::enable_cancel(module_accessor);
-                    }
-                }
-            }
-            else if status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A {
-
-                if MotionModule::frame(module_accessor) >= 45.0 {
-                    if ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_ATTACK){
-                        CancelModule::enable_cancel(module_accessor);
-                    }
-                }
-            }
-
-            
-        }
+        //if fighter_kind == *FIGHTER_KIND_KOOPA
         //if fighter_kind == *FIGHTER_KIND_KOOPAJR
         //if fighter_kind == *FIGHTER_KIND_KROOL
         //if fighter_kind == *FIGHTER_KIND_LINK
@@ -173,7 +140,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 //Cancel into airdodge 
 
-                if frame == 10.0 || frame == 19.0 {
+                if frame == 10.0 
+                //|| frame == 19.0 
+                {
                     if ! AttackModule::is_attack_occur(module_accessor){
                        if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
                             StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
@@ -183,7 +152,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             
                 //Cancel into side b
 
-                if  cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0 {
+                if  AttackModule::is_attack_occur(module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0 {
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
                 }
                 
@@ -194,13 +163,13 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
              
         }        
         //if fighter_kind == *FIGHTER_KIND_RYU
-        if fighter_kind == *FIGHTER_KIND_SAMUS || fighter_kind == *FIGHTER_KIND_SAMUSD {
-            if motion_kind == smash::hash40("special_hi") || motion_kind == smash::hash40("special_hi") {
-                if frame == 20.0 {
-                    CancelModule::enable_cancel(module_accessor);
-                }
-            }
-        }
+        //if fighter_kind == *FIGHTER_KIND_SAMUS || fighter_kind == *FIGHTER_KIND_SAMUSD {
+            //    if motion_kind == smash::hash40("special_hi") || motion_kind == smash::hash40("special_air_hi") {
+            //        if frame == 20.0 {
+            //            CancelModule::enable_cancel(module_accessor);
+            //        }
+            //    }
+            //}
         //if fighter_kind == *FIGHTER_KIND_SHEIK
         //if fighter_kind == *FIGHTER_KIND_SHIZUE
         //if fighter_kind == *FIGHTER_KIND_SHULK
@@ -209,7 +178,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //if fighter_kind == *FIGHTER_KIND_SONIC
         if fighter_kind == *FIGHTER_KIND_SZEROSUIT {
             if motion_kind == smash::hash40("special_hi") {
-                if frame == 6.0 || frame == 10.0 {
+                if frame == 6.0 
+                //|| frame == 10.0 
+                {
                     if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
                         //if ! cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0{
                             StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
@@ -223,22 +194,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }
         }
         //if fighter_kind == *FIGHTER_KIND_TANTAN
-        if fighter_kind == *FIGHTER_KIND_TOONLINK {
-            if motion_kind == smash::hash40("special_air_hi") {
-
-                //Cancel into up air
-
-                
-            }
-             
-        }
+        //if fighter_kind == *FIGHTER_KIND_TOONLINK
         //if fighter_kind == *FIGHTER_KIND_WARIO
         //if fighter_kind == *FIGHTER_KIND_WIIFIT
-        if fighter_kind == *FIGHTER_KIND_WOLF {
-
-            //Cancel into dair
-  
-        }
+        //if fighter_kind == *FIGHTER_KIND_WOLF 
         //if fighter_kind == *FIGHTER_KIND_YOSHI
         //if fighter_kind == *FIGHTER_KIND_YOUNGLINK
         //if fighter_kind == *FIGHTER_KIND_ZELDA

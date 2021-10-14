@@ -57,6 +57,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 ||fighter_kind == *FIGHTER_KIND_RICHTER
                 ||fighter_kind == *FIGHTER_KIND_ZELDA
                 ||fighter_kind == *FIGHTER_KIND_DEMON
+                ||fighter_kind == *FIGHTER_KIND_SAMUS
+                ||fighter_kind == *FIGHTER_KIND_SAMUSD
 
                 
             ){
@@ -65,11 +67,15 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 }
             }  
         }  
+        
 
         //BALANCE UP SMASH/SIDE SMASH/ UP TILT
         
-        if (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 || status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 || status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4) && AttackModule:: is_attack_occur(fighter.module_accessor) {
-            if jump_guard_dash_upspecial_pressed {
+        if (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 || status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3) && AttackModule:: is_attack_occur(fighter.module_accessor) {
+            if  (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 1  {
+                CancelModule::enable_cancel(fighter.module_accessor);
+            }
+            if  (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4) != 1  {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         }
@@ -94,15 +100,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
             }
         }
-        //RESET AIRDODGE ON HIT EXCEPT UP SPECIAL OF ALL KINDS
-       
-        if situation_kind == *SITUATION_KIND_AIR {
-            if UP_SPECIAL_ANIMATION[ENTRY_ID] == false {       
-                if AttackModule::is_attack_occur(fighter.module_accessor) && (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD != 0) {
-                    StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                }   
-            }
-        }
+        
         
         //Get airdodge back during free fall
         if status_kind == *FIGHTER_STATUS_KIND_FALL_SPECIAL {

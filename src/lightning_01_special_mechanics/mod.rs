@@ -3,8 +3,8 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smashline::*;
-use crate::lightning_01_up_special_callbacks::UP_SPECIAL_ANIMATION;
-use crate::lightning_01_up_special_callbacks::ENTRY_ID;
+use crate::lightning_02_up_special_callbacks::UP_SPECIAL_ANIMATION;
+use crate::lightning_02_up_special_callbacks::ENTRY_ID;
 
 // CREATED BY PHAZOGANON, THANK YOU :)
 

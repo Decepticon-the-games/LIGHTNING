@@ -15,8 +15,8 @@ pub fn once_per_fighter_frame_samus(fighter : &mut L2CFighterCommon) {
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
             
             if MotionModule::frame(module_accessor) == 15.0 {
-                if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-                    //StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_HI3, true);
+                if AttackModule::is_attack_occur(fighter.module_accessor) {
+                    CancelModule::enable_cancel(module_accessor);
                 }
             }
         }
@@ -45,8 +45,8 @@ pub fn once_per_fighter_frame_samusd(fighter : &mut L2CFighterCommon) {
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
             
             if MotionModule::frame(module_accessor) == 15.0 {
-                if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-                    //StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_HI3, true);
+                if AttackModule::is_attack_occur(fighter.module_accessor) {
+                    CancelModule::enable_cancel(module_accessor);
                 }
             }
         }

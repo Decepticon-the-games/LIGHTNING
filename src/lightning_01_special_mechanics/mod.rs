@@ -126,33 +126,16 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     
                     if ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW != 0 {
                         
+                        EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("head"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 1.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0); 
+                        CRIMSON_CANCELLING[entry_id] = 120;
+                            
                         acmd!(lua_state,{
                                     
                             FILL_SCREEN_MODEL_COLOR( 0, 12, 0.1, 0.1, 0.1, 0.01, 0, 0, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, 205);
+                            SLOW_OPPONENT(5, 120)
 
                         });
-
-                        if AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) || AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_SHIELD) { //Perfectly timed spark (on hit)
-                            EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("body"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 10.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0); 
                         
-                            CRIMSON_CANCELLING[entry_id] = 120;
-                            acmd!(lua_state,{
-                                    
-                                SLOW_OPPONENT(20, 120)
-
-                            });
-
-                        }
-
-                        else { // Regular Spark
-                            EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("head"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 1.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0); 
-                            CRIMSON_CANCELLING[entry_id] = 120;
-                            acmd!(lua_state,{
-                                    
-                                SLOW_OPPONENT(5, 120)
-
-                            });
-                        }
                        
                         for mut _x in CAN_CRIMSON_CANCEL.iter() {
                             _x = &false;
@@ -165,10 +148,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 }
             }
 
-            if CRIMSON_CANCELLING[entry_id] >= 60 {
-                if  MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw") 
-                && ! (ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW)) {
-                    CancelModule::enable_cancel(module_accessor);
+            if CRIMSON_CANCELLING[entry_id] >= 60 { //Cancels the taunt to gain maximum spark time
+                if  MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw_l") || MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw_r")  {
+                    if ! ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) {
+                        CancelModule::enable_cancel(module_accessor);
+                    }
                 }
             }
             

@@ -62,9 +62,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 
             ){
-                if AttackModule:: is_attack_occur(fighter.module_accessor) {
-                    CancelModule::enable_cancel(fighter.module_accessor);
-                }
+                if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                CancelModule::enable_cancel(fighter.module_accessor);
+            }
             }  
         }  
         

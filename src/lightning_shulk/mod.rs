@@ -57,7 +57,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-            if AttackModule:: is_attack_occur(fighter.module_accessor) {
+            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
                 CancelModule::enable_cancel(module_accessor);
             }
         }

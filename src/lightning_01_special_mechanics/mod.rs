@@ -28,6 +28,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let lua_state = fighter.lua_state_agent; 
         let status_kind = StatusModule::status_kind(module_accessor);
         let situation_kind = StatusModule::situation_kind(module_accessor);
+        let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
+        let cat2 = ControlModule::get_command_flag_cat(fighter.module_accessor, 1);
 
         //let mut gfxname: [&str; 8] = ["sys_final_aura"; 8];
         //let gfxcoords  = smash::phx::Vector3f { x: 0.0, y: 0.0, z: 0.0 };
@@ -62,10 +64,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 if situation_kind == *SITUATION_KIND_AIR {
                     if UP_SPECIAL_ANIMATION[ENTRY_ID] == false {
                         if AttackModule::is_attack_occur(module_accessor) {
-                            if (cat1 & *FIGHTER_PAD_CMD_CAT2_FLAG_JUMP != 0) {
+                            if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0 {
                                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
                             }
-                            if (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD != 0) {
+                            if (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD) != 0 {
                                 StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                             }
                         }   
@@ -118,17 +120,40 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if CRIMSON_CANCELLING[entry_id] == -1 
             && CAN_CRIMSON_CANCEL[entry_id] {
                 
-                if DamageModule::damage(module_accessor, 0) >= 50.0 {
+                if DamageModule::damage(module_accessor, 0) >= 50.0
+                && ! CaptureModule::is_capture(module_accessor) //Can't spark while being held in a grab/throw, wastes it
+                {
                     
                     if ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW != 0 {
-                        CRIMSON_CANCELLING[entry_id] = 120;
-                        EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("head"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 1.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0); 
+                        
                         acmd!(lua_state,{
-                                
-                            SLOW_OPPONENT(5, 120)
+                                    
                             FILL_SCREEN_MODEL_COLOR( 0, 12, 0.1, 0.1, 0.1, 0.01, 0, 0, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, 205);
 
                         });
+
+                        if AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) || AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_SHIELD) { //Perfectly timed spark (on hit)
+                            EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("body"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 10.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0); 
+                        
+                            CRIMSON_CANCELLING[entry_id] = 120;
+                            acmd!(lua_state,{
+                                    
+                                SLOW_OPPONENT(20, 120)
+
+                            });
+
+                        }
+
+                        else { // Regular Spark
+                            EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("head"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 1.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0); 
+                            CRIMSON_CANCELLING[entry_id] = 120;
+                            acmd!(lua_state,{
+                                    
+                                SLOW_OPPONENT(5, 120)
+
+                            });
+                        }
+                       
                         for mut _x in CAN_CRIMSON_CANCEL.iter() {
                             _x = &false;
                         }

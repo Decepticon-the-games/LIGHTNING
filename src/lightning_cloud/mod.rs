@@ -50,7 +50,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             //FIX UP B
             if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
                
-                if frame >= 28.0 {
+                if MotionModule::frame(module_accessor) >= 28.0 {
                     CancelModule::enable_cancel(module_accessor); 
                 }
             }

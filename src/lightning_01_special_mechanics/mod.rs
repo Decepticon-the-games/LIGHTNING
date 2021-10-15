@@ -3,6 +3,7 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smashline::*;
+use smash_script::*;
 use crate::lightning_02_up_special_callbacks::UP_SPECIAL_ANIMATION;
 use crate::lightning_02_up_special_callbacks::ENTRY_ID;
 
@@ -123,24 +124,18 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 if DamageModule::damage(module_accessor, 0) >= 50.0 
                 && ! CaptureModule::is_capture(module_accessor) //Can't spark while being held in a grab/throw, wastes it 
                 {
-                    
                     if ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW != 0 {
                         CRIMSON_CANCELLING[entry_id] = 120;
-                        EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("head"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 1.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0); 
-                        acmd!(lua_state,{
-                                
-                            SLOW_OPPONENT(5, 120)
-                            FILL_SCREEN_MODEL_COLOR( 0, 12, 0.1, 0.1, 0.1, 0.01, 0, 0, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, 205);
+                        EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("head"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 1.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0);
+                        macros::SLOW_OPPONENT(fighter, 5.0, 120.0);
+                        macros::FILL_SCREEN_MODEL_COLOR(fighter, 0, 12, 0.1, 0.1, 0.1, 0.01, 0, 0, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, 205);
+                        // for mut _x in CAN_CRIMSON_CANCEL.iter() {
+                        //     _x = &false;
+                        // }
 
-                        });
-                        for mut _x in CAN_CRIMSON_CANCEL.iter() {
-                            _x = &false;
-                        }
                         CAN_CRIMSON_CANCEL_TEMP = CAN_CRIMSON_CANCEL;
-                    
-                        
+                        CAN_CRIMSON_CANCEL = [false; 8];
                     }
-                    
                 }
             }
 
@@ -157,10 +152,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 CRIMSON_CANCELLING[entry_id] -=1;
             }
             if CRIMSON_CANCELLING[entry_id] == 0 || status_kind == *FIGHTER_STATUS_KIND_DEAD {
-                acmd!(lua_state,{
-                    CANCEL_FILL_SCREEN(0, 5) 
-                    SLOW_OPPONENT(0,0)
-                });
+                macros::CANCEL_FILL_SCREEN(fighter, 0, 5.0);
+                macros::SLOW_OPPONENT(fighter, 0.0, 0.0);
                 CAN_CRIMSON_CANCEL = CAN_CRIMSON_CANCEL_TEMP;
             }
         //_________________________________________________________________________________________________________________________________________________________________________________    

@@ -25,7 +25,6 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if !(status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
-        && ! (status_kind == *FIGHTER_TANTAN_STATUS_KIND_ATTACK_COMBO)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW)
@@ -59,7 +58,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 ||fighter_kind == *FIGHTER_KIND_DEMON
                 ||fighter_kind == *FIGHTER_KIND_SAMUS
                 ||fighter_kind == *FIGHTER_KIND_SAMUSD
-
+                ||fighter_kind == *FIGHTER_KIND_TANTAN
+                ||fighter_kind == *FIGHTER_KIND_DEMON+1 
                 
             ){
                 if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){

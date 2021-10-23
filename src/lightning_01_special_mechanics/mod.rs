@@ -121,40 +121,47 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if CRIMSON_CANCELLING[entry_id] == -1 
             && CAN_CRIMSON_CANCEL[entry_id] {
                 
-                if DamageModule::damage(module_accessor, 0) >= 50.0 
-                && ! CaptureModule::is_capture(module_accessor) //Can't spark while being held in a grab/throw, wastes it 
-                {
-                    if ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW != 0 {
-                        CRIMSON_CANCELLING[entry_id] = 120;
-                        EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("head"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 1.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0);
-                        macros::SLOW_OPPONENT(fighter, 5.0, 120.0);
-                        macros::FILL_SCREEN_MODEL_COLOR(fighter, 0, 12, 0.1, 0.1, 0.1, 0.01, 0, 0, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, 205);
-                        // for mut _x in CAN_CRIMSON_CANCEL.iter() {
-                        //     _x = &false;
-                        // }
+                if DamageModule::damage(module_accessor, 0) >= 50.0 {
+                    if ! CaptureModule::is_capture(module_accessor) || StopModule::is_hit(module_accessor) { //Can't spark while being hit in hitlag or being held in a grab/throw, wastes it 
+                        if ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW != 0 {
+                            CRIMSON_CANCELLING[entry_id] = 120;
+                            EffectModule::req_on_joint(module_accessor, smash::phx::Hash40::new_raw(TIME_SLOW_EFFECT_HASH), smash::phx::Hash40::new("head"), &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, 1.0, &TIME_SLOW_EFFECT_VECTOR, &TIME_SLOW_EFFECT_VECTOR, false, 0, 0, 0);
+                            macros::SLOW_OPPONENT(fighter, 5.0, 120.0);
+                            macros::FILL_SCREEN_MODEL_COLOR(fighter, 0, 12, 0.1, 0.1, 0.1, 0.01, 0, 0, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, 205);
+                            // for mut _x in CAN_CRIMSON_CANCEL.iter() {
+                            //     _x = &false;
+                            // }
 
-                        CAN_CRIMSON_CANCEL_TEMP = CAN_CRIMSON_CANCEL;
-                        CAN_CRIMSON_CANCEL = [false; 8];
+                            CAN_CRIMSON_CANCEL_TEMP = CAN_CRIMSON_CANCEL;
+                            CAN_CRIMSON_CANCEL = [false; 8];
+                        }
                     }
                 }
             }
 
-            if CRIMSON_CANCELLING[entry_id] >= 60 { //Cancels the taunt to gain maximum spark time
-                if  (MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw_l") 
-                || MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw_r")) 
-                && ! ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) {    
-                    CancelModule::enable_cancel(module_accessor);    
-                }
+            if CRIMSON_CANCELLING[entry_id] >= 60 
+            && (MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw_l") || MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw_r")) 
+            && ! ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) {    
+                CancelModule::enable_cancel(module_accessor); //Cancels the taunt to gain maximum spark time   
             }
             
             if CRIMSON_CANCELLING[entry_id] >= 1 {
                 
                 CRIMSON_CANCELLING[entry_id] -=1;
             }
+            //When the timer runs out or you get KO'd, the effects wear off
             if CRIMSON_CANCELLING[entry_id] == 0 || status_kind == *FIGHTER_STATUS_KIND_DEAD {
                 macros::CANCEL_FILL_SCREEN(fighter, 0, 5.0);
                 macros::SLOW_OPPONENT(fighter, 0.0, 0.0);
                 CAN_CRIMSON_CANCEL = CAN_CRIMSON_CANCEL_TEMP;
+            }
+
+            // If you get hit during a spark, it'll wear off but your spark resets. It won't reset if you don't get hit
+            if CRIMSON_CANCELLING[entry_id] <= 120 && StopModule::is_hit(module_accessor) {
+                macros::CANCEL_FILL_SCREEN(fighter, 0, 5.0);
+                macros::SLOW_OPPONENT(fighter, 0.0, 0.0);
+                CAN_CRIMSON_CANCEL_TEMP = CAN_CRIMSON_CANCEL;
+                CAN_CRIMSON_CANCEL = [true; 8];
             }
         //_________________________________________________________________________________________________________________________________________________________________________________    
  

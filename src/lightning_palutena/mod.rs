@@ -14,10 +14,13 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 {
-            if MotionModule::frame(module_accessor) >30.0 {
-                    if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
-                CancelModule::enable_cancel(module_accessor);
-            }}
+            if MotionModule::frame(module_accessor) >23.0 {
+                if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
+                    if prev_status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 {
+                        CancelModule::enable_cancel(module_accessor);
+                    }
+                }               
+            }
         }
             
             
@@ -25,8 +28,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
+        //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
+        //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
             if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
                 CancelModule::enable_cancel(module_accessor);

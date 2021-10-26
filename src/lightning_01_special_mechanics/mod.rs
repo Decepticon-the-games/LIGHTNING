@@ -156,11 +156,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 CAN_CRIMSON_CANCEL = CAN_CRIMSON_CANCEL_TEMP;
             }
 
-            // If you get hit during a spark, it'll wear off but your spark resets. It won't reset if you don't get hit
+            // If you get hit during a spark, it'll wear off but your spark resets.
             if CRIMSON_CANCELLING[entry_id] <= 120 && StopModule::is_hit(module_accessor) {
                 macros::CANCEL_FILL_SCREEN(fighter, 0, 5.0);
                 macros::SLOW_OPPONENT(fighter, 0.0, 0.0);
-                CAN_CRIMSON_CANCEL_TEMP = CAN_CRIMSON_CANCEL;
+                CAN_CRIMSON_CANCEL = CAN_CRIMSON_CANCEL_TEMP;
                 CAN_CRIMSON_CANCEL = [true; 8];
             }
         //_________________________________________________________________________________________________________________________________________________________________________________    

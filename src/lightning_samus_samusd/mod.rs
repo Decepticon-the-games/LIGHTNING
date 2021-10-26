@@ -24,8 +24,8 @@ pub fn once_per_fighter_frame_samus(fighter : &mut L2CFighterCommon) {
         else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
+        //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
+        //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW)
         && ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI) {
             if AttackModule:: is_attack_occur(module_accessor) {
@@ -55,8 +55,8 @@ pub fn once_per_fighter_frame_samusd(fighter : &mut L2CFighterCommon) {
         else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
+        //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
+        //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW)
         && ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI) {
             if AttackModule:: is_attack_occur(module_accessor) {

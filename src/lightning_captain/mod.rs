@@ -9,16 +9,19 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
+        let motion_kind = MotionModule::motion_kind(fighter.module_accessor);       
+        let frame = MotionModule::frame(fighter.module_accessor);
         //let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
         //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         
-        //FIX DOWN TRHROW, IT HAS NO HITBOX 
-        if MotionModule::motion_kind(module_accessor)== smash::hash40("throw_lw"){ 
-            if MotionModule::frame(module_accessor)>= 22.0 {
+        
+        //Fix Up Smash 
+        if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 && frame >27.0 {
+            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
                 CancelModule::enable_cancel(module_accessor);
             }
-
         }
+
         //SIDE B
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
             //TAUNT CANCEL
@@ -47,7 +50,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
+        //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
             if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
                 CancelModule::enable_cancel(module_accessor);

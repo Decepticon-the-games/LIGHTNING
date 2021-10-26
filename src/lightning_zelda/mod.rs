@@ -19,13 +19,19 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //-------------------------------------------------------------------------------
         //Fix up smash chain
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
-            if AttackModule:: is_attack_occur(fighter.module_accessor) {
-                if  jump_guard_dash_upspecial_pressed {
+            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
+                if  prev_status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
                     CancelModule::enable_cancel(module_accessor);
                 }
             }
         }
-            
+        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N {
+            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
+                if  prev_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N {
+                    CancelModule::enable_cancel(module_accessor);
+                }
+            }
+        }
             
     
         //else 

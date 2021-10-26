@@ -15,12 +15,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_DASH {
 
             if status_kind == *FIGHTER_STATUS_KIND_ATTACK_DASH {
-                if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
-                    
-                    if MotionModule::frame(module_accessor) >=7.0 {
-                        if AttackModule:: is_attack_occur(module_accessor){
-                            CancelModule::enable_cancel(module_accessor);
-                        }
+                if MotionModule::frame(module_accessor) >=7.0 {
+                    if AttackModule:: is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor){
+                        CancelModule::enable_cancel(module_accessor);
                     }
                 }
             }
@@ -29,8 +26,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
+        //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
+        //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
             if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
                 CancelModule::enable_cancel(module_accessor);
@@ -41,9 +38,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4
         || status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW4 {
             if AttackModule:: is_attack_occur(fighter.module_accessor) {
-                if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0) {
-                    CancelModule::enable_cancel(module_accessor);
-                }
+                //CancelModule::enable_cancel(module_accessor);    
             }
         }
     }                                      

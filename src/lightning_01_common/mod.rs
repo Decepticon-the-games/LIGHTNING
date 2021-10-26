@@ -12,6 +12,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
         let fighter_kind = utility::get_kind(&mut *fighter.module_accessor);
         let status_kind = StatusModule::status_kind(fighter.module_accessor);
+        let prev_status_kind = StatusModule::prev_status_kind(fighter.module_accessor, 1);
         let situation_kind = StatusModule::situation_kind(fighter.module_accessor);
         let motion_kind = MotionModule::motion_kind(fighter.module_accessor);       
         let frame = MotionModule::frame(fighter.module_accessor);
@@ -22,63 +23,65 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
         
         //CANCEL ON HIT (EXCEPT UP SPECIALS)
-        if !(status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_THROW)
-        {
         
-            if ! (fighter_kind == *FIGHTER_KIND_CAPTAIN
-                ||fighter_kind == *FIGHTER_KIND_CHROM
-                ||fighter_kind == *FIGHTER_KIND_CLOUD
-                ||fighter_kind == *FIGHTER_KIND_DIDDY
-                ||fighter_kind == *FIGHTER_KIND_DOLLY
-                ||fighter_kind == *FIGHTER_KIND_EDGE
-                ||fighter_kind == *FIGHTER_KIND_EFLAME
-                ||fighter_kind == *FIGHTER_KIND_ELIGHT
-                ||fighter_kind == *FIGHTER_KIND_FALCO
-                ||fighter_kind == *FIGHTER_KIND_FOX
-                ||fighter_kind == *FIGHTER_KIND_GANON
-                ||fighter_kind == *FIGHTER_KIND_JACK
-                ||fighter_kind == *FIGHTER_KIND_KOOPA
-                ||fighter_kind == *FIGHTER_KIND_LINK
-                ||fighter_kind == *FIGHTER_KIND_LITTLEMAC
-                ||fighter_kind == *FIGHTER_KIND_MARTH
-                ||fighter_kind == *FIGHTER_KIND_LUCINA
-                ||fighter_kind == *FIGHTER_KIND_PALUTENA
-                ||fighter_kind == *FIGHTER_KIND_PIT
-                ||fighter_kind == *FIGHTER_KIND_PITB
-                ||fighter_kind == *FIGHTER_KIND_ROY
-                ||fighter_kind == *FIGHTER_KIND_SHULK
-                ||fighter_kind == *FIGHTER_KIND_SIMON
-                ||fighter_kind == *FIGHTER_KIND_RICHTER
-                ||fighter_kind == *FIGHTER_KIND_ZELDA
-                ||fighter_kind == *FIGHTER_KIND_DEMON
-                ||fighter_kind == *FIGHTER_KIND_SAMUS
-                ||fighter_kind == *FIGHTER_KIND_SAMUSD
-                ||fighter_kind == *FIGHTER_KIND_TANTAN
-                ||fighter_kind == *FIGHTER_KIND_DEMON+1 
-                
-            ){
+        
+        if ! (fighter_kind == *FIGHTER_KIND_CAPTAIN
+            ||fighter_kind == *FIGHTER_KIND_CHROM
+            ||fighter_kind == *FIGHTER_KIND_CLOUD
+            ||fighter_kind == *FIGHTER_KIND_DIDDY
+            ||fighter_kind == *FIGHTER_KIND_DOLLY
+            ||fighter_kind == *FIGHTER_KIND_EDGE
+            ||fighter_kind == *FIGHTER_KIND_EFLAME
+            ||fighter_kind == *FIGHTER_KIND_ELIGHT
+            ||fighter_kind == *FIGHTER_KIND_FALCO
+            ||fighter_kind == *FIGHTER_KIND_FOX
+            ||fighter_kind == *FIGHTER_KIND_GANON
+            ||fighter_kind == *FIGHTER_KIND_JACK
+            ||fighter_kind == *FIGHTER_KIND_KOOPA
+            ||fighter_kind == *FIGHTER_KIND_LINK
+            ||fighter_kind == *FIGHTER_KIND_LITTLEMAC
+            ||fighter_kind == *FIGHTER_KIND_MARTH
+            ||fighter_kind == *FIGHTER_KIND_LUCINA
+            ||fighter_kind == *FIGHTER_KIND_PALUTENA
+            ||fighter_kind == *FIGHTER_KIND_PIT
+            ||fighter_kind == *FIGHTER_KIND_PITB
+            ||fighter_kind == *FIGHTER_KIND_ROY
+            ||fighter_kind == *FIGHTER_KIND_SHULK
+            ||fighter_kind == *FIGHTER_KIND_SIMON
+            ||fighter_kind == *FIGHTER_KIND_RICHTER
+            ||fighter_kind == *FIGHTER_KIND_ZELDA
+            ||fighter_kind == *FIGHTER_KIND_DEMON
+            ||fighter_kind == *FIGHTER_KIND_SAMUS
+            ||fighter_kind == *FIGHTER_KIND_SAMUSD
+            ||fighter_kind == *FIGHTER_KIND_TANTAN
+            ||fighter_kind == *FIGHTER_KIND_DEMON+1 
+            
+        ){
+            
+            if !(status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+            && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
+            && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
+            //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
+            //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
+            && ! (status_kind == *FIGHTER_STATUS_KIND_THROW)
+            {
                 if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
-                CancelModule::enable_cancel(fighter.module_accessor);
-            }
+                    CancelModule::enable_cancel(fighter.module_accessor);
+                }
             }  
         }  
         
 
         //BALANCE UP SMASH/SIDE SMASH/ UP TILT
         
-        if (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 || status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3) && AttackModule:: is_attack_occur(fighter.module_accessor) {
-            if  (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 1  {
-                CancelModule::enable_cancel(fighter.module_accessor);
-            }
-            if  (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4) != 1  {
-                CancelModule::enable_cancel(fighter.module_accessor);
-            }
-        }
+        //if (prev_status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 || prev_status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3) && AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+        //    if  (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 0  {
+       //         CancelModule::enable_cancel(fighter.module_accessor);
+        //    }
+        //    if  (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4) != 0  {
+        //        CancelModule::enable_cancel(fighter.module_accessor);
+        //    }
+        //}
 
         //EASIER WAVEDASH CHAINS// 
         if motion_kind== smash::hash40("landing_light") || motion_kind== smash::hash40("landing_heavy") {
@@ -110,10 +113,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         }
         
         //GRAB COMBOS
-        if status_kind == *FIGHTER_STATUS_KIND_THROW && AttackModule::is_attack_occur(fighter.module_accessor) {
-            if ! ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0) {
+        if status_kind == *FIGHTER_STATUS_KIND_THROW && AttackModule::is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) {
+            //if ! ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0) {
                 CancelModule::enable_cancel(fighter.module_accessor);
-            }
+            //}
         }
         
        
@@ -141,7 +144,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || motion_kind== smash::hash40("attack_100_sub")
         || motion_kind== smash::hash40("attack_100_end") {
             
-            if AttackModule::is_attack_occur(fighter.module_accessor) {
+            if AttackModule::is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) {
                 
                 //if status_kind == *FIGHTER_STATUS_KIND_ATTACK
                 //|| status_kind == *FIGHTER_STATUS_KIND_ATTACK_100

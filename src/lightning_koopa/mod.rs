@@ -17,7 +17,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
             //Fix Up Special 
             if MotionModule::frame(module_accessor) >=38.0 {
-                if AttackModule:: is_attack_occur(fighter.module_accessor) {
+                if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
                     CancelModule::enable_cancel(module_accessor);
                 }
             }
@@ -26,14 +26,14 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
             //Fix Up Special 
             if MotionModule::frame(module_accessor) >=45.0 {
-                if AttackModule:: is_attack_occur(fighter.module_accessor) {
+                if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
                     CancelModule::enable_cancel(module_accessor);
                 }
             }
         }
         // Cancel first hit/last hit of Down Special
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW && (MotionModule::frame(module_accessor) ==11.0 || MotionModule::frame(module_accessor) >=37.0)
-        && AttackModule:: is_attack_occur(fighter.module_accessor) {
+        && AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor) {
             CancelModule::enable_cancel(module_accessor);
         }
 
@@ -43,8 +43,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
-        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
+        //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
+        //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
             if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
                 CancelModule::enable_cancel(module_accessor);

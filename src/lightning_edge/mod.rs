@@ -10,6 +10,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let status_kind = StatusModule::status_kind(module_accessor);
+        let frame = MotionModule::frame(fighter.module_accessor);
         //let situation_kind = StatusModule::situation_kind(module_accessor);
         //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         
@@ -17,7 +18,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             CancelModule::enable_cancel(module_accessor);
         }
         //Fix Up tilt
-        if *status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 && frame >15.0 {
+        if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 && frame >15.0 {
             if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
                 CancelModule::enable_cancel(module_accessor);
             }

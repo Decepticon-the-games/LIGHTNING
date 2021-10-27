@@ -64,7 +64,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
                 if situation_kind == *SITUATION_KIND_AIR {
                     if UP_SPECIAL_ANIMATION[ENTRY_ID] == false {
-                        if AttackModule::is_attack_occur(module_accessor) {
+                        if AttackModule::is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor) {
                             if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0 {
                                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
                             }
@@ -160,7 +160,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if CRIMSON_CANCELLING[entry_id] <= 120 && StopModule::is_hit(module_accessor) {
                 macros::CANCEL_FILL_SCREEN(fighter, 0, 5.0);
                 macros::SLOW_OPPONENT(fighter, 0.0, 0.0);
-                CAN_CRIMSON_CANCEL = CAN_CRIMSON_CANCEL_TEMP;
+                
                 CAN_CRIMSON_CANCEL = [true; 8];
             }
         //_________________________________________________________________________________________________________________________________________________________________________________    

@@ -17,7 +17,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
             //Fix Uptilt
             if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 && MotionModule::frame(module_accessor) >19.0 {                
-                if AttackModule:: is_attack_occur(module_accessor) {
+                if AttackModule:: is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor){
                     if prev_status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 {
                         CancelModule::enable_cancel(module_accessor);
                     }

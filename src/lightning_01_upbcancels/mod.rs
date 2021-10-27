@@ -47,7 +47,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 //set clout to wait if up b connects and up b is rapidly pressed again (stylistic effect)
 
                 if frame == 6.0 {
-                    if AttackModule::is_attack_occur(module_accessor) {
+                    if AttackModule::is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor) {
                         if  cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 {
                             StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, false);
                         }

@@ -52,7 +52,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //ENHANCE 
 
         if MotionModule::frame(module_accessor) == 23.0 || MotionModule::frame(module_accessor) == 26.0 {
-            if AttackModule::is_attack_occur(module_accessor) {
+            if AttackModule::is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor) {
                 if cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0 {
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
                 }

@@ -25,7 +25,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             //FIX Side Special cancel
             if status_kind == *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S3 {
 
-                if MotionModule::frame(module_accessor) >=25.0  {                       
+                if MotionModule::frame(module_accessor) >=25.0 && ! SlowModule::is_slow(module_accessor) {                       
                     if AttackModule:: is_attack_occur(module_accessor){
                         CancelModule::enable_cancel(module_accessor);
                     }
@@ -34,7 +34,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             // SIDE SMASH 
             if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 {
                 //CANCEL WITH DOWN SMASH AND SIDE B
-                if AttackModule:: is_attack_occur(module_accessor){
+                if AttackModule:: is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor) {
                     if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4) != 0 
                     || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) !=0 {
                         CancelModule::enable_cancel(module_accessor);
@@ -42,7 +42,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 }
                 //FIX Side Smash cancel
                 if MotionModule::frame(module_accessor) >=28.0  {                       
-                    if AttackModule:: is_attack_occur(module_accessor){
+                    if AttackModule:: is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor) {
                         CancelModule::enable_cancel(module_accessor);
                     }
                 }

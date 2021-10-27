@@ -15,7 +15,7 @@ pub fn once_per_fighter_frame_samus(fighter : &mut L2CFighterCommon) {
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
             
             if MotionModule::frame(module_accessor) == 26.0 {
-                if AttackModule::is_attack_occur(module_accessor) {
+                if AttackModule::is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor) {
                     CancelModule::enable_cancel(module_accessor);
                 }
             }
@@ -46,7 +46,7 @@ pub fn once_per_fighter_frame_samusd(fighter : &mut L2CFighterCommon) {
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
             
             if MotionModule::frame(module_accessor) == 26.0 {
-                if AttackModule::is_attack_occur(module_accessor) {
+                if AttackModule::is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor) {
                     CancelModule::enable_cancel(module_accessor);
                 }
             }

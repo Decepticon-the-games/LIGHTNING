@@ -12,10 +12,17 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let status_kind = StatusModule::status_kind(module_accessor);
         let frame = MotionModule::frame(fighter.module_accessor);
         //let situation_kind = StatusModule::situation_kind(module_accessor);
-        //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
+        let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         
-        if MotionModule::motion_kind(module_accessor) == hash40("special_hi1_end") && MotionModule::frame(module_accessor) >1.0 {
+        if MotionModule::motion_kind(module_accessor) == hash40("special_hi1_end") && frame >1.0 {
             CancelModule::enable_cancel(module_accessor);
+        }
+        if MotionModule::motion_kind(module_accessor) == hash40("special_hi1") {
+            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
+                if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 {
+                    CancelModule::enable_cancel(module_accessor);
+                }
+            }
         }
         //Fix Up tilt
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 && frame >22.0 {

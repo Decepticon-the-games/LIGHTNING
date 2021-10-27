@@ -55,6 +55,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             ||fighter_kind == *FIGHTER_KIND_SAMUSD
             ||fighter_kind == *FIGHTER_KIND_TANTAN
             ||fighter_kind == *FIGHTER_KIND_DEMON+1 
+            ||fighter_kind == *FIGHTER_KIND_YOUNGLINK
+            ||fighter_kind == *FIGHTER_KIND_SONIC
+            ||fighter_kind == *FIGHTER_KIND_PIKACHU
+            ||fighter_kind == *FIGHTER_KIND_PICHU
+            ||fighter_kind == *FIGHTER_KIND_TOONLINK
             
         ){
             

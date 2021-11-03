@@ -58,38 +58,40 @@ move_type_again: bool) -> u64 {
     // let a_entry_id = WorkModule::get_int(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let d_entry_id = WorkModule::get_int(defender_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     
-    if SEC_SEN_STATE[d_entry_id] {
-        if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER // Grabs the attacker's position and stores it in a public variable.
-        || utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_ENEMY
-        || utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_ITEM {
-            OPPONENT_X[d_entry_id] = PostureModule::pos_x(attacker_boma); // Sets the variable to True, so Ryu's mod.rs can see it an start working.
-            OPPONENT_Y[d_entry_id] = PostureModule::pos_y(attacker_boma);
-            if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-                JostleModule::set_status(&mut *attacker_boma, false);
-            }
-            OPPONENT_BOMA[d_entry_id] = (&mut *attacker_boma as *mut smash::app::BattleObjectModuleAccessor) as u64;
-        }
-        else if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON {
-            let oboma = smash::app::sv_battle_object::module_accessor((WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-            if utility::get_category(&mut *oboma) != *BATTLE_OBJECT_CATEGORY_FIGHTER { // Checks to see if the owner of what hit you is a Fighter or not
-                OPPONENT_X[d_entry_id] = PostureModule::pos_x(defender_boma); // If no, stores Ryu's position (check Ryu's mod.rs for an explanation)
-                OPPONENT_Y[d_entry_id] = PostureModule::pos_y(defender_boma);
-                //OPPONENT_BOMA[d_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
-            }
-            else { // If yes, stores the opponent's position
-                OPPONENT_X[d_entry_id] = PostureModule::pos_x(oboma); 
-                OPPONENT_Y[d_entry_id] = PostureModule::pos_y(oboma);
-                OPPONENT_BOMA[d_entry_id] = (&mut *oboma as *mut smash::app::BattleObjectModuleAccessor) as u64;
-                if utility::get_category(&mut *oboma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+    if utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+        if SEC_SEN_STATE[d_entry_id] {
+            if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER
+            || utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_ENEMY {
+                OPPONENT_BOMA[d_entry_id] = (&mut *attacker_boma as *mut BattleObjectModuleAccessor) as u64;
+                OPPONENT_X[d_entry_id] = PostureModule::pos_x(attacker_boma);
+                OPPONENT_Y[d_entry_id] = PostureModule::pos_y(attacker_boma);
+                if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
                     JostleModule::set_status(&mut *attacker_boma, false);
                 }
             }
+            else if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON {
+                let oboma = sv_battle_object::module_accessor((WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
+                if utility::get_category(&mut *oboma) != *BATTLE_OBJECT_CATEGORY_FIGHTER {
+                    OPPONENT_X[d_entry_id] = PostureModule::pos_x(defender_boma);
+                    OPPONENT_Y[d_entry_id] = PostureModule::pos_y(defender_boma);
+                    OPPONENT_BOMA[d_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
+                }
+                else {
+                    OPPONENT_X[d_entry_id] = PostureModule::pos_x(oboma);
+                    OPPONENT_Y[d_entry_id] = PostureModule::pos_y(oboma);
+                    OPPONENT_BOMA[d_entry_id] = (&mut *oboma as *mut BattleObjectModuleAccessor) as u64;
+                    if utility::get_category(&mut *oboma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+                        JostleModule::set_status(&mut *oboma, false);
+                    }
+                }
+            }
+            else {
+                OPPONENT_X[d_entry_id] = PostureModule::pos_x(defender_boma);
+                OPPONENT_Y[d_entry_id] = PostureModule::pos_y(defender_boma);
+                OPPONENT_BOMA[d_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
+            }
+            SECRET_SENSATION[d_entry_id] = true;
         }
-        else {
-            OPPONENT_X[d_entry_id] = PostureModule::pos_x(defender_boma); // If what his you is anything else, stores Ryu's position (for the same reason as above, will explain)
-            OPPONENT_Y[d_entry_id] = PostureModule::pos_y(defender_boma);
-        }
-        SECRET_SENSATION[d_entry_id] = true;
     }
     
     original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)

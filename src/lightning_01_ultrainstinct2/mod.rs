@@ -74,7 +74,7 @@ move_type_again: bool) -> u64 {
             if utility::get_category(&mut *oboma) != *BATTLE_OBJECT_CATEGORY_FIGHTER { // Checks to see if the owner of what hit you is a Fighter or not
                 OPPONENT_X[d_entry_id] = PostureModule::pos_x(defender_boma); // If no, stores Ryu's position (check Ryu's mod.rs for an explanation)
                 OPPONENT_Y[d_entry_id] = PostureModule::pos_y(defender_boma);
-                OPPONENT_BOMA[d_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
+                //OPPONENT_BOMA[d_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
             }
             else { // If yes, stores the opponent's position
                 OPPONENT_X[d_entry_id] = PostureModule::pos_x(oboma); 

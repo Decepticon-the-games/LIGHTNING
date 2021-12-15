@@ -28,12 +28,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 CancelModule::enable_cancel(module_accessor);
             }
         }
-        //Side Smash
-        if motion_kind == smash::hash40("attack_s4_s2") {
-            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor) {
-                CancelModule::enable_cancel(module_accessor);
-            }
-        }
+
         //Up Special
         if (motion_kind == smash::hash40("special_hi") && frame >= 43.0) || (motion_kind == smash::hash40("special_air_hi") && frame >= 46.0)  {
             if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor) {

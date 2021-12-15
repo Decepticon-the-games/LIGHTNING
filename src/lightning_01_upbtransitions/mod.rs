@@ -91,7 +91,10 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         || motion_kind == smash::hash40("special_air_hi2")
         || motion_kind == smash::hash40("special_air_hi2_squat")
 
-        || motion_kind == smash::hash40("special_air_hi3_start"){
+        || motion_kind == smash::hash40("special_air_hi3_start")
+        
+        || ((fighter_kind == *FIGHTER_KIND_FALCO || fighter_kind == *FIGHTER_KIND_FOX || fighter_kind == *FIGHTER_KIND_WOLF) && motion_kind == smash::hash40("special_hi"))
+        {
             
             DISABLE_UP_SPECIAL[ENTRY_ID] = true;
         }

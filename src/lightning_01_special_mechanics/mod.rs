@@ -60,29 +60,27 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 //});
 
                     
-                //RESET JUMP ON HIT EXCEPT UP SPECIAL OF ALL KINDS
+                //RESET JUMP/AIRDODGE ON HIT EXCEPT UP SPECIAL OF ALL KINDS
         
                 if situation_kind == *SITUATION_KIND_AIR {
-                    if UP_SPECIAL_ANIMATION[ENTRY_ID] == false {
+                    //if UP_SPECIAL_ANIMATION[ENTRY_ID] == false {
+                        
                         if AttackModule::is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor) {
+                            //JUMP
+
                             if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0 {
                                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
                             }
-                            if (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD) != 0 {
+                            //AIRDODGE
+
+                            if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
                                 StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                             }
                         }   
-                    }
+                    //}
                 }
                 //RESET AIRDODGE ON HIT EXCEPT UP SPECIAL OF ALL KINDS
                     
-                if situation_kind == *SITUATION_KIND_AIR {
-                    if UP_SPECIAL_ANIMATION[ENTRY_ID] == false {       
-                        if AttackModule::is_attack_occur(fighter.module_accessor) && (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD != 0) {
-                            //StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                        }   
-                    }
-                }
                 
                 //ALL Attack move move a bit fasteer
                 
@@ -157,12 +155,12 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }
 
             // If you get hit during a spark, it'll wear off but your spark resets.
-            if CRIMSON_CANCELLING[entry_id] <= 120 && StopModule::is_hit(module_accessor) {
-                macros::CANCEL_FILL_SCREEN(fighter, 0, 5.0);
-                macros::SLOW_OPPONENT(fighter, 0.0, 0.0);
+            //if CRIMSON_CANCELLING[entry_id] <= 120 && StopModule::is_hit(module_accessor) {
+            //    macros::CANCEL_FILL_SCREEN(fighter, 0, 5.0);
+            //    macros::SLOW_OPPONENT(fighter, 0.0, 0.0);
                 
-                CAN_CRIMSON_CANCEL = [true; 8];
-            }
+            //    CAN_CRIMSON_CANCEL[entry_id] = true;
+            //}
         //_________________________________________________________________________________________________________________________________________________________________________________    
  
 

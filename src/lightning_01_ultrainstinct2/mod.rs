@@ -249,10 +249,12 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 }
                 if MotionModule::frame(boma) <= 30.0
                 && MotionModule::frame(boma) >= 4.0 {
+                    //CAMERA[entry_id] = false;
                     SEC_SEN_STATE[entry_id] = true;
                     DamageModule::set_damage_lock(boma, true);
                     DamageModule::set_no_reaction_no_effect(boma, true);
                     HitModule::set_hit_stop_mul(boma, 0.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0);
+                    
                 }
                 else {
                     DamageModule::set_damage_lock(boma, false);

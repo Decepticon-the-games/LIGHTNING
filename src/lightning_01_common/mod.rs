@@ -60,7 +60,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             ||fighter_kind == *FIGHTER_KIND_PIKACHU
             ||fighter_kind == *FIGHTER_KIND_PICHU
             ||fighter_kind == *FIGHTER_KIND_TOONLINK
-            
+            ||fighter_kind == *FIGHTER_KIND_MASTER
+            ||fighter_kind == *FIGHTER_KIND_MIIFIGHTER
+            ||fighter_kind == *FIGHTER_KIND_MIIGUNNER
+            ||fighter_kind == *FIGHTER_KIND_MIISWORDSMAN
         ){
             
             if !(status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)

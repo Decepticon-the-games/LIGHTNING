@@ -3,8 +3,11 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smashline::*;
+use smash_script::*;
 use crate::lightning_02_up_special_callbacks::UP_SPECIAL_ANIMATION;
 use crate::lightning_02_up_special_callbacks::ENTRY_ID;
+use smash::phx::Hash40;
+use smash::hash40;
 
 // Use this for general per-frame fighter-level hooks
 #[fighter_frame_callback]
@@ -20,6 +23,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let cat2 = ControlModule::get_command_flag_cat(fighter.module_accessor, 1);
         let jump_guard_dash_upspecial_pressed = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || (situation_kind == *SITUATION_KIND_GROUND && (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD) != 0) || (situation_kind == *SITUATION_KIND_AIR && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (situation_kind == *SITUATION_KIND_AIR && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0);
         let jump_button_pressed = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0;
+        let stick_x = ControlModule::get_stick_x;
 
         
         //CANCEL ON HIT (EXCEPT UP SPECIALS)
@@ -28,6 +32,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if ! (fighter_kind == *FIGHTER_KIND_CAPTAIN
             ||fighter_kind == *FIGHTER_KIND_CHROM
             ||fighter_kind == *FIGHTER_KIND_CLOUD
+            ||fighter_kind == *FIGHTER_KIND_DEMON
             ||fighter_kind == *FIGHTER_KIND_DIDDY
             ||fighter_kind == *FIGHTER_KIND_DOLLY
             ||fighter_kind == *FIGHTER_KIND_EDGE
@@ -37,33 +42,41 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             ||fighter_kind == *FIGHTER_KIND_FOX
             ||fighter_kind == *FIGHTER_KIND_GANON
             ||fighter_kind == *FIGHTER_KIND_JACK
+            ||fighter_kind == *FIGHTER_KIND_KAMUI
             ||fighter_kind == *FIGHTER_KIND_KOOPA
             ||fighter_kind == *FIGHTER_KIND_LINK
             ||fighter_kind == *FIGHTER_KIND_LITTLEMAC
             ||fighter_kind == *FIGHTER_KIND_MARTH
             ||fighter_kind == *FIGHTER_KIND_LUCINA
-            ||fighter_kind == *FIGHTER_KIND_PALUTENA
+            ||fighter_kind == *FIGHTER_KIND_MASTER
+            ||fighter_kind == *FIGHTER_KIND_MIIFIGHTER
+            ||fighter_kind == *FIGHTER_KIND_MIIGUNNER
+            ||fighter_kind == *FIGHTER_KIND_MIISWORDSMAN
+            ||fighter_kind == *FIGHTER_KIND_POPO
+            ||fighter_kind == *FIGHTER_KIND_NANA
+
+
+            ||fighter_kind == *FIGHTER_KIND_PALUTENA 
+            ||fighter_kind == *FIGHTER_KIND_PIKACHU
+            ||fighter_kind == *FIGHTER_KIND_PICHU
             ||fighter_kind == *FIGHTER_KIND_PIT
             ||fighter_kind == *FIGHTER_KIND_PITB
             ||fighter_kind == *FIGHTER_KIND_ROY
+            ||fighter_kind == *FIGHTER_KIND_SHEIK
             ||fighter_kind == *FIGHTER_KIND_SHULK
             ||fighter_kind == *FIGHTER_KIND_SIMON
             ||fighter_kind == *FIGHTER_KIND_RICHTER
-            ||fighter_kind == *FIGHTER_KIND_ZELDA
-            ||fighter_kind == *FIGHTER_KIND_DEMON
+
+
             ||fighter_kind == *FIGHTER_KIND_SAMUS
             ||fighter_kind == *FIGHTER_KIND_SAMUSD
             ||fighter_kind == *FIGHTER_KIND_TANTAN
             ||fighter_kind == *FIGHTER_KIND_DEMON+1 
             ||fighter_kind == *FIGHTER_KIND_YOUNGLINK
             ||fighter_kind == *FIGHTER_KIND_SONIC
-            ||fighter_kind == *FIGHTER_KIND_PIKACHU
-            ||fighter_kind == *FIGHTER_KIND_PICHU
+
             ||fighter_kind == *FIGHTER_KIND_TOONLINK
-            ||fighter_kind == *FIGHTER_KIND_MASTER
-            ||fighter_kind == *FIGHTER_KIND_MIIFIGHTER
-            ||fighter_kind == *FIGHTER_KIND_MIIGUNNER
-            ||fighter_kind == *FIGHTER_KIND_MIISWORDSMAN
+            ||fighter_kind == *FIGHTER_KIND_ZELDA
         ){
             
             if !(status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
@@ -80,24 +93,18 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         }  
         
 
-        //BALANCE UP SMASH/SIDE SMASH/ UP TILT
+        //REMOVE INVINCIBILITY ON SHIELD BREAK 
         
-        //if (prev_status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 || prev_status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3) && AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
-        //    if  (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 0  {
-       //         CancelModule::enable_cancel(fighter.module_accessor);
-        //    }
-        //    if  (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4) != 0  {
-        //        CancelModule::enable_cancel(fighter.module_accessor);
-        //    }
-        //}
+        if status_kind == *FIGHTER_STATUS_KIND_SHIELD_BREAK_FALL {
+            macros::WHOLE_HIT(fighter, *HIT_STATUS_NORMAL);
+        }
 
         //EASIER WAVEDASH CHAINS// 
-        if motion_kind== smash::hash40("landing_light") || motion_kind== smash::hash40("landing_heavy") {
-            if frame >= 10.0 && jump_button_pressed {
-                StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
-            }
-            
+        if status_kind == *FIGHTER_STATUS_KIND_LANDING && frame >10.0 {
+            CancelModule::enable_cancel(fighter.module_accessor);
         }
+            
+        
         //REMOVE LANDING LAG
         if (status_kind == *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR || status_kind == *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL) && frame >1.0 {
             CancelModule::enable_cancel(fighter.module_accessor);
@@ -112,21 +119,43 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }
         }
         
+        // ROLL??
+        if (motion_kind== smash::hash40("escape_f") || motion_kind== smash::hash40("escape_b") ) {
+
+        }
+
+        //SHIMMY
+        if status_kind == *FIGHTER_STATUS_KIND_DASH {
+            if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 {
+                //PostureModule::reverse_lr(fighter.module_accessor);
+            }   
+        }
+
+        //DODGES ARE FASTER
         
         //Get airdodge back during free fall
         if status_kind == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
-            if cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD != 0 {
-            // StatusModule::change_status_request_from_script(fighter.module_accessor,*FIGHTER_STATUS_KIND_ESCAPE_AIR,true); 
-            }   
+            //if cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD != 0 {
+            StatusModule::change_status_request_from_script(fighter.module_accessor,*FIGHTER_STATUS_KIND_FALL,true); 
+            //}   
         }
         
         //GRAB COMBOS
         if status_kind == *FIGHTER_STATUS_KIND_THROW && AttackModule::is_attack_occur(fighter.module_accessor) {
-            //if ! ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0) {
+            
+            if ! (fighter_kind == *FIGHTER_KIND_SHULK && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0) {
                 CancelModule::enable_cancel(fighter.module_accessor);
-            //}
+            }
+            
         }
-        
+        //MOONWALKING
+        let speed = smash::phx::Vector3f {x: -1.0, y: 0.0, z: 0.0 };
+        let mut stick_x = ControlModule::get_stick_x(fighter.module_accessor);
+        stick_x = stick_x * PostureModule::lr(fighter.module_accessor);
+
+        if (motion_kind == smash::hash40("dash") || motion_kind == smash::hash40("turn_dash")) && MotionModule::frame(fighter.module_accessor) <= 3.0 && stick_x <= -0.3 {
+            KineticModule::add_speed(fighter.module_accessor,  &speed);
+        };
        
 
         //REWARD PARRIES WITH INVINCIBILITY
@@ -150,7 +179,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || motion_kind== smash::hash40("attack_19")
         || motion_kind== smash::hash40("attack_100")
         || motion_kind== smash::hash40("attack_100_sub")
-        || motion_kind== smash::hash40("attack_100_end") {
+        || motion_kind== smash::hash40("attack_100_end")
+        || motion_kind== smash::hash40("attack_110") {
             
             if AttackModule::is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) {
                 
@@ -164,7 +194,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                         StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_CATCH, true);
                     }
                     if ControlModule::get_command_flag_cat(fighter.module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH != 0 {
-                        CancelModule::enable_cancel(fighter.module_accessor);
+                        if ! fighter_kind == *FIGHTER_KIND_DEMON {
+                           CancelModule::enable_cancel(fighter.module_accessor); 
+                        }
+                        
                     }
                 //}  
             } 
@@ -174,4 +207,5 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
 pub fn install() {
     smashline::install_agent_frame_callbacks!(once_per_fighter_frame);
+
 }

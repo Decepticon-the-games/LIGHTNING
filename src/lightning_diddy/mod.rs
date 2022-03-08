@@ -20,8 +20,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //FIXES
         //-------------------------------------------------------------------------------
         //Fix up smash
-        if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 && ! SlowModule::is_slow(module_accessor) {
-            if AttackModule:: is_attack_occur(fighter.module_accessor) {
+        if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4  {
+            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
                 if  ! prev_status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
                     CancelModule::enable_cancel(module_accessor);
                 }

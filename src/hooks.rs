@@ -2,7 +2,7 @@
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::app::*;
-//use crate::lightning_01_ultrainstinct::SECRET_SENSATION;
+use smash::hash40; 
 use crate::lightning_01_ultrainstinct2::SECRET_SENSATION;
 use crate::lightning_01_upbtransitions::DISABLE_UP_SPECIAL;
 
@@ -33,6 +33,35 @@ pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObje
   
 
 }
+
+#[skyline::hook(offset = 0x4E53C0)]
+pub unsafe fn get_param_int_replace(module_accessor: u64, param_type: u64, param_hash: u64) -> i32 {
+    let boma = &mut *(*((module_accessor as *mut u64).offset(1)) as *mut BattleObjectModuleAccessor);
+    let ret = original!()(module_accessor, param_type, param_hash);
+    let fighter_kind = utility::get_kind(boma);
+    if param_hash == hash40("hit_stop_delay_flick") {
+        if FighterUtil::is_hp_mode(boma) {
+            return 0x4;
+        }
+    }
+    return ret;
+}
+
+#[skyline::hook(offset = 0x4E5380)]
+pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, param_hash: u64) -> f32 {
+    let boma = &mut *(*((module_accessor as *mut u64).offset(1)) as *mut BattleObjectModuleAccessor);
+    let ret = original!()(module_accessor, param_type, param_hash);
+    let fighter_kind = utility::get_kind(boma);
+    if param_hash == hash40("hit_stop_delay_stick") {
+        if FighterUtil::is_hp_mode(boma) {
+            return 0.7;
+        }
+    }
+    return ret;
+    
+}
 pub fn install() {
     skyline::install_hook!(is_enable_transition_term_replace);
+    //skyline::install_hook!(get_param_float_replace);
+    skyline::install_hook!(get_param_int_replace);
 }

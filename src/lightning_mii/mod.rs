@@ -1,12 +1,12 @@
 
 use smash::app::lua_bind::*;
-use smash::lua2cpp::{L2CFighterCommon, L2CFighterBase};
+use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smashline::*;
 
 // Use this for general per-frame fighter-level hooks
 #[fighter_frame( agent = FIGHTER_KIND_MIIFIGHTER )]
-fn once_per_fighter_frame_1(fighter : &mut L2CFighterCommon) {
+pub fn once_per_fighter_frame_miifighter(fighter : &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
@@ -18,18 +18,23 @@ fn once_per_fighter_frame_1(fighter : &mut L2CFighterCommon) {
         
         //FIXES
         //-------------------------------------------------------------------------------
-        if (status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_S1_END) && frame >= 25.0
+        if (status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_S1_END) && frame > 25.0
         {
             if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
-                if  jump_guard_dash_upspecial_pressed {
+                //if  jump_guard_dash_upspecial_pressed {
                     CancelModule::enable_cancel(module_accessor);
-                }
+                //}
             }
         }
-
-        else if (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        if status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_S3_FALL {
+            CancelModule::enable_cancel(module_accessor);
+        }
+        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        && ! (status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_MISS)
         && ! (status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_HIT)
         && ! (status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_S1_END)
+        && ! (status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_S3_CATCH)
+        && ! (status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_S3_THROW)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
@@ -41,7 +46,7 @@ fn once_per_fighter_frame_1(fighter : &mut L2CFighterCommon) {
 }
 
 #[fighter_frame( agent = FIGHTER_KIND_MIIGUNNER )]
-fn once_per_fighter_frame_2(fighter : &mut L2CFighterCommon) {
+pub fn once_per_fighter_frame_miigunner(fighter : &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
@@ -54,7 +59,7 @@ fn once_per_fighter_frame_2(fighter : &mut L2CFighterCommon) {
         //FIXES
         //-------------------------------------------------------------------------------
         
-        if (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
@@ -66,7 +71,7 @@ fn once_per_fighter_frame_2(fighter : &mut L2CFighterCommon) {
 }
 
 #[fighter_frame( agent = FIGHTER_KIND_MIISWORDSMAN )]
-fn once_per_fighter_frame_3(fighter : &mut L2CFighterCommon) {
+pub fn once_per_fighter_frame_miisordsman(fighter : &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
@@ -78,7 +83,7 @@ fn once_per_fighter_frame_3(fighter : &mut L2CFighterCommon) {
         
         //FIXES
         //-------------------------------------------------------------------------------
-        if (status_kind == *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_N3_END) && frame >32.0  
+        if (status_kind == *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_N3_END) && frame >14.0  
         || (status_kind == *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_N3_END_MAX) && frame >32.0  
         {
             if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
@@ -87,7 +92,13 @@ fn once_per_fighter_frame_3(fighter : &mut L2CFighterCommon) {
                 }
             }
         }
-        else if (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        if (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4) && frame >32.0   
+        {
+            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
+                CancelModule::enable_cancel(module_accessor);
+            }
+        }
+        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_N3_END)
         && ! (status_kind == *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_N3_END_MAX)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
@@ -101,5 +112,5 @@ fn once_per_fighter_frame_3(fighter : &mut L2CFighterCommon) {
 }
 
 pub fn install() {
-    smashline::install_agent_frames!(once_per_fighter_frame_1,once_per_fighter_frame_2,once_per_fighter_frame_3);
+    smashline::install_agent_frames!(once_per_fighter_frame_miifighter, once_per_fighter_frame_miigunner, once_per_fighter_frame_miisordsman);
 }

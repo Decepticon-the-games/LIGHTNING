@@ -5,10 +5,11 @@ use smash::lib::lua_const::*;
 use smashline::*;
 
 // Use this for general per-frame fighter-level hooks
-#[fighter_frame( agent = FIGHTER_KIND_NAMEHERE )]
+#[fighter_frame( agent = FIGHTER_KIND_KAMUI )]
 fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+        let motion_kind = MotionModule::motion_kind(module_accessor);  
         let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
         let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
         let prev_status_kind = StatusModule::prev_status_kind(fighter.module_accessor, 1);
@@ -19,14 +20,15 @@ fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
         //FIXES
         //-------------------------------------------------------------------------------
-        if {//add exceptions
+        //add exceptions
 
-        }
+        
         //else 
         if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
+        && ! (motion_kind == smash::hash40("attack_air_lw"))
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
@@ -38,6 +40,14 @@ fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //ENHANCES
         //--------------------------------------------------------------------------------
 
+
+        //MOTION CANCELS
+        //--------------------------------------------------------------------------------
+
+
+
+        //UP SPECIAL CANCELS
+        //--------------------------------------------------------------------------------
 
 
     }                                      

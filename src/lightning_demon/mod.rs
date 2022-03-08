@@ -35,6 +35,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         && ! (motion_kind== smash::hash40("attack_100"))
         && ! (motion_kind== smash::hash40("attack_100_sub"))
         && ! (motion_kind== smash::hash40("attack_100_end"))
+        && ! (motion_kind== smash::hash40("attack_110"))
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {

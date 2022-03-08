@@ -18,7 +18,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
         //FIXES
         //-------------------------------------------------------------------------------
-        
+        //if 
             
     
         //else 

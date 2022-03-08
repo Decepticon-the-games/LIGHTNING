@@ -32,10 +32,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //SHULK
         if fighter_kind == *FIGHTER_KIND_SHULK {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_hit") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw_hit") {
-                if cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0 {
-                    if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw"){
-                        CancelModule::enable_cancel(fighter.module_accessor);
-                    }
+                if ! ((cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) || (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0)) {
+                    CancelModule::enable_cancel(fighter.module_accessor);
                 }
             }
         }
@@ -61,7 +59,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         }
         //GRENINJA
         if fighter_kind == *FIGHTER_KIND_GEKKOUGA {
-            if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_attack") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw_attack") {
+            if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_hit") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw_hit") {
                 if MotionModule::frame(fighter.module_accessor) >1.0 {
                     if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
                         CancelModule::enable_cancel(fighter.module_accessor);

@@ -74,8 +74,8 @@ pub fn once_per_fighter_frame_chrom(fighter : &mut L2CFighterCommon) {
                 CancelModule::enable_cancel(module_accessor);
             }
         }
-        if MotionModule::motion_kind(module_accessor) == smash::hash40("attack_11") && AttackModule::is_attack_occur(module_accessor) {
-            if MotionModule::frame(module_accessor)== 3.0 && (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0) {
+        if MotionModule::motion_kind(module_accessor) == smash::hash40("attack_11") && AttackModule::is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor) {
+            if (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0) {
                 CancelModule::enable_cancel(module_accessor);
             }
         }

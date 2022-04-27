@@ -32,6 +32,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if ! (fighter_kind == *FIGHTER_KIND_CAPTAIN
             ||fighter_kind == *FIGHTER_KIND_CHROM
             ||fighter_kind == *FIGHTER_KIND_CLOUD
+            ||fighter_kind == *FIGHTER_KIND_DAISY
             ||fighter_kind == *FIGHTER_KIND_DEMON
             ||fighter_kind == *FIGHTER_KIND_DIDDY
             ||fighter_kind == *FIGHTER_KIND_DOLLY
@@ -52,6 +53,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             ||fighter_kind == *FIGHTER_KIND_MIIFIGHTER
             ||fighter_kind == *FIGHTER_KIND_MIIGUNNER
             ||fighter_kind == *FIGHTER_KIND_MIISWORDSMAN
+            ||fighter_kind == *FIGHTER_KIND_PEACH
             ||fighter_kind == *FIGHTER_KIND_POPO
             ||fighter_kind == *FIGHTER_KIND_NANA
 
@@ -61,7 +63,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             ||fighter_kind == *FIGHTER_KIND_PICHU
             ||fighter_kind == *FIGHTER_KIND_PIT
             ||fighter_kind == *FIGHTER_KIND_PITB
+            
             ||fighter_kind == *FIGHTER_KIND_ROY
+            ||fighter_kind == *FIGHTER_KIND_ROBOT
             ||fighter_kind == *FIGHTER_KIND_SHEIK
             ||fighter_kind == *FIGHTER_KIND_SHULK
             ||fighter_kind == *FIGHTER_KIND_SIMON
@@ -143,7 +147,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //GRAB COMBOS
         if status_kind == *FIGHTER_STATUS_KIND_THROW && AttackModule::is_attack_occur(fighter.module_accessor) {
             
-            if ! (fighter_kind == *FIGHTER_KIND_SHULK && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0) {
+            if ! (fighter_kind == *FIGHTER_KIND_SHULK && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0) { //so shulk's monado arts don't break
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
             
@@ -193,8 +197,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH) {
                         StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_CATCH, true);
                     }
-                    if ControlModule::get_command_flag_cat(fighter.module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH != 0 {
-                        if ! fighter_kind == *FIGHTER_KIND_DEMON {
+                    if ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0) {
+                        if ! fighter_kind == *FIGHTER_KIND_DEMON { //Kazuya is the only one that can't dash after jab
                            CancelModule::enable_cancel(fighter.module_accessor); 
                         }
                         

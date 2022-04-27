@@ -11,27 +11,30 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
         //let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
         let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
-        
+        let frame = MotionModule::frame(module_accessor);
 
-        if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 {
-            if MotionModule::frame(module_accessor)< 57.0 {
-                if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 0 {
-                    
-                    //MotionModule::set_frame(module_accessor, 58.0, true);
-                }
+        //UPTILT REVAMP 
+        if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 && (frame > 23.0 && frame < 53.0) {
+            if AttackModule::is_attack_occur(module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 0 {
+         
+                 MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, 53.0, false, false, false);
+                
             }
         
 
 
-            if MotionModule::frame(module_accessor)> 64.0 {
+            if frame > 64.0 {
                 if AttackModule::is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor){
-                    CancelModule::enable_cancel(module_accessor);
+                    if ! (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 0 {
+                        CancelModule::enable_cancel(module_accessor);
+                    }
                 }
             }
 
         }
+        
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
-            if MotionModule::frame(module_accessor)>= 18.0 {
+            if frame>= 18.0 {
                 if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI)
                 || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW)
                 || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_L)
@@ -54,7 +57,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }               
         }     
         
-        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_CLING)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)

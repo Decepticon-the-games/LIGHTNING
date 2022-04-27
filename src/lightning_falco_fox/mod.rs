@@ -30,7 +30,7 @@ pub fn once_per_fighter_frame_falco(fighter : &mut L2CFighterCommon) {
         ||MotionModule::motion_kind(module_accessor) == smash::hash40("special_lw_r") {
             if MotionModule::frame(module_accessor) >= 7.0 {
                 if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
+                    CancelModule::enable_cancel(module_accessor);
                 }
             }
         }
@@ -84,7 +84,7 @@ pub fn once_per_fighter_frame_fox(fighter : &mut L2CFighterCommon) {
         || MotionModule::motion_kind(module_accessor) == smash::hash40("special_lw_hit_l") {
             if MotionModule::frame(module_accessor) >= 1.0 {
                 if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
+                    CancelModule::enable_cancel(module_accessor);
                 }
             }
         }
@@ -94,7 +94,7 @@ pub fn once_per_fighter_frame_fox(fighter : &mut L2CFighterCommon) {
         || MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_lw_hit_l") {
             if MotionModule::frame(module_accessor) >= 1.0 {
                 if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
+                    CancelModule::enable_cancel(module_accessor);
                 }
             }
         }

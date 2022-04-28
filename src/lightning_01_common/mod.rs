@@ -128,7 +128,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
         }
 
-        //SHIMMY
+        //SHIMMY??
         if status_kind == *FIGHTER_STATUS_KIND_DASH {
             if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 {
                 //PostureModule::reverse_lr(fighter.module_accessor);
@@ -188,22 +188,20 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             
             if AttackModule::is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) {
                 
-                //if status_kind == *FIGHTER_STATUS_KIND_ATTACK
-                //|| status_kind == *FIGHTER_STATUS_KIND_ATTACK_100
-                //|| status_kind == *FIGHTER_TANTAN_STATUS_KIND_ATTACK_COMBO {
-                    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
-                        StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
+                
+                if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0 {
+                    StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
+                }
+                if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH) != 0 {
+                    StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_CATCH, true);
+                }
+                if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 {
+                    if ! (fighter_kind == *FIGHTER_KIND_DEMON)  { //Kazuya is the only one that can't dash after jab
+                        CancelModule::enable_cancel(fighter.module_accessor); 
                     }
-                    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH) {
-                        StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_CATCH, true);
-                    }
-                    if ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0) {
-                        if ! fighter_kind == *FIGHTER_KIND_DEMON { //Kazuya is the only one that can't dash after jab
-                           CancelModule::enable_cancel(fighter.module_accessor); 
-                        }
-                        
-                    }
-                //}  
+                    
+                }
+                
             } 
         }
     }

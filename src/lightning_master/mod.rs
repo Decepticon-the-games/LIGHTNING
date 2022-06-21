@@ -1,8 +1,11 @@
 
 use smash::app::lua_bind::*;
-use smash::lua2cpp::{L2CFighterCommon, L2CFighterBase};
+use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smashline::*;
+
+
+
 
 // Use this for general per-frame fighter-level hooks
 #[fighter_frame( agent = FIGHTER_KIND_MASTER)]
@@ -34,8 +37,8 @@ fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
+        
         }
-
         //ENHANCES
         //--------------------------------------------------------------------------------
 

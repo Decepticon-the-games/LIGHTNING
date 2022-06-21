@@ -3,6 +3,7 @@ use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
 use smashline::*;
+
 use smash_script::*;
 use smash::app::sv_animcmd::*;
 

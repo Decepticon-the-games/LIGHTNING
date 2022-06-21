@@ -3,6 +3,7 @@ use smash::lua2cpp::{L2CFighterCommon};
 use smash::lib::lua_const::*;
 use smashline::*;
 
+
 // Use this for general per-frame fighter-level hooks
 #[fighter_frame_callback]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
@@ -166,7 +167,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //if fighter_kind == *FIGHTER_KIND_SAMUS || fighter_kind == *FIGHTER_KIND_SAMUSD {
             //    if motion_kind == smash::hash40("special_hi") || motion_kind == smash::hash40("special_air_hi") {
             //        if frame == 20.0 {
-            //            CancelModule::enable_cancel(module_accessor);
+            //            CancelModule::enable_cancel(fighter.module_accessor);
             //        }
             //    }
             //}

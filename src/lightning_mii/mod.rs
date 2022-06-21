@@ -4,6 +4,9 @@ use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smashline::*;
 
+
+
+
 // Use this for general per-frame fighter-level hooks
 #[fighter_frame( agent = FIGHTER_KIND_MIIFIGHTER )]
 pub fn once_per_fighter_frame_miifighter(fighter : &mut L2CFighterCommon) {
@@ -22,12 +25,12 @@ pub fn once_per_fighter_frame_miifighter(fighter : &mut L2CFighterCommon) {
         {
             if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
                 //if  jump_guard_dash_upspecial_pressed {
-                    CancelModule::enable_cancel(module_accessor);
+                    CancelModule::enable_cancel(fighter.module_accessor);
                 //}
             }
         }
         if status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_S3_FALL {
-            CancelModule::enable_cancel(module_accessor);
+            CancelModule::enable_cancel(fighter.module_accessor);
         }
         else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_MISS)
@@ -38,9 +41,10 @@ pub fn once_per_fighter_frame_miifighter(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
-                CancelModule::enable_cancel(module_accessor);
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                CancelModule::enable_cancel(fighter.module_accessor);
             }
+        
         }
     }                                      
 }
@@ -63,9 +67,10 @@ pub fn once_per_fighter_frame_miigunner(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
-                CancelModule::enable_cancel(module_accessor);
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                CancelModule::enable_cancel(fighter.module_accessor);
             }
+        
         }
     }                                      
 }
@@ -88,25 +93,28 @@ pub fn once_per_fighter_frame_miisordsman(fighter : &mut L2CFighterCommon) {
         {
             if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
                 if  jump_guard_dash_upspecial_pressed {
-                    CancelModule::enable_cancel(module_accessor);
+                    CancelModule::enable_cancel(fighter.module_accessor);
                 }
             }
         }
-        if (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4) && frame >32.0   
+        if (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4) && frame >21.0   
         {
-            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
-                CancelModule::enable_cancel(module_accessor);
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                CancelModule::enable_cancel(fighter.module_accessor);
             }
+        
         }
-        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
         && ! (status_kind == *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_N3_END)
         && ! (status_kind == *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_N3_END_MAX)
+        && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
-                CancelModule::enable_cancel(module_accessor);
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                CancelModule::enable_cancel(fighter.module_accessor);
             }
+        
         }
     }                                      
 }

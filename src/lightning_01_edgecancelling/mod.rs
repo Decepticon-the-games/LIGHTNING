@@ -1,10 +1,10 @@
-use smash::hash40;
 use smash::app::lua_bind::*;
 use smash::app::{self};
-use smash::lua2cpp::{L2CFighterCommon};
+//use smash::lua2cpp::{L2CFighterCommon};
 use smash::lib::lua_const::*;
-use smash::app::utility::*;
+//use smash::app::utility::*;
 use smashline::*;
+
 
 #[skyline::hook(replace = smash::app::lua_bind::StatusModule::init_settings)]
 unsafe fn init_settings_replace(module_accessor: &mut app::BattleObjectModuleAccessor, situation_kind: i32, arg3: i32, arg4: u64, ground_cliff_check_kind: u64, arg6: bool, arg7: i32, arg8: i32, arg9: i32, arg10: i32) -> u64 {

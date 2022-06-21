@@ -3,6 +3,7 @@ use smash::app::utility::get_kind;
 use smash::lua2cpp::{L2CFighterCommon, L2CFighterBase};
 use smashline::*;
 
+
 // Use this for general per-frame fighter-level hooks
 #[fighter_frame_callback]
 pub fn global_fighter_frame(fighter : &mut L2CFighterCommon) {

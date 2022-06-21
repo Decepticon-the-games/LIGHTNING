@@ -31,16 +31,23 @@ fn params_main(params_info: &ParamsInfo<'_>) {
         //Increased DI
         common.damage_fly_correction_max = 18.0;
 
+        //Roll sensitivity
+        common.escape_fb_flick_x =2
+
         //Shield Pressure
 
             //Shield depletes slower, shield HP
             common.shield_max = 100.0;
 
             //Shieldstun frame 2 is 3x higher 
-            common.shield_setoff_add = 7.0;
+            common.shield_setoff_add = 3.0;
+
 
             //Base shieldun multiplier is lower
-            common.shield_scale_min = 0.8;
+            common.shield_setoff_mul = 1.0;
+            common.shield_setoff_mul_fighter_shot = 0.29;
+            common.shield_setoff_mul_attack_4 = 0.8;
+            common.shield_setoff_mul_attack_air = 1;
             
             //Minimum shield size is higher, 8/10 full size
             common.shield_scale_min = 0.8;
@@ -104,10 +111,10 @@ fn params_main(params_info: &ParamsInfo<'_>) {
 
     //BATTLE_OBJECT.PRC//
 
-    //if let Ok(battle_object) = params_info.get::<BattleObjectParams>() {
+    if let Ok(battle_object) = params_info.get::<BattleObjectParams>() {
     //    //More base hitlag frames, to accommodate speed so combos are more visible (pluse aesthetic)
-    //    battle_object.hitstop_frame_add = 15;
-    //}
+        battle_object.hitstop_frame_add = 12;
+    }
 }
 
 // in main

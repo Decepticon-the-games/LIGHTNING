@@ -5,6 +5,7 @@ use smash::app::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::phx::Vector2f;
 use smashline::*;
+
 use smash_script::*;
 use skyline::hooks::{getRegionAddress, Region};
 use smash::phx::Hash40;
@@ -20,7 +21,7 @@ static mut RYU_Y : [f32; 8] = [0.0; 8];
 static mut SEC_SEN_TIMER : [f32; 8] = [-0.2; 8]; // I start this as -0.4 so that Ryu doesn't immediately start dodging, there's a little pause before he does
 static mut OPPONENT_DIRECTION : [f32; 8] = [12.0; 8];
 static mut VERT_EXTRA : [f32; 8] = [12.0; 8];
-static mut SEC_SEN_STATE : [bool; 8] = [false; 8];
+pub static mut SEC_SEN_STATE : [bool; 8] = [false; 8];
 static mut SEC_SEN_DIREC : [i32; 8] = [0; 8];
 static mut FLASH_TIMER : [i16; 8] = [-1; 8];
 
@@ -54,7 +55,7 @@ move_type_again: bool) -> u64 {
     let attacker_boma = sv_battle_object::module_accessor(attacker_object_id);
     let defender_boma = sv_battle_object::module_accessor(defender_object_id);
     // let attacker_fighter_kind = sv_battle_object::kind(attacker_object_id);
-    let defender_fighter_kind = sv_battle_object::kind(defender_object_id);
+    //let defender_fighter_kind = sv_battle_object::kind(defender_object_id);
     // let a_entry_id = WorkModule::get_int(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let d_entry_id = WorkModule::get_int(defender_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     
@@ -103,6 +104,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let fighter_kind = utility::get_kind(boma);
+        let status_kind = StatusModule::status_kind(boma);
         if entry_id < 8 {
 
             // Reset Vars
@@ -115,6 +117,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             // Handles the blue flashes on Ryu during the counter state
 
             if SEC_SEN_STATE[entry_id] {
+
                 if FLASH_TIMER[entry_id] < 0 {
                     FLASH_TIMER[entry_id] = 8;
                 }
@@ -132,11 +135,15 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
             
             if SECRET_SENSATION[entry_id] {
+                EffectModule::req_emit(boma, Hash40::new("sys_aura_light"), 0);
+                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
+            
                 JostleModule::set_status(boma, false); // Turns off body blocking for Ryu every frame Secret Sensation is true
                 macros::WHOLE_HIT(fighter, *HIT_STATUS_XLU); // Makes Ryu invincible.
                 DamageModule::set_damage_lock(boma, true); // Makes sure Ryu doesn't take damage during the dodge
                 DamageModule::set_no_reaction_no_effect(boma, true); // Makes sure Ryu doesn't take knockback.
                 HitModule::set_hit_stop_mul(boma, 0.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0); // Removes all hitlag from Ryu so the Focus Attack Dash animation plays out.
+                
                 if CAMERA[entry_id] == false { // Exists so all of this code will only happen once.
                     macros::PLAY_SE(fighter, Hash40::new("se_ryu_6c_exec"));
                     macros::CAM_ZOOM_IN_arg5(fighter, 3.0, 0.0, 1.5, 0.0, 0.0); // Sets the camera
@@ -235,6 +242,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     }
                     macros::CAM_ZOOM_OUT(fighter); // Resets the camera.
                     macros::CANCEL_FILL_SCREEN(fighter, 0, 5); // Clears out the background screen darken effect.
+                    macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), true, true);
                     SlowModule::clear_whole(boma); // Clears the global 4x slowdown multiplier from above
                     JostleModule::set_status(boma, true); // Resets Ryu's body blocking back to normal
                     SEC_SEN_TIMER[entry_id] = -0.4; // Resets the interpolation timer.
@@ -243,6 +251,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             else if MotionModule::motion_kind(boma) == smash::hash40("appeal_hi_r")
             || MotionModule::motion_kind(boma) == smash::hash40("appeal_hi_l") {
                 if MotionModule::frame(boma) == 4.0 {
+                    EffectModule::req_emit(boma, Hash40::new("sys_aura_light"), 0);
+                    macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
                     macros::PLAY_SE(fighter, Hash40::new("se_ryu_6c_aura"));
                     
                     FLASH_TIMER[entry_id] = -1;
@@ -259,6 +269,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 else {
                     DamageModule::set_damage_lock(boma, false);
                     DamageModule::set_no_reaction_no_effect(boma, false);
+                    //macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), true, true);
                     HitModule::set_hit_stop_mul(boma, 1.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0);
                     macros::COL_NORMAL(fighter);
                     SEC_SEN_STATE[entry_id] = false;
@@ -269,6 +280,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             && SEC_SEN_STATE[entry_id] {
                 DamageModule::set_damage_lock(boma, false);
                 DamageModule::set_no_reaction_no_effect(boma, false);
+                macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), true, true);
                 HitModule::set_hit_stop_mul(boma, 1.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0);
                 macros::COL_NORMAL(fighter);
                 SEC_SEN_STATE[entry_id] = false;

@@ -5,6 +5,7 @@ use smash::lib::lua_const::*;
 use smashline::*;
 
 
+
 pub static mut UP_SPECIAL_ANIMATION : [bool; 8] = [false; 8];
 pub static mut ENTRY_ID : usize = 0;
 

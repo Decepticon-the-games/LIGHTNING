@@ -2,6 +2,9 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::{L2CFighterCommon, L2CAgentBase};
 use smash::lib::lua_const::*;
 use smashline::*;
+
+
+
 use smash_script::*;
 use smash::phx::Hash40;
 use smash::app::sv_animcmd::*;
@@ -27,7 +30,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
                 if MotionModule::frame(module_accessor) >=25.0 && ! SlowModule::is_slow(module_accessor) {                       
                     if AttackModule:: is_attack_occur(module_accessor){
-                        CancelModule::enable_cancel(module_accessor);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }
@@ -37,13 +40,13 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 if AttackModule:: is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor) {
                     if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4) != 0 
                     || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) !=0 {
-                        CancelModule::enable_cancel(module_accessor);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
                 //FIX Side Smash cancel
                 if MotionModule::frame(module_accessor) >=28.0  {                       
                     if AttackModule:: is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor) {
-                        CancelModule::enable_cancel(module_accessor);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }
@@ -51,7 +54,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
                
                 if MotionModule::frame(module_accessor) >= 28.0 {
-                    CancelModule::enable_cancel(module_accessor); 
+                    CancelModule::enable_cancel(fighter.module_accessor); 
                 }
             }
         }
@@ -62,9 +65,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
-                CancelModule::enable_cancel(module_accessor);
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                CancelModule::enable_cancel(fighter.module_accessor);
             }
+        
         }
     }                                      
 }

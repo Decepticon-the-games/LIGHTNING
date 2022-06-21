@@ -4,6 +4,9 @@ use smash::lua2cpp::{L2CFighterCommon};
 use smash::lib::lua_const::*;
 use smashline::*;
 
+
+
+
 // Use this for general per-frame fighter-level hooks
 #[fighter_frame( agent = FIGHTER_KIND_YOUNGLINK )]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
@@ -25,7 +28,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //Up Smash
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 && MotionModule::frame(module_accessor) >39.0 {            
             if AttackModule::is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
-                CancelModule::enable_cancel(module_accessor);
+                CancelModule::enable_cancel(fighter.module_accessor);
             }
         }
 
@@ -33,7 +36,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if (motion_kind == smash::hash40("special_hi") && frame >= 43.0) || (motion_kind == smash::hash40("special_air_hi") && frame >= 46.0)  {
             if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor) {
                 if jump_guard_dash_upspecial_pressed {
-                    CancelModule::enable_cancel(module_accessor);
+                    CancelModule::enable_cancel(fighter.module_accessor);
                 }
             }
         }
@@ -48,7 +51,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
             if AttackModule::is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor) {
-                CancelModule::enable_cancel(module_accessor);
+                CancelModule::enable_cancel(fighter.module_accessor);
             }
         }
 

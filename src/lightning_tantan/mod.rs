@@ -4,6 +4,9 @@ use smash::lua2cpp::{L2CFighterCommon};
 use smash::lib::lua_const::*;
 use smashline::*;
 
+
+
+
 // Use this for general per-frame fighter-level hooks
 #[fighter_frame( agent = FIGHTER_KIND_TANTAN )]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
@@ -26,7 +29,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100) 
         && ! (status_kind == *FIGHTER_TANTAN_STATUS_KIND_ATTACK_COMBO) {
             if AttackModule::is_attack_occur(fighter.module_accessor) {
-                CancelModule::enable_cancel(module_accessor);
+                CancelModule::enable_cancel(fighter.module_accessor);
             }
         }
 

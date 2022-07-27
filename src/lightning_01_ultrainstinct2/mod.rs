@@ -145,11 +145,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 HitModule::set_hit_stop_mul(boma, 0.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0); // Removes all hitlag from Ryu so the Focus Attack Dash animation plays out.
                 
                 if CAMERA[entry_id] == false { // Exists so all of this code will only happen once.
-                    macros::PLAY_SE(fighter, Hash40::new("se_ryu_6c_exec"));
-                    macros::CAM_ZOOM_IN_arg5(fighter, 3.0, 0.0, 1.5, 0.0, 0.0); // Sets the camera
-                    macros::SLOW_OPPONENT(fighter, 100.0, 32.0); // Slows the opponent down by 100x for 32 frames
-                    SlowModule::set_whole(boma, 4, 0); // Slows ***everything*** down by a 4x. This includes the above slowdown, which probably means I should shorten the above length of time but eh
-                    macros::FILL_SCREEN_MODEL_COLOR(fighter, 0, 12, 0.1, 0.1, 0.1, 0, 0.001, 0.011, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, 205);
+                    //macros::PLAY_SE(fighter, Hash40::new("se_ryu_6c_exec"));
+                    //macros::CAM_ZOOM_IN_arg5(fighter, 3.0, 0.0, 1.5, 0.0, 0.0); // Sets the camera
+                    //macros::SLOW_OPPONENT(fighter, 100.0, 32.0); // Slows the opponent down by 100x for 32 frames
+                    //SlowModule::set_whole(boma, 4, 0); // Slows ***everything*** down by a 4x. This includes the above slowdown, which probably means I should shorten the above length of time but eh
+                    //macros::FILL_SCREEN_MODEL_COLOR(fighter, 0, 12, 0.1, 0.1, 0.1, 0, 0.001, 0.011, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, 205);
                     RYU_X[entry_id] = PostureModule::pos_x(boma); // Gets Ryu's position
                     RYU_Y[entry_id] = PostureModule::pos_y(boma);
                     if RYU_X[entry_id] == OPPONENT_X[entry_id] { // The reason I sometimes set Ryu's position as the Opponent's position is for this, if Ryu can't find the owner of what hit him, he will instead just dodge backwards.
@@ -269,7 +269,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 else {
                     DamageModule::set_damage_lock(boma, false);
                     DamageModule::set_no_reaction_no_effect(boma, false);
-                    //macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), true, true);
+                    macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), true, true);
                     HitModule::set_hit_stop_mul(boma, 1.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0);
                     macros::COL_NORMAL(fighter);
                     SEC_SEN_STATE[entry_id] = false;

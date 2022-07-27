@@ -125,10 +125,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 
                 
                 if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0 {
-                    StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
+                    CancelModule::enable_cancel(fighter.module_accessor); 
                 }
                 if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH) != 0 {
-                    StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_CATCH, true);
+                    CancelModule::enable_cancel(fighter.module_accessor);
                 }
                 if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 {
                     if ! (fighter_kind == *FIGHTER_KIND_DEMON)  { //Kazuya is the only one that can't dash after jab
@@ -141,6 +141,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         }
     }
 }
+
 
 pub fn install() {
     smashline::install_agent_frame_callbacks!(once_per_fighter_frame);

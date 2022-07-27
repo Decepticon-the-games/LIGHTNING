@@ -1,5 +1,5 @@
 [package]
-name = "lightning_6-17-22-canceltest"
+name = "lightning_7-27-22-vanish-test"
 version = "0.1.0"
 authors = ["jam1garner <jam1.mcleod@hotmail.com>"]
 edition = "2018"

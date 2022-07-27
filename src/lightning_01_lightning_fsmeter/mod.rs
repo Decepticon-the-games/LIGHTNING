@@ -263,19 +263,19 @@ pub unsafe fn get_player_number(module_accessor:  &mut app::BattleObjectModuleAc
                 {//if button command pressed
                     
                     LIGHTNING[entry_id] = true; 
-                    EffectModule::req_emit(module_accessor, Hash40::new("sys_final_aura2"), 1);
+                    EffectModule::req_emit(module_accessor, Hash40::new("sys_final_aura2"), 0);
                     macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
                     ModelModule::enable_gold_eye(module_accessor);	
                     //EffectModule::req_emit(module_accessor, Hash40::new("sys_final_aura2"), 1);
                     //macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
 
                     if dead_count == 0 {
-                        LIGHTNING_TIMER [entry_id] = 600; //10 seconds
+                        LIGHTNING_TIMER [entry_id] = 1200; //20 seconds
                     }
                     //if status_kind == *FIGHTER_STATUS_KIND_REBIRTH {
 
                     if dead_count == 1 {
-                    LIGHTNING_TIMER [entry_id] = 1500; //25 seconds
+                    LIGHTNING_TIMER [entry_id] = 1800; //30 seconds
                     }
                     if dead_count == 2 {
                      LIGHTNING_TIMER [entry_id] = 2400; //40 seconds
@@ -301,6 +301,7 @@ pub unsafe fn get_player_number(module_accessor:  &mut app::BattleObjectModuleAc
             if LIGHTNING_TIMER[entry_id] == 0 {
                 //LIGHTNING_STOP[entry_id] = true;
                 LIGHTNING[entry_id] = false;
+                sv_animcmd::FT_REMOVE_FINAL_AURA(fighter.lua_state_agent);   
                 macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_final_aura2"), true, true); 
                 MotionModule::set_rate(module_accessor, 1.0);    
                 ModelModule::disable_gold_eye(module_accessor);	
@@ -399,20 +400,12 @@ pub unsafe fn get_player_number(module_accessor:  &mut app::BattleObjectModuleAc
             }
             
 
-//
-//Making sure final smash turns off properly
-            if status_kind == *FIGHTER_STATUS_KIND_FINAL {
-                //DISABLE_FINAL [entry_id] = true;
-                //sv_animcmd::REMOVE_FINAL_SCREEN_EFFECT(fighter.lua_state_agent);
-                //notify_event_msc_cmd!(fighter, 0x1e0aba2d68u64, 7); //drains meter entirely
-                //if motion_kind != hash40("just_shield_off") {
-                //    ModelModule::disable_gold_eye(module_accessor);    
-            }
+
 
         }
         
     }
-         
+
 
 //
 pub fn install() {

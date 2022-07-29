@@ -13,7 +13,7 @@ use smash::phx::Hash40;
 use smash_script::*;
 use crate::lightning_01_crimson_cancel::CRIMSON_CANCELLING;
 use crate::lightning_01_crimson_cancel::CAN_CRIMSON_CANCEL;
-use crate::lightning_01_ultrainstinct2::SEC_SEN_STATE;
+use crate::lightning_01_ultrainstinct_vanish::SEC_SEN_STATE;
 
 pub static mut FIGHTER_MANAGER_ADDR: usize = 0;
 pub static mut START_FS: [bool;9] = [false;9]; //Used for canceling taunt startup into FS

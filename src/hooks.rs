@@ -156,7 +156,7 @@ move_type_again: bool) -> u64 {
         
         if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER
         || utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON
-        //{ 
+        { 
 
             if ACTIVATE_VANISH[a_entry_id] { // if the attacker is a fighter/weapon  
             

@@ -154,54 +154,52 @@ move_type_again: bool) -> u64 {
     //VANISH (ATTACKER)
 
         
-        //if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER
-        //|| utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON
+        if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER
+        || utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON
         //{ 
 
             if ACTIVATE_VANISH[a_entry_id] { // if the attacker is a fighter/weapon  
             
-                //if utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER 
-                //|| utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_ENEMY { // if the defender is a fighter/enemy
+                if utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER 
+                || utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_ENEMY { // if the defender is a fighter/enemy
 
-                //    VA_OPPONENT_X[a_entry_id] = PostureModule::pos_x(defender_boma); //get defender's x position
-                //    VA_OPPONENT_Y[a_entry_id] = PostureModule::pos_y(defender_boma); //get defender's y position
-                //    if utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-                //        JostleModule::set_status(&mut *defender_boma, false);
-                //   }
-                //   VA_OPPONENT_BOMA[a_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64; 
-                //    VANISH_READY[a_entry_id] = true;
-                //}
+                    VA_OPPONENT_X[a_entry_id] = PostureModule::pos_x(defender_boma); //get defender's x position
+                    VA_OPPONENT_Y[a_entry_id] = PostureModule::pos_y(defender_boma); //get defender's y position
+                    if utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+                        JostleModule::set_status(&mut *defender_boma, false);
+                    }
+                    VA_OPPONENT_BOMA[a_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64; 
+                    VANISH_READY[a_entry_id] = true;
+                }
 
-                if utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON { //if the attacker is a weaponn (projectile)
+                if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON { //if the attacker is a weaponn (projectile) 
 
-                    let dboma = sv_battle_object::module_accessor((WorkModule::get_int(defender_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32); // links weapon to whatever attacker may ownn it   
-
-                    let aboma = sv_battle_object::module_accessor((WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32); // links weapon to whatever attacker may ownn it   
+                    let oboma = sv_battle_object::module_accessor((WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32); // links weapon to whatever attacker may ownn it   
 
                     // Check to see if the owner of what hit you is a Fighter or not
 
-                    //if utility::get_category(&mut *aboma) != *BATTLE_OBJECT_CATEGORY_FIGHTER { // If yes, stores the opponent's position
+                    if utility::get_category(&mut *oboma) != *BATTLE_OBJECT_CATEGORY_FIGHTER { 
 
-                        //VA_OPPONENT_X[d_entry_id] = PostureModule::pos_x(defender_boma);
-                        //VA_OPPONENT_Y[d_entry_id] = PostureModule::pos_y(defender_boma);
-                        //VA_OPPONENT_BOMA[d_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
+                        VA_OPPONENT_X[a_entry_id] = PostureModule::pos_x(defender_boma);
+                        VA_OPPONENT_Y[a_entry_id] = PostureModule::pos_y(defender_boma);
+                        VA_OPPONENT_BOMA[a_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
                             
-                    //}
-                    if utility::get_category(&mut *aboma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-                        //VA_OPPONENT_X[a_entry_id] = PostureModule::pos_x(defender_boma);
-                        //VA_OPPONENT_Y[a_entry_id] = PostureModule::pos_y(defender_boma);
-                        VA_OPPONENT_BOMA[d_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
-                        //if utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-                        //    JostleModule::set_status(&mut *defender_boma, false);
-                        //}
                     }
-                    //if StopModule::is_hit(&mut *defender_boma) {
+                    else { // If yes, stores the opponent's position
+                        VA_OPPONENT_X[a_entry_id] = PostureModule::pos_x(defender_boma);
+                        VA_OPPONENT_Y[a_entry_id] = PostureModule::pos_y(defender_boma);
+                        VA_OPPONENT_BOMA[d_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
+                        if utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+                            JostleModule::set_status(&mut *defender_boma, false);
+                        }
+                    }
+                    if StopModule::is_hit(&mut *defender_boma) {
                         VANISH_READY[a_entry_id] = true;
-                    //}                      
+                    }                      
                 }
                 
             }
-        //}
+        }
 
         
     original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)

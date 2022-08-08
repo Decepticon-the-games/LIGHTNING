@@ -43,7 +43,7 @@ pub fn once_per_fighter_frame_pichu(fighter : &mut L2CFighterCommon) {
         && !  motion_kind == smash::hash40("attack_air_f")
         && ! motion_kind == smash::hash40("attack_air_b")
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         
@@ -94,7 +94,7 @@ pub fn once_per_fighter_frame_pikachu(fighter : &mut L2CFighterCommon) {
         && !  motion_kind == smash::hash40("attack_air_f")
         && ! motion_kind == smash::hash40("attack_air_b")
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         

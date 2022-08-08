@@ -41,7 +41,7 @@ pub fn once_per_fighter_frame_miifighter(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         
@@ -67,7 +67,7 @@ pub fn once_per_fighter_frame_miigunner(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         
@@ -99,7 +99,7 @@ pub fn once_per_fighter_frame_miisordsman(fighter : &mut L2CFighterCommon) {
         }
         if (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4) && frame >21.0   
         {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         
@@ -111,7 +111,7 @@ pub fn once_per_fighter_frame_miisordsman(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         

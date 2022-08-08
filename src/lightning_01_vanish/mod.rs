@@ -20,6 +20,7 @@ static mut VANISH_TIMER : [f32; 8] = [0.0; 8];
 pub static mut ACTIVATE_VANISH : [bool; 8] = [true; 8];
 static mut VERT_EXTRA : [f32; 8] = [12.0; 8];
 static mut VA_OPPONENT_DIRECTION : [f32; 8] = [12.0; 8];
+pub static mut GET_CURRENT_POSITION : [bool; 8] = [false; 8];
 
 // VANISH
 
@@ -45,16 +46,12 @@ static mut VA_OPPONENT_DIRECTION : [f32; 8] = [12.0; 8];
                     if ! SlowModule::is_slow(fighter.module_accessor)
                     && ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0)
                     {
-                        if AttackModule::is_attack_occur(fighter.module_accessor) { // direct attacks
+                        if AttackModule::is_attack_occur(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK{ // direct attacks
                             VANISH[entry_id] = true; 
-                        }
-                        else { // projectile attacks
-                            
-                            VANISH[entry_id] = true;  
-                             
+                            //GET_CURRENT_POSITION [entry_id] = true;
                         }
                         
-                        VANISH_READY[entry_id] = false;
+                        //VANISH_READY[entry_id] = false;
 
                     }
                 }
@@ -132,9 +129,11 @@ static mut VA_OPPONENT_DIRECTION : [f32; 8] = [12.0; 8];
                         
                         VANISH_TIMER[entry_id] = 0.0; // Resets the interpolation timer.
                     }
+                    
                 }
 
                 else {
+                    VANISH[entry_id] = false;
                     //ACTIVATE_VANISH[entry_id] = true;
                     VisibilityModule::set_whole(fighter.module_accessor, true);
                     macros::WHOLE_HIT(fighter, *HIT_STATUS_NORMAL);

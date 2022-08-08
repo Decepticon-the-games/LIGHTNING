@@ -23,14 +23,14 @@ fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //FIX SIDE SMASH AND DOWN SMASH
         //-------------------------------------------------------------------------------
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame > 19.0 {//add exceptions
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         
         }
 
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW4 && frame > 14.0 {//add exceptions
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         
@@ -43,7 +43,7 @@ fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor){
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         

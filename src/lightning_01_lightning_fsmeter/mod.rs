@@ -14,6 +14,7 @@ use smash_script::*;
 use crate::lightning_01_crimson_cancel::CRIMSON_CANCELLING;
 use crate::lightning_01_crimson_cancel::CAN_CRIMSON_CANCEL;
 use crate::lightning_01_ultrainstinct::SEC_SEN_STATE;
+use crate::lightning_01_vanish::ACTIVATE_VANISH;
 
 pub static mut FIGHTER_MANAGER_ADDR: usize = 0;
 pub static mut START_FS: [bool;9] = [false;9]; //Used for canceling taunt startup into FS
@@ -208,7 +209,7 @@ pub unsafe fn get_player_number(module_accessor:  &mut app::BattleObjectModuleAc
             
                 //if FighterUtil::is_hp_mode(module_accessor) {
                     if ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_L) //button command
-                    {
+                    && CancelModule::is_enable_cancel(fighter.module_accessor) {
                         
                         StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FINAL, false);
                     }
@@ -368,7 +369,7 @@ pub unsafe fn get_player_number(module_accessor:  &mut app::BattleObjectModuleAc
                     }
                 }   
 
-        //ALL Attack move move a bit fasteer
+            //ALL Attack move move a bit fasteer
                     
                 if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S3
                 || status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3
@@ -399,6 +400,8 @@ pub unsafe fn get_player_number(module_accessor:  &mut app::BattleObjectModuleAc
             
             }
             
+            //Vanish Mechanic enabled
+                ACTIVATE_VANISH[entry_id] = true;
 
 
 

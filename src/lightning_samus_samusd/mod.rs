@@ -24,7 +24,8 @@ pub fn once_per_fighter_frame_samus(fighter : &mut L2CFighterCommon) {
             }
         }
         
-        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK) 
+        && ! (status_kind == *FIGHTER_STATUS_KIND_FINAL)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
@@ -55,7 +56,8 @@ pub fn once_per_fighter_frame_samusd(fighter : &mut L2CFighterCommon) {
             }
         }
         
-        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK) 
+        && ! (status_kind == *FIGHTER_STATUS_KIND_FINAL)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)

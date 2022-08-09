@@ -24,7 +24,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             
     
         //else 
-        if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK) 
+        && ! (status_kind == *FIGHTER_STATUS_KIND_FINAL)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100) 
         && ! (status_kind == *FIGHTER_TANTAN_STATUS_KIND_ATTACK_COMBO) {

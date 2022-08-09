@@ -43,7 +43,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
     
         //else 
-        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK) 
+        && ! (status_kind == *FIGHTER_STATUS_KIND_FINAL)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (motion_kind == smash::hash40("special_hi") || motion_kind == smash::hash40("special_air_hi"))
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)

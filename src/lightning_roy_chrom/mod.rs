@@ -22,20 +22,23 @@ pub fn once_per_fighter_frame_roy(fighter : &mut L2CFighterCommon) {
 
             if status_kind == *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4 {
         
-                            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
+                            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) 
+ {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
          
             }
         } 
             
-        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK) 
+        && ! (status_kind == *FIGHTER_STATUS_KIND_FINAL)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) 
+ {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         
@@ -63,20 +66,23 @@ pub fn once_per_fighter_frame_chrom(fighter : &mut L2CFighterCommon) {
 
             if status_kind == *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4 {
         
-                            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
+                            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) 
+ {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
          
             }
         } 
             
-        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK) 
+        && ! (status_kind == *FIGHTER_STATUS_KIND_FINAL)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) 
+ {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         

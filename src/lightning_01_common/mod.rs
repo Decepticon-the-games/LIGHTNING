@@ -101,6 +101,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
         //NERF FINAL SMASH DAMAGE OUTPUT
         if status_kind == *FIGHTER_STATUS_KIND_FINAL {
+            if AttackModule::is_attack_occur(fighter.module_accessor) {
             
         }
 

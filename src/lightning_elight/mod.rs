@@ -24,14 +24,16 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_s") && MotionModule::frame(module_accessor) >14.0)
         || (MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_s") && MotionModule::frame(module_accessor) >14.0)    
         {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) 
+ {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         
         }
             
     
-        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK)
+        else if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK) 
+        && ! (status_kind == *FIGHTER_STATUS_KIND_FINAL)
         && ! (status_kind == *FIGHTER_ELIGHT_STATUS_KIND_SPECIAL_N_END)
         && ! (status_kind == *FIGHTER_ELIGHT_STATUS_KIND_SPECIAL_S_FORWARD)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
@@ -39,7 +41,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_FINAL {
+                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) 
+ {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         

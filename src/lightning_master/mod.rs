@@ -7,10 +7,12 @@ use smashline::*;
 
 
 
-// Use this for general per-frame fighter-level hooks
+
+
 #[fighter_frame( agent = FIGHTER_KIND_MASTER)]
 fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let status_kind = StatusModule::status_kind(fighter.module_accessor);
         let prev_status_kind = StatusModule::prev_status_kind(fighter.module_accessor, 1);
         let situation_kind = StatusModule::situation_kind(fighter.module_accessor);

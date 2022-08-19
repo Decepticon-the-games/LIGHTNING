@@ -6,6 +6,7 @@ use smash::phx::Vector2f;
 use smashline::*;
 use smash_script::*;
 use smash::phx::Hash40;
+use crate::hooks::PROJECTILE_HIT;
 
 
 pub static mut VANISH : [bool; 8] = [false; 8];
@@ -20,46 +21,76 @@ static mut VANISH_TIMER : [f32; 8] = [0.0; 8];
 pub static mut ACTIVATE_VANISH : [bool; 8] = [true; 8];
 static mut VERT_EXTRA : [f32; 8] = [12.0; 8];
 static mut VA_OPPONENT_DIRECTION : [f32; 8] = [12.0; 8];
+pub static mut WHO_GOT_HIT : [i32; 8] = [0; 8];
+pub static mut WHO_GOT_HIT_BOMA : [u32; 8] = [0; 8];
 pub static mut GET_CURRENT_POSITION : [bool; 8] = [false; 8];
+
 
 // VANISH
 
     #[fighter_frame_callback]
     pub fn vanish(fighter : &mut L2CFighterCommon) {
         unsafe {
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             //let fighter.module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
             let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+            let fighter_kind = utility::get_kind(&mut *fighter.module_accessor);
             let status_kind = StatusModule::status_kind(fighter.module_accessor);
+            let frame = MotionModule::frame(fighter.module_accessor);
             let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
+            let opponent_boma = sv_battle_object::module_accessor(WHO_GOT_HIT_BOMA[entry_id]);
             if entry_id < 8 {
 
                 // Reset Vars
 
                 if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false {
-                    //VANISH_READY[entry_id] = false;
-                    //ACTIVATE_VANISH[entry_id] = false;
-                    //VANISH[entry_id] = false;
+                    
+                    VANISH_READY[entry_id] = false;
+                    VANISH[entry_id] = false;
                     
                 }
 
                 if VANISH_READY[entry_id]{
-                    if ! SlowModule::is_slow(fighter.module_accessor)
-                    && ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0)
-                    {
-                        if AttackModule::is_attack_occur(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK{ // direct attacks
-                            VANISH[entry_id] = true; 
-                            //GET_CURRENT_POSITION [entry_id] = true;
-                        }
-                        
-                        //VANISH_READY[entry_id] = false;
 
-                    }
+                    //if ! fighter_kind == *FIGHTER_KIND_NANA {
+
+                        if (AttackModule::is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor))// direct attacks
+                        || (PROJECTILE_HIT[entry_id] == true && frame <= 30.0)// projectile hits, 10 frame window
+                        {
+                            if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH) != 0 { 
+                                GET_CURRENT_POSITION[entry_id] = true;
+                            }
+                        }
+                        else {
+                            PROJECTILE_HIT[entry_id] = false; 
+                        }
+                    //}
+
                 }
-                // Secret Sensation???
+
+                if GET_CURRENT_POSITION[entry_id] { //RECALL PLAYER ID VARIABLE, and store their position
+
+                    VA_OPPONENT_X[entry_id] = PostureModule::pos_x(opponent_boma);
+                    VA_OPPONENT_Y[entry_id] = PostureModule::pos_y(opponent_boma);
+                    VA_OPPONENT_BOMA[entry_id] = (&mut *opponent_boma as *mut BattleObjectModuleAccessor) as u64;
+                    if utility::get_category(&mut *opponent_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+                        JostleModule::set_status(&mut *opponent_boma, false);
+                    }
+                    VANISH[entry_id] = true; 
+                    VANISH_READY[entry_id] = false; 
+                    GET_CURRENT_POSITION[entry_id] = false;
+                }
+                // VANISH
 
                 
                 if VANISH[entry_id] {
-                    PostureModule::reverse_lr(fighter.module_accessor); 
+
+                    if ! status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK { //Don't turn around on grab attack
+                        PostureModule::reverse_lr(fighter.module_accessor); 
+                    }
+                    if status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK { //Make the opponent invisible too, for the illusion of vanish
+                        VisibilityModule::set_whole(opponent_boma, false);
+                    }
                     //EffectModule::req_emit(fighter.module_accessor, Hash40::new("sys_aura_light"), 0);
                     //macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
                     VisibilityModule::set_whole(fighter.module_accessor, false);
@@ -67,6 +98,8 @@ pub static mut GET_CURRENT_POSITION : [bool; 8] = [false; 8];
                     macros::WHOLE_HIT(fighter, *HIT_STATUS_XLU); // Makes Ryu invincible.
                     MotionModule::set_rate(fighter.module_accessor, 0.001);
                     macros::SLOW_OPPONENT(fighter, 100.0, 10.0);
+
+                    
 
                     if CAMERA[entry_id] == false { // Exists so all of this code will only happen once.
                         
@@ -123,6 +156,7 @@ pub static mut GET_CURRENT_POSITION : [bool; 8] = [false; 8];
                         macros::SET_SPEED_EX(fighter, 0, 0.5, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
                         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
                         VisibilityModule::set_whole(fighter.module_accessor, true);
+                        VisibilityModule::set_whole(opponent_boma, true);
                         MotionModule::set_rate(fighter.module_accessor, 1.0);
                         macros::WHOLE_HIT(fighter, *HIT_STATUS_NORMAL);
                         JostleModule::set_status(fighter.module_accessor, true); // Resets Ryu's body blocking back to normal
@@ -134,7 +168,7 @@ pub static mut GET_CURRENT_POSITION : [bool; 8] = [false; 8];
 
                 else {
                     VANISH[entry_id] = false;
-                    //ACTIVATE_VANISH[entry_id] = true;
+                    ACTIVATE_VANISH[entry_id] = true;
                     VisibilityModule::set_whole(fighter.module_accessor, true);
                     macros::WHOLE_HIT(fighter, *HIT_STATUS_NORMAL);
                 }

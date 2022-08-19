@@ -7,13 +7,16 @@ use smashline::*;
 
 
 
-// Use this for general per-frame fighter-level hooks
+
+
 #[fighter_frame( agent = FIGHTER_KIND_DEMON )]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
         let motion_kind = MotionModule::motion_kind(module_accessor);       
+        let frame = MotionModule::frame(module_accessor);
         //let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
         //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
@@ -22,7 +25,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
         //FIXES
         //-------------------------------------------------------------------------------
-            
+        
             
     
         //else 
@@ -40,15 +43,40 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         && ! (motion_kind== smash::hash40("attack_100_sub"))
         && ! (motion_kind== smash::hash40("attack_100_end"))
         && ! (motion_kind== smash::hash40("attack_110"))
+
+
+        && ! (motion_kind== smash::hash40("attack_s3_hi"))
+        && ! (motion_kind== smash::hash40("attack_s3_lw"))
+        && ! (motion_kind== smash::hash40("attack_hi_3"))
+        && ! (motion_kind== smash::hash40("attack_hi3_2"))
+
+        
+
+        && ! (motion_kind == smash::hash40("attack_stand1") && frame <13.0 )
+        && ! (motion_kind == smash::hash40("attack_stand2_1"))
+        && ! (motion_kind == smash::hash40("attack_stand2_2"))
+        && ! (motion_kind == smash::hash40("attack_stand2_3"))
+        && ! (motion_kind == smash::hash40("attack_stand2_4") && frame <13.0 )
+        && ! (motion_kind == smash::hash40("attack_stand3_1"))
+        && ! (motion_kind == smash::hash40("attack_stand3_2") && frame <15.0 )
+        && ! (motion_kind == smash::hash40("attack_stand4") && frame <14.0 )
+        && ! (motion_kind == smash::hash40("attack_stand5") && frame <10.0 )
+        && ! (motion_kind == smash::hash40("attack_stand6") && frame <13.0 )
+        && ! (motion_kind == smash::hash40("attack_squat1") && frame <14.0 )
+        && ! (motion_kind == smash::hash40("attack_squat2") && frame <6.0 )
+        && ! (motion_kind == smash::hash40("attack_squat3") && frame <10.0 )
+        && ! (motion_kind == smash::hash40("attack_squat4") && frame <12.0 )
+        && ! (motion_kind == smash::hash40("attack_step2") && frame <12.0 )
+        && ! (motion_kind == smash::hash40("attack_step2f") && frame <12.0 )
+        && ! (motion_kind == smash::hash40("attack_step2l") && frame <27.0 )
+        && ! (motion_kind == smash::hash40("attack_step2s") && frame <33.0 )
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) 
- {
-                CancelModule::enable_cancel(fighter.module_accessor);
-            }
-        
-        }
+                     if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) {
+                        CancelModule::enable_cancel(fighter.module_accessor);
+                    }   
+}
 
         //ENHANCES
         //--------------------------------------------------------------------------------

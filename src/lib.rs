@@ -183,7 +183,6 @@ lightning_ryu_ken::install();
 lightning_samus_samusd::install();
 lightning_sheik::install();
 lightning_shizue::install();
-lightning_shizue::install();
 lightning_shulk::install();
 lightning_simon_richter::install();
 lightning_snake::install();

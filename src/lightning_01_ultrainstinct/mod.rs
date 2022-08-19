@@ -26,6 +26,7 @@ static mut FLASH_TIMER : [i16; 8] = [-1; 8];
     #[fighter_frame_callback]
     pub fn ultrainstinct(fighter : &mut L2CFighterCommon) {
         unsafe {
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             //let fighter.module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
             let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             let fighter_kind = utility::get_kind(&mut *fighter.module_accessor);

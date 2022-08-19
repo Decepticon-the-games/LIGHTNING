@@ -4,10 +4,11 @@ use smash::lib::lua_const::*;
 use smashline::*;
 
 
-// Use this for general per-frame fighter-level hooks
+
 #[fighter_frame_callback]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let fighter_kind = smash::app::utility::get_kind(&mut *fighter.module_accessor);
         //let status_kind = smash::app::lua_bind::StatusModule::status_kind(fighter.module_accessor);
         //let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(fighter.module_accessor);
@@ -78,6 +79,16 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 }
             }   
         }
+        //MIIBRAWLER
+        if fighter_kind == *FIGHTER_KIND_MIISWORDSMAN {
+            if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw1_catch") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw1_catch") {
+                if MotionModule::frame(fighter.module_accessor) >1.0 {
+                    if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
+                        CancelModule::enable_cancel(fighter.module_accessor);
+                    }
+                }
+            }   
+        }        
         //MIISWORDFIGHTER
         if fighter_kind == *FIGHTER_KIND_MIISWORDSMAN {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw1_hit") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw1_hit") {
@@ -108,7 +119,29 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     }
                 }
             }   
-        }   
+        } 
+        //LITTLE MAC
+        if fighter_kind == *FIGHTER_KIND_LITTLEMAC {
+            if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_hit") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw_hit") {
+                if MotionModule::frame(fighter.module_accessor) >1.0 {
+                    if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
+                        CancelModule::enable_cancel(fighter.module_accessor);
+                    }
+                }
+            }   
+        }        
+        
+
+        //SORA
+        if fighter_kind == *FIGHTER_KIND_DEMON+1 {
+            if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_rebound") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw_rebound") {
+                if MotionModule::frame(fighter.module_accessor) >1.0 {
+                    if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
+                        CancelModule::enable_cancel(fighter.module_accessor);
+                    }
+                }
+            }   
+        }    
     }                                      
 }
 

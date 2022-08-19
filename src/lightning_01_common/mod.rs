@@ -12,11 +12,11 @@ use smash::hash40;
 
 
 
-// Use this for general per-frame fighter-level hooks
 #[fighter_frame_callback]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
-        
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let fighter_kind = utility::get_kind(&mut *fighter.module_accessor);
         let status_kind = StatusModule::status_kind(fighter.module_accessor);
         let prev_status_kind = StatusModule::prev_status_kind(fighter.module_accessor, 1);
@@ -25,7 +25,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let frame = MotionModule::frame(fighter.module_accessor);
         let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
         let cat2 = ControlModule::get_command_flag_cat(fighter.module_accessor, 1);
-
+        
+        
 
         //REMOVE INVINCIBILITY ON SHIELD BREAK 
         
@@ -96,12 +97,6 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
         if motion_kind== smash::hash40("just_shield") || motion_kind== smash::hash40("just_shield_off") {
             HitModule::set_whole(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_INVINCIBLE), 0);    
-            
-        }
-
-        //NERF FINAL SMASH DAMAGE OUTPUT
-        if status_kind == *FIGHTER_STATUS_KIND_FINAL {
-            if AttackModule::is_attack_occur(fighter.module_accessor) {
             
         }
 

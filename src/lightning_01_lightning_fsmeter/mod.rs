@@ -146,6 +146,7 @@ pub unsafe fn get_player_number(module_accessor:  &mut app::BattleObjectModuleAc
     #[fighter_frame_callback]
     pub fn fs_meter(fighter : &mut L2CFighterCommon) {
         unsafe {
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             LookupSymbol(&mut FIGHTER_MANAGER_ADDR, "_ZN3lib9SingletonIN3app14FighterManagerEE9instance_E\u{0}".as_bytes().as_ptr());
             let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut smash::app::FighterManager);
             let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
@@ -164,7 +165,7 @@ pub unsafe fn get_player_number(module_accessor:  &mut app::BattleObjectModuleAc
             let is_cpu = FighterInformation::is_operation_cpu(FighterManager::get_fighter_information(fighter_manager,smash::app::FighterEntryID(entry_idi32)));
 
             if fighter_kind == *FIGHTER_KIND_GANON {
-                println!("something: {}", WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_CHARGE_FINAL_GAUGE));
+                //println!("something: {}", WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_CHARGE_FINAL_GAUGE));
             }
             
     //MISSING HERE, if not enough meter        
@@ -239,6 +240,7 @@ pub unsafe fn get_player_number(module_accessor:  &mut app::BattleObjectModuleAc
     #[fighter_frame_callback]
     pub fn lightning(fighter : &mut L2CFighterCommon) {
         unsafe {
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             LookupSymbol(&mut FIGHTER_MANAGER_ADDR, "_ZN3lib9SingletonIN3app14FighterManagerEE9instance_E\u{0}".as_bytes().as_ptr());
             let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut smash::app::FighterManager);
             let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);

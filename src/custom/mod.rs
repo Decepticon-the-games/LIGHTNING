@@ -4,10 +4,11 @@ use smash::lua2cpp::{L2CFighterCommon, L2CFighterBase};
 use smashline::*;
 
 
-// Use this for general per-frame fighter-level hooks
+
 #[fighter_frame_callback]
 pub fn global_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         
         if StatusModule::is_situation_changed(module_accessor) {
@@ -31,6 +32,7 @@ pub fn global_fighter_frame(fighter : &mut L2CFighterCommon) {
 #[weapon_frame_callback]
 pub fn global_weapon_frame(fighter_base : &mut L2CFighterBase) {
     unsafe {
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter_base.lua_state_agent);
         let frame = smash::app::lua_bind::MotionModule::frame(module_accessor) as i32;
 

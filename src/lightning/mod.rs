@@ -5,10 +5,11 @@ use smash::lib::lua_const::*;
 use smashline::*;
 
 
-// Use this for general per-frame fighter-level hooks
+
 #[fighter_frame_callback]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let fighter_kind = smash::app::utility::get_kind(fighter.module_accessor);
         let status_kind = smash::app::lua_bind::StatusModule::status_kind(fighter.module_accessor);
         let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(fighter.module_accessor);

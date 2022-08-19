@@ -7,10 +7,12 @@ use smashline::*;
 
 
 
-// Use this for general per-frame fighter-level hooks
+
+
 #[fighter_frame( agent = FIGHTER_KIND_SHEIK )]
 fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
         let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
@@ -23,20 +25,16 @@ fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //FIX SIDE SMASH AND DOWN SMASH
         //-------------------------------------------------------------------------------
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame > 19.0 {//add exceptions
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) 
- {
-                CancelModule::enable_cancel(fighter.module_accessor);
-            }
-        
-        }
+                     if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) {
+                        CancelModule::enable_cancel(fighter.module_accessor);
+                    }   
+}
 
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW4 && frame > 14.0 {//add exceptions
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) 
- {
-                CancelModule::enable_cancel(fighter.module_accessor);
-            }
-        
-        }
+                     if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) {
+                        CancelModule::enable_cancel(fighter.module_accessor);
+                    }   
+}
         //else 
         if ! (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK) 
         && ! (status_kind == *FIGHTER_STATUS_KIND_FINAL)
@@ -46,12 +44,10 @@ fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) 
- {
-                CancelModule::enable_cancel(fighter.module_accessor);
-            }
-        
-        }
+                     if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) {
+                        CancelModule::enable_cancel(fighter.module_accessor);
+                    }   
+}
 
         //ENHANCES
         //--------------------------------------------------------------------------------

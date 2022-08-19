@@ -7,10 +7,12 @@ use smashline::*;
 
 
 
-// Use this for general per-frame fighter-level hooks
+
+
 #[fighter_frame( agent = FIGHTER_KIND_YOUNGLINK )]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let frame = MotionModule::frame(fighter.module_accessor);
         let motion_kind = MotionModule::motion_kind(fighter.module_accessor);  

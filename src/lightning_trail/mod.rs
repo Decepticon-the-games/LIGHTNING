@@ -7,11 +7,13 @@ use smashline::*;
 
 
 
-// Use this for general per-frame fighter-level hooks
+
+
 //#[fighter_frame( agent = FIGHTER_KIND_TRAIL )]
 #[fighter_frame_callback]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let fighter_kind = utility::get_kind(&mut *fighter.module_accessor);
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
@@ -26,7 +28,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //FIXES
         //-------------------------------------------------------------------------------
         //Fix 
-        if motion_kind== smash::hash40("attack_s3_s3") || motion_kind== smash::hash40("attack_air_n3") || motion_kind== smash::hash40("attack_air_f3") {
+        if motion_kind== smash::hash40("attack_s3_3") || motion_kind== smash::hash40("attack_air_n3") || motion_kind== smash::hash40("attack_air_f3") {
                         if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) 
  {
                 CancelModule::enable_cancel(fighter.module_accessor);
@@ -47,6 +49,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S3)
+        && ! (motion_kind== smash::hash40("attack_s3_s2"))
         //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (motion_kind== smash::hash40("attack_air_n"))
@@ -56,12 +59,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //&& ! (status_kind == *FIGHTER_TRAIL_STATUS_KIND_ATTACK_AIR_N)
         //&& ! (status_kind == FIGHTER_TRAIL_STATUS_KIND_ATTACK_AIR_F)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) 
- {
-                CancelModule::enable_cancel(fighter.module_accessor);
-            }
-        
-        }
+                     if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) {
+                        CancelModule::enable_cancel(fighter.module_accessor);
+                    }   
+}
 
         //ENHANCES
         //--------------------------------------------------------------------------------

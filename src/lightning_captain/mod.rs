@@ -5,10 +5,13 @@ use smashline::*;
 
 
 
-// Use this for general per-frame fighter-level hooks
+
+
+
 #[fighter_frame( agent = FIGHTER_KIND_CAPTAIN )]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
         let motion_kind = MotionModule::motion_kind(fighter.module_accessor);       
@@ -19,12 +22,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
         //Fix Up Smash 
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 && frame >27.0 {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) 
- {
-                CancelModule::enable_cancel(fighter.module_accessor);
-            }
-        
-        }
+                     if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) {
+                        CancelModule::enable_cancel(fighter.module_accessor);
+                    }   
+}
 
         //SIDE B
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
@@ -52,12 +53,10 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if ! (status_kind == *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_HI_CLING)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-                        if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) 
- {
-                CancelModule::enable_cancel(fighter.module_accessor);
-            }
-        
-        }
+                     if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) {
+                        CancelModule::enable_cancel(fighter.module_accessor);
+                    }   
+}
         
     }                                      
 }

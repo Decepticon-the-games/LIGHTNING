@@ -5,26 +5,23 @@ use smash::lib::lua_const::*;
 use smashline::*;
 
 use smash_script::*;
-use crate::lightning_02_up_special_callbacks::UP_SPECIAL_ANIMATION;
-use crate::lightning_02_up_special_callbacks::ENTRY_ID;
-use smash::phx::Hash40;
-use smash::hash40;
+//use smash::phx::Hash40;
+//use smash::hash40;
 
 
 
 #[fighter_frame_callback]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
-        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        //let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let fighter_kind = utility::get_kind(&mut *fighter.module_accessor);
         let status_kind = StatusModule::status_kind(fighter.module_accessor);
-        let prev_status_kind = StatusModule::prev_status_kind(fighter.module_accessor, 1);
-        let situation_kind = StatusModule::situation_kind(fighter.module_accessor);
+        //let prev_status_kind = StatusModule::prev_status_kind(fighter.module_accessor, 1);
+        //let situation_kind = StatusModule::situation_kind(fighter.module_accessor);
         let motion_kind = MotionModule::motion_kind(fighter.module_accessor);       
         let frame = MotionModule::frame(fighter.module_accessor);
         let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
-        let cat2 = ControlModule::get_command_flag_cat(fighter.module_accessor, 1);
+        //let cat2 = ControlModule::get_command_flag_cat(fighter.module_accessor, 1);
         
         
 

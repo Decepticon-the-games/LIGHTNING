@@ -5,12 +5,15 @@ use smash::app::*;
 use smash::hash40; 
 use skyline::hooks::{getRegionAddress, Region};
 use smash::app::FighterManager;
-use crate::lightning_01_ultrainstinct::{SEC_SEN_STATE, SECRET_SENSATION, OPPONENT_X, OPPONENT_Y, OPPONENT_BOMA};
-use crate::lightning_01_vanish::{ACTIVATE_VANISH, VANISH_READY, VANISH, VA_OPPONENT_X, VA_OPPONENT_Y, VA_OPPONENT_BOMA, WHO_GOT_HIT, WHO_GOT_HIT_BOMA, GET_CURRENT_POSITION};
+use crate::lightning_01_ultrainstinct::{SEC_SEN_STATE, SECRET_SENSATION, OPPONENT_X, OPPONENT_Y, OPPONENT_BOMA, CROSS_CANCEL_BUTTON};
+use crate::lightning_01_vanish::{ACTIVATE_VANISH, VANISH, VANISH_READY, WHO_GOT_HIT_BOMA, VANISH_BUTTON};
 use crate::lightning_01_upbtransitions::DISABLE_UP_SPECIAL;
-use crate::lightning_01_lightning_fsmeter::DISABLE_FINAL;
+use crate::lightning_01_lightning_fsmeter::{DISABLE_FINAL, FINAL_SMASH_BUTTON};
+use crate::lightning_01_crimson_cancel::{CRIMSON_CANCEL_BUTTON, CRIMSON_CANCEL_TIMER};
+use crate::lightning_01_lightning_mode::{LIGHTNING_BUTTON};
 
 pub static mut PROJECTILE_HIT : [bool; 8] = [false; 8];
+pub static mut DIRECT_HIT : [bool; 8] = [false; 8];
 
 static mut NOTIFY_LOG_EVENT_COLLISION_HIT_OFFSET : usize = 0x675A20;
 static NOTIFY_LOG_EVENT_COLLISION_HIT_SEARCH_CODE: &[u8] = &[
@@ -42,14 +45,18 @@ move_type_again: bool) -> u64 {
     
     let attacker_boma = sv_battle_object::module_accessor(attacker_object_id);
     let defender_boma = sv_battle_object::module_accessor(defender_object_id);
+    let oboma = sv_battle_object::module_accessor((WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32); // links weapon to whatever may ownn it  
+
     let attacker_fighter_kind = sv_battle_object::kind(attacker_object_id);
-    let defender_fighter_kind = sv_battle_object::kind(defender_object_id);
+    //let defender_fighter_kind = sv_battle_object::kind(defender_object_id);
+
+    //let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let a_entry_id = WorkModule::get_int(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let d_entry_id = WorkModule::get_int(defender_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    let oboma = sv_battle_object::module_accessor((WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32); // links weapon to whatever may ownn it
-    let o_entry_id = WorkModule::get_int(&mut *oboma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize; //links weapon to whatever may own it
-    
-     
+    let o_entry_id = WorkModule::get_int(oboma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize; //links weapon to whatever may own it
+
+    let o_fighter_kind = smash::app::utility::get_kind(&mut *oboma);
+    let o_status_kind = StatusModule::status_kind(oboma); 
     //ULTRA INSTINCT (DEFENDER)
 
         if utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
@@ -93,8 +100,12 @@ move_type_again: bool) -> u64 {
 
         
 
-        if ACTIVATE_VANISH[o_entry_id] {   
         
+        //if ! (o_fighter_kind == *FIGHTER_KIND_POPO || o_fighter_kind == *FIGHTER_KIND_NANA)
+        //&& ! (o_status_kind == *FIGHTER_STATUS_KIND_FINAL)
+        //{   
+
+            //if ACTIVATE_VANISH[o_entry_id] {
             //IF THE ATTACKER IS A FIGHTER AND THE DEFENDER IS A FIGHTER, GET THE DEFENNDER'S POSITION
 
                 if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER // if the attacker is a fighter
@@ -103,50 +114,54 @@ move_type_again: bool) -> u64 {
                     if utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER 
                     || utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_ENEMY { // if the defender is a fighter/enemy
                         
-                        WHO_GOT_HIT[o_entry_id] = sv_battle_object::entry_id(defender_object_id); //Store the id of the person who got hit up until vanish is pressed
-                        WHO_GOT_HIT_BOMA[o_entry_id] = defender_object_id;
-                        
-                        VANISH_READY[o_entry_id] = true; 
+                        DIRECT_HIT[a_entry_id] = true;
+                        WHO_GOT_HIT_BOMA[a_entry_id] = defender_object_id; //Store the id of the person who got hit up until vanish is pressed
+                        if ! (attacker_fighter_kind == *FIGHTER_KIND_POPO || attacker_fighter_kind == *FIGHTER_KIND_NANA) {
+                            VANISH_READY[a_entry_id] = true; 
+                        }
                     } 
-                }
-
-           
-            //IF THE ATTACKER IS A WEAPON AND COLLIDES WITH ANOTHER ATTACKER WEAPON, GET THE OWNER'S POSITION
+                }    
+            
+        
+            
+            //IF THE ATTACKER IS A WEAPON AND THE DEFENDER IS A FIGHTER/COLLIDES WITH ANOTHER ATTACKER WEAPON, GET THE OWNER'S POSITION
                 if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON {//if the attacker is a weaponn (projectile) 
 
                     // Check to see if the owner of what you hit is a Fighter or not
 
                     if utility::get_category(&mut *oboma) == *BATTLE_OBJECT_CATEGORY_FIGHTER { // If the object that was hit is owned by a fighter, stores that fighter's position
-
-                        PROJECTILE_HIT[o_entry_id] = true;
-                        WHO_GOT_HIT[o_entry_id] = sv_battle_object::entry_id(defender_object_id); //Store the id of the person who got hit up until vanish is pressed
-                        WHO_GOT_HIT_BOMA[o_entry_id] = defender_object_id;
-                        VANISH_READY[o_entry_id] = true;
-                    }      
-                }
+                    
+                        PROJECTILE_HIT[o_entry_id] = true; 
+                        WHO_GOT_HIT_BOMA[o_entry_id] = defender_object_id; //Store the id of the person who got hit up until vanish is pressed
+                        if ! (o_fighter_kind == *FIGHTER_KIND_POPO || o_fighter_kind == *FIGHTER_KIND_NANA) {
+                            VANISH_READY[a_entry_id] = true; 
+                        }
+                    }    
+                
 
             //IF THE ATTACKER IS A WEAPON AND THE DEFENDER IS A FIGHTER, GET THE DEFENDER'S POSITION
-                if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON {//if the attacker is a weaponn (projectile) 
-
-                    if utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER { // If the object that was hit is a fighter, stores the opponent's position
+                
+                    else if utility::get_category(&mut *oboma) == *BATTLE_OBJECT_CATEGORY_WEAPON { // If the object that was hit is a fighter, stores the opponent's position
 
                         PROJECTILE_HIT[o_entry_id] = true; 
-                        WHO_GOT_HIT[o_entry_id] = sv_battle_object::entry_id(defender_object_id); //Store the id of the person who got hit up until vanish is pressed
-                        WHO_GOT_HIT_BOMA[o_entry_id] = defender_object_id;
-                        VANISH_READY[o_entry_id] = true;
-                    } 
-                        
-                }         
-        }
+                        WHO_GOT_HIT_BOMA[o_entry_id] = defender_object_id; //Store the id of the person who got hit up until vanish is pressed
+                        if ! (o_fighter_kind == *FIGHTER_KIND_POPO || o_fighter_kind == *FIGHTER_KIND_NANA) {
+                            VANISH_READY[a_entry_id] = true; 
+                        }
+                    }    
+                }                 
+            //}
+
+                   
+        //}
     //ICE CLIMBERS DESYNC RECALL
 
-    let fighter_kind = smash::app::utility::get_kind(&mut *oboma);
+    
 
-        if fighter_kind == *FIGHTER_KIND_NANA { // if the projectile belongs to nana
+        if o_fighter_kind == *FIGHTER_KIND_NANA { // if the projectile belongs to nana
             PROJECTILE_HIT[o_entry_id] = true;
         }
 
-        
     original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)
 }
 
@@ -155,15 +170,23 @@ move_type_again: bool) -> u64 {
 pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObjectModuleAccessor, term: i32) -> bool {
     let ret = original!()(module_accessor,term);
     let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let special_mechanics_button = (CRIMSON_CANCEL_BUTTON[entry_id]
+    || CROSS_CANCEL_BUTTON[entry_id]
+    || VANISH_BUTTON[entry_id]
+    || LIGHTNING_BUTTON[entry_id]);
 
     
     if SECRET_SENSATION[entry_id] {
         return false;
     }
-    
     if VANISH[entry_id] {
         return false;
     }
+    //if special_mechanics_button 
+    //{
+    //    return false;
+    //}
+
 
     if DISABLE_UP_SPECIAL[entry_id] {
         if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI {
@@ -180,6 +203,25 @@ pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObje
         else {
             return ret;
         }
+    }
+    if CRIMSON_CANCEL_TIMER[entry_id] >= 1 {
+        if (term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK 
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_S3
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_S4
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI3
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW3
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW
+        ) {
+            return false;
+        }
+        else {
+            return ret;
+        } 
     }
     else {
         return ret;
@@ -198,15 +240,15 @@ pub unsafe fn get_param_int_replace(module_accessor: u64, param_type: u64, param
             return 0x4;
         }
     }
-    return ret;
-    if param_hash == hash40("precede") { //No buffer during neutral at all until comboing (attacks hit)
-        if AttackModule::is_attack_occur(boma) {
-            return 0x10;
-        }
-        else{
-            return 0x1;
-        }
-    }
+    //return ret;
+    //if param_hash == hash40("precede") { //No buffer during neutral at all until comboing (attacks hit)
+    //    if AttackModule::is_attack_occur(boma) {
+    //        return 0x10;
+    //    }
+    //    else{
+    //        return 0x1;
+    //    }
+    //}
     return ret;
 }
 

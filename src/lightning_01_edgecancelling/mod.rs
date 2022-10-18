@@ -3,7 +3,7 @@ use smash::app::{self};
 //use smash::lua2cpp::{L2CFighterCommon};
 use smash::lib::lua_const::*;
 //use smash::app::utility::*;
-use smashline::*;
+//use smashline::*;
 
 
 #[skyline::hook(replace = smash::app::lua_bind::StatusModule::init_settings)]

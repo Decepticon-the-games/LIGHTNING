@@ -9,6 +9,8 @@ use smash::phx::Hash40;
 
 
 pub static mut SECRET_SENSATION : [bool; 8] = [false; 8];
+pub static mut CROSS_CANCEL_BUTTON : [bool; 8] = [false; 8];
+pub static mut CROSS_CANCEL_SETUP : [bool; 8] = [false; 8];
 static mut CAMERA : [bool; 8] = [false; 8];
 pub static mut OPPONENT_X : [f32; 8] = [0.0; 8];
 pub static mut OPPONENT_Y : [f32; 8] = [0.0; 8];
@@ -26,11 +28,12 @@ static mut FLASH_TIMER : [i16; 8] = [-1; 8];
     #[fighter_frame_callback]
     pub fn ultrainstinct(fighter : &mut L2CFighterCommon) {
         unsafe {
-        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             //let fighter.module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
             let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             let fighter_kind = utility::get_kind(&mut *fighter.module_accessor);
             let status_kind = StatusModule::status_kind(fighter.module_accessor);
+            let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+
             if entry_id < 8 {
 
                 // Reset Vars
@@ -39,6 +42,71 @@ static mut FLASH_TIMER : [i16; 8] = [-1; 8];
                     SECRET_SENSATION[entry_id] = false;
                     SEC_SEN_STATE[entry_id] = false;
                 }
+
+                //Button 
+                if //(ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) 
+                //&& ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_R))
+                motion_kind == smash::hash40("appeal_hi_l")||motion_kind == smash::hash40("appeal_hi_r")
+                && StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_GROUND 
+                {
+                    CROSS_CANCEL_BUTTON[entry_id] = true;
+                }
+                else {
+                    CROSS_CANCEL_BUTTON[entry_id] = false;
+                }
+
+                if CROSS_CANCEL_BUTTON[entry_id] 
+                //&& CancelModule::is_enable_cancel(fighter.module_accessor) 
+                {
+                    //StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, false);
+                    CROSS_CANCEL_SETUP[entry_id] = true;
+                    CROSS_CANCEL_BUTTON[entry_id] = false;
+                }
+
+                if CROSS_CANCEL_SETUP[entry_id] && SECRET_SENSATION [entry_id] == false 
+                {
+                    //StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, false);
+                    if MotionModule::frame(fighter.module_accessor) == 4.0 {
+                        EffectModule::req_emit(fighter.module_accessor, Hash40::new("sys_aura_light"), 0);
+                        macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
+                        macros::PLAY_SE(fighter, Hash40::new("se_ryu_6c_aura"));
+                        
+                        FLASH_TIMER[entry_id] = -1;
+                    }
+                    if MotionModule::frame(fighter.module_accessor) <= 30.0
+                    && MotionModule::frame(fighter.module_accessor) >= 4.0 {
+                        //CAMERA[entry_id] = false;
+                        SEC_SEN_STATE[entry_id] = true;
+                        DamageModule::set_damage_lock(fighter.module_accessor, true);
+                        DamageModule::set_no_reaction_no_effect(fighter.module_accessor, true);
+                        HitModule::set_hit_stop_mul(fighter.module_accessor, 0.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0);
+                        
+                        
+                    }
+                    else {
+                        DamageModule::set_damage_lock(fighter.module_accessor, false);
+                        DamageModule::set_no_reaction_no_effect(fighter.module_accessor, false);
+                        macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), true, true);
+                        HitModule::set_hit_stop_mul(fighter.module_accessor, 1.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0);
+                        macros::COL_NORMAL(fighter);
+                        SEC_SEN_STATE[entry_id] = false;
+                        //macros::WHOLE_HIT(fighter, *HIT_STATUS_NORMAL);
+                        
+                    }
+                    if MotionModule::frame(fighter.module_accessor) > 30.0 {
+                        CROSS_CANCEL_SETUP[entry_id] = false;
+                    }
+                }
+                else if SECRET_SENSATION[entry_id] == false // Turns off all of the effects of Secret Sensation.
+                && SEC_SEN_STATE[entry_id] {
+                    DamageModule::set_damage_lock(fighter.module_accessor, false);
+                    DamageModule::set_no_reaction_no_effect(fighter.module_accessor, false);
+                    macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), true, true);
+                    HitModule::set_hit_stop_mul(fighter.module_accessor, 1.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0);
+                    macros::COL_NORMAL(fighter);
+                    SEC_SEN_STATE[entry_id] = false;
+                    //macros::WHOLE_HIT(fighter, *HIT_STATUS_NORMAL);
+                }          
 
                 // Handles the blue flashes on Ryu during the counter state
 
@@ -65,15 +133,15 @@ static mut FLASH_TIMER : [i16; 8] = [-1; 8];
                     macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
                 
                     JostleModule::set_status(fighter.module_accessor, false); // Turns off body blocking for Ryu every frame Secret Sensation is true
-                    macros::WHOLE_HIT(fighter, *HIT_STATUS_XLU); // Makes Ryu invincible.
+                    //macros::WHOLE_HIT(fighter, *HIT_STATUS_XLU); // Makes Ryu invincible.
                     DamageModule::set_damage_lock(fighter.module_accessor, true); // Makes sure Ryu doesn't take damage during the dodge
                     DamageModule::set_no_reaction_no_effect(fighter.module_accessor, true); // Makes sure Ryu doesn't take knockback.
                     HitModule::set_hit_stop_mul(fighter.module_accessor, 0.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0); // Removes all hitlag from Ryu so the Focus Attack Dash animation plays out.
-                        macros::PLAY_SE(fighter, Hash40::new("se_ryu_6c_exec"));
-                        macros::CAM_ZOOM_IN_arg5(fighter, 3.0, 0.0, 1.5, 0.0, 0.0); // Sets the camera
-                        macros::SLOW_OPPONENT(fighter, 100.0, 32.0); // Slows the UIOPPONENT down by 100x for 32 frames
-                        SlowModule::set_whole(fighter.module_accessor, 4, 32); // Slows ***everything*** down by a 4x. This includes the above slowdown, which probably means I should shorten the above length of time but eh
-                        macros::FILL_SCREEN_MODEL_COLOR(fighter, 0, 12, 0.1, 0.1, 0.1, 0, 0.001, 0.011, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, 205);                    
+                    macros::PLAY_SE(fighter, Hash40::new("se_ryu_6c_exec"));
+                    macros::CAM_ZOOM_IN_arg5(fighter, 3.0, 0.0, 1.5, 0.0, 0.0); // Sets the camera
+                    macros::SLOW_OPPONENT(fighter, 100.0, 1.0); // Slows the UIOPPONENT down by 100x for 32 frames
+                    SlowModule::set_whole(fighter.module_accessor, 4, 32); // Slows ***everything*** down by a 4x. This includes the above slowdown, which probably means I should shorten the above length of time but eh
+                    macros::FILL_SCREEN_MODEL_COLOR(fighter, 0, 12, 0.1, 0.1, 0.1, 0, 0.001, 0.011, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, 205);                    
                     if CAMERA[entry_id] == false { // Exists so all of this code will only happen once.
 
                         YOU_X[entry_id] = PostureModule::pos_x(fighter.module_accessor); // Gets Ryu's position
@@ -158,6 +226,7 @@ static mut FLASH_TIMER : [i16; 8] = [-1; 8];
                     if SEC_SEN_TIMER[entry_id] > 1.0 {
                         SECRET_SENSATION[entry_id] = false;
                         CAMERA[entry_id] = false;
+                        //macros::SLOW_OPPONENT(fighter, 0.001, 0.0);
                         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_GRAVITY_STABLE_UNABLE); // Gives Ryu back his gravity
                         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK); // These three lines are here to make sure Ryu doesn't just fall like a rock after moving into the air.
                         macros::SET_SPEED_EX(fighter, 0, 0.5, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
@@ -170,48 +239,15 @@ static mut FLASH_TIMER : [i16; 8] = [-1; 8];
                         macros::CANCEL_FILL_SCREEN(fighter, 0, 5); // Clears out the background screen darken effect.
                         macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), true, true);
                         SlowModule::clear_whole(fighter.module_accessor); // Clears the global 4x slowdown multiplier from above
+                        MotionModule::set_rate(fighter.module_accessor, 1.0);
                         JostleModule::set_status(fighter.module_accessor, true); // Resets Ryu's body blocking back to normal
                         SEC_SEN_TIMER[entry_id] = -0.2; // Resets the interpolation timer.
                     }
                 }
-                else if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("appeal_hi_r")
-                || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("appeal_hi_l") {
-                    if MotionModule::frame(fighter.module_accessor) == 4.0 {
-                        EffectModule::req_emit(fighter.module_accessor, Hash40::new("sys_aura_light"), 0);
-                        macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
-                        macros::PLAY_SE(fighter, Hash40::new("se_ryu_6c_aura"));
-                        
-                        FLASH_TIMER[entry_id] = -1;
-                    }
-                    if MotionModule::frame(fighter.module_accessor) <= 30.0
-                    && MotionModule::frame(fighter.module_accessor) >= 4.0 {
-                        //CAMERA[entry_id] = false;
-                        SEC_SEN_STATE[entry_id] = true;
-                        DamageModule::set_damage_lock(fighter.module_accessor, true);
-                        DamageModule::set_no_reaction_no_effect(fighter.module_accessor, true);
-                        HitModule::set_hit_stop_mul(fighter.module_accessor, 0.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0);
-                        
-                    }
-                    else {
-                        DamageModule::set_damage_lock(fighter.module_accessor, false);
-                        DamageModule::set_no_reaction_no_effect(fighter.module_accessor, false);
-                        macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), true, true);
-                        HitModule::set_hit_stop_mul(fighter.module_accessor, 1.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0);
-                        macros::COL_NORMAL(fighter);
-                        SEC_SEN_STATE[entry_id] = false;
-                        macros::WHOLE_HIT(fighter, *HIT_STATUS_NORMAL);
-                    }
-                }
-                else if SECRET_SENSATION[entry_id] == false // Turns off all of the effects of Secret Sensation.
-                && SEC_SEN_STATE[entry_id] {
-                    DamageModule::set_damage_lock(fighter.module_accessor, false);
-                    DamageModule::set_no_reaction_no_effect(fighter.module_accessor, false);
-                    macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), true, true);
-                    HitModule::set_hit_stop_mul(fighter.module_accessor, 1.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0);
-                    macros::COL_NORMAL(fighter);
-                    SEC_SEN_STATE[entry_id] = false;
-                    macros::WHOLE_HIT(fighter, *HIT_STATUS_NORMAL);
-                }
+
+
+
+
             }
         }
     }

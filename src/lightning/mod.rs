@@ -13,7 +13,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let fighter_kind = smash::app::utility::get_kind(fighter.module_accessor);
         let status_kind = smash::app::lua_bind::StatusModule::status_kind(fighter.module_accessor);
         let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(fighter.module_accessor);
-        let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
+        //let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
         
         //DISABLE UP SPECIAL/PUMMEL INFLICTION CANCEL
         if ! (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI)

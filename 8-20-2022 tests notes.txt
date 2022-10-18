@@ -1,0 +1,25 @@
+8-20-2022 tests
+
+ADDITIONS:
+	*As many airdodges as you have jumps 
+	*Adaptive Buffer: Remains 0 in neutral but changes to 10 when a direct attack occurs
+	*Motion Cancels upgraded - 
+		*cancel into airdodge as many as you have jumps (will change to just a LIGHTNING mechanic later)
+		*jump cancel airdodge on every jump
+		*Fixed Spams
+
+	*VANISH IS COMPLETE - 
+		*press catch upon hiting something (fighter or projectile) to teleport to their owner. Will include directional controls later
+
+FIXES:
+	*Removed grab spam
+	*Counter Cancels added:: Little Mac, MiiBrawler, Sora
+	*FS Meter Final Smash is not as nerfed
+
+
+
+
+*CHARACTER FIXES
+	*Kazuya in general
+	*Sora side tilt 2 not cancellable on hit anymore
+	*Zss side smash

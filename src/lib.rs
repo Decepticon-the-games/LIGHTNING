@@ -1,6 +1,7 @@
 #![feature(concat_idents)]
 #![feature(proc_macro_hygiene)]
 #![feature(asm)]
+//#![allow(unused_macros)]
 
 mod hooks;
 mod lightning_01_common;
@@ -8,13 +9,14 @@ mod lightning_01_counter_cancels;
 mod lightning_01_detector_boxes;
 mod lightning_01_motioncancels;
 mod lightning_01_crimson_cancel;
-//mod lightning_01_lightning_mode_mechanics;
+mod lightning_01_lightning_mode;
 mod lightning_01_ultrainstinct;
 mod lightning_01_upbcancels;
 mod lightning_01_upbtransitions;
 mod lightning_01_edgecancelling;
 mod lightning_02_up_special_callbacks;
 mod lightning_01_lightning_fsmeter;
+mod lightning_01_custom_meters;
 mod lightning_01_vanish;
 //mod lightning_02_params;
 mod lightning_bayonetta;
@@ -108,7 +110,7 @@ lightning_01_common::install();
 lightning_01_counter_cancels::install();
 lightning_01_detector_boxes::install();
 lightning_01_motioncancels::install();
-//lightning_01_lightning_mode_mechanics::install();
+lightning_01_lightning_mode::install();
 lightning_01_lightning_fsmeter::install();
 lightning_01_crimson_cancel::install();
 lightning_01_ultrainstinct::install();
@@ -117,6 +119,7 @@ lightning_01_upbtransitions::install();
 lightning_01_edgecancelling::install();
 lightning_02_up_special_callbacks::install();
 lightning_01_vanish::install();
+//lightning_01_custom_meters::install();
 //lightning_02_params::install();
 lightning_bayonetta::install();
 lightning_brave::install();

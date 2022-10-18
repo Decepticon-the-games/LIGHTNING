@@ -12,7 +12,7 @@ pub static mut ENTRY_ID : usize = 0;
 #[fighter_frame_callback]
 pub fn set_bool(fighter: &mut L2CFighterCommon) {
     unsafe {
-        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        //let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let lua_state = fighter.lua_state_agent;
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(lua_state);
         let fighter_kind = smash::app::utility::get_kind(module_accessor);

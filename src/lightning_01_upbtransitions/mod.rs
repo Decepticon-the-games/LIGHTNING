@@ -6,7 +6,6 @@ use smashline::*;
 //use crate::lightning_01_up_special_callbacks::UP_SPECIAL_ANIMATION;
 
 pub static mut DISABLE_UP_SPECIAL : [bool; 8] = [false; 8];
-static mut ENTRY_ID : usize = 0;
 
 #[fighter_frame_callback]
 pub fn set_bool(fighter: &mut L2CFighterCommon) {
@@ -17,7 +16,6 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         let fighter_kind = smash::app::utility::get_kind(module_accessor);
         let status_kind = StatusModule::status_kind(module_accessor);
         let motion_kind = MotionModule::motion_kind(module_accessor);      
-        ENTRY_ID = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 
         //Set up bool to make all types of aerial up bs to only be used once no matter what
         //if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_AIR
@@ -99,7 +97,7 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         || ((fighter_kind == *FIGHTER_KIND_FALCO || fighter_kind == *FIGHTER_KIND_FOX || fighter_kind == *FIGHTER_KIND_WOLF) && motion_kind == smash::hash40("special_hi"))
         {
             
-            DISABLE_UP_SPECIAL[ENTRY_ID] = true;
+            DISABLE_UP_SPECIAL[entry_id] = true;
         }
         //Reset up b once you're in certain situations
         if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND 
@@ -137,7 +135,7 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         || (fighter_kind == *FIGHTER_KIND_BAYONETTA 
             && status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL)
         {
-            DISABLE_UP_SPECIAL[ENTRY_ID] = false;
+            DISABLE_UP_SPECIAL[entry_id] = false;
         }
     
     }

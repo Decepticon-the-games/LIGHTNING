@@ -14,6 +14,7 @@ pub static mut VANISH : [bool; 8] = [false; 8];
 pub static mut VANISH_READY : [bool; 8] = [false; 8];
 pub static mut VANISH_BUTTON : [bool; 8] = [false; 8]; // Only used to replicate a button_pad_trigger, runs only 1 frame
 pub static mut CAN_VANISH : [bool; 8] = [false; 8];//Incorporating the ability to use vanish under condition. See lightning_01_motioncancels/mod.rs
+pub static mut VANISH_COUNTER : [bool; 8] = [false; 8];
 pub static mut VANISH_COUNT : [i32; 8] = [0; 8];//See motioncancels/mod.rs
 pub static mut VANISH_RESET : [bool; 8] = [false; 8];//See motioncancels/mod.rs
 static mut CAMERA : [bool; 8] = [false; 8];
@@ -33,14 +34,15 @@ pub static mut LEFT : [bool; 8] = [false; 8];
 pub static mut RIGHT : [bool; 8] = [false; 8];
 pub static mut UP : [bool; 8] = [false; 8];
 pub static mut DOWN : [bool; 8] = [false; 8];
-
+static mut EFFECTS_ON : [bool; 8] = [false; 8];
+static mut EFFECTS_OFF : [bool; 8] = [false; 8];
 
 // VANISH
 
     #[fighter_frame_callback]
     pub fn vanish(fighter : &mut L2CFighterCommon) {
         unsafe {
-            //let fighter.module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+            //module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
             let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             let fighter_kind = utility::get_kind(&mut *fighter.module_accessor);
             let status_kind = StatusModule::status_kind(fighter.module_accessor);
@@ -54,7 +56,7 @@ pub static mut DOWN : [bool; 8] = [false; 8];
 
                 
                 
-                //println!("vanish button: {}", VANISH_BUTTON[entry_id]);     
+                   
                 // Reset Vars
 
                 if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false { //Also include a false for if the opponent is gonna be ko'ed
@@ -72,63 +74,62 @@ pub static mut DOWN : [bool; 8] = [false; 8];
                     VANISH_BUTTON[entry_id] = false;
                 }
 
-                
-                    if status_kind == *FIGHTER_STATUS_KIND_FINAL {
-                        ACTIVATE_VANISH[entry_id] = false;
+                println!("vready: {}", VANISH_READY[entry_id]);    
+                    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STATUS)  {
+                       VANISH_READY[entry_id] = false;
                     }
-                    if fighter_kind == *FIGHTER_KIND_ICE_CLIMBER {
-                        ACTIVATE_VANISH[entry_id] = false;
-                    }
-                
 
-                    if VANISH_READY[entry_id] && CAN_VANISH[entry_id] 
+                    if VANISH_READY[entry_id] 
+                    && CAN_VANISH[entry_id] 
                     {
 
                         //Set the directional input before pressing the vanish button
                         
                         
-                    
-                        if (DIRECT_HIT[entry_id] && AttackModule::is_attack_occur(fighter.module_accessor)// direct attacks
-                        || (PROJECTILE_HIT[entry_id] == true && frame <= 30.0))// projectile hits, 10 frame window
+                        
 
-                        {
-                            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH)
-                            { 
-                                VANISH_BUTTON[entry_id] = true;// Only used to replicate a button_pad_trigger, runs only 1 frame pt 1
-                            }
-                            if l_stick_out {
+                            if (DIRECT_HIT[entry_id] && AttackModule::is_attack_occur(fighter.module_accessor)// direct attacks
+                            || (PROJECTILE_HIT[entry_id] == true && frame <= 30.0))// projectile hits, 10 frame window
 
-                                if ControlModule::get_stick_x(fighter.module_accessor) > 0.8 { //RIGHT 
-                                    RIGHT[entry_id] = true;
+                            {
+                                
+                                if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH)
+                                { 
+                                    VANISH_BUTTON[entry_id] = true;// Only used to replicate a button_pad_trigger, runs only 1 frame pt 1
                                 }
-                                else if ControlModule::get_stick_x(fighter.module_accessor) < -0.8 {//LEFT
-                                    LEFT[entry_id] = true;
-                                } 
-                                else if ControlModule::get_stick_y(fighter.module_accessor) > 0.8 { //UP 
-                                    UP[entry_id] = true;
-                                }
-                                else if ControlModule::get_stick_y(fighter.module_accessor) < -0.8 {//DOWN
-                                    DOWN[entry_id] = true;
-                                } 
-                            }
-                        }
-                        
-                        
-                        else {
-                            PROJECTILE_HIT[entry_id] = false; 
-                            VANISH_BUTTON[entry_id] = false;
-                        }
+                                if l_stick_out {
 
-                        if VANISH_BUTTON[entry_id] 
-                        //&& ! (fighter_kind == POPO || fighter_kind == *FIGHTER_KIND_NANA)
+                                    if ControlModule::get_stick_x(fighter.module_accessor) > 0.8 { //RIGHT 
+                                        RIGHT[entry_id] = true;
+                                    }
+                                    else if ControlModule::get_stick_x(fighter.module_accessor) < -0.8 {//LEFT
+                                        LEFT[entry_id] = true;
+                                    } 
+                                    else if ControlModule::get_stick_y(fighter.module_accessor) > 0.8 { //UP 
+                                        UP[entry_id] = true;
+                                    }
+                                    else if ControlModule::get_stick_y(fighter.module_accessor) < -0.8 {//DOWN
+                                        DOWN[entry_id] = true;
+                                    } 
+                                }
+                            }
+                            
+                            
+                            else {
+                                PROJECTILE_HIT[entry_id] = false; 
+                                VANISH_BUTTON[entry_id] = false;
+                            }
                         
-                        && ! SlowModule::is_slow(fighter.module_accessor)
-                        {// Only used to replicate a button_pad_trigger, runs only 1 frame pt 2
-                            GET_CURRENT_POSITION[entry_id] = true;
-                            VANISH_COUNT[entry_id] += 1;
+
+                        if VANISH_BUTTON[entry_id] {// Only used to replicate a button_pad_trigger, runs only 1 frame pt 2
+                            
+                            if ! SlowModule::is_slow(fighter.module_accessor)
+                            {
+                                GET_CURRENT_POSITION[entry_id] = true;
+                                
+                            }
                             
                         }
-
                     }
 
                 
@@ -149,22 +150,9 @@ pub static mut DOWN : [bool; 8] = [false; 8];
 
                 
                 if VANISH[entry_id] {
-                    VANISH_BUTTON[entry_id] = false;
-                    if ! status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK { //Don't turn around on grab attack
-                        PostureModule::reverse_lr(fighter.module_accessor); 
-                    }
-                    if status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK { //Make the opponent invisible too, for the illusion of vanish
-                        VisibilityModule::set_whole(opponent_boma, false);
-                    }
-                    //EffectModule::req_emit(fighter.module_accessor, Hash40::new("sys_aura_light"), 0);
-                    //macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
-                    VisibilityModule::set_whole(fighter.module_accessor, false);
-                    JostleModule::set_status(fighter.module_accessor, false); // Turns off body blocking for Ryu every frame Secret Sensation is true
-                    //macros::WHOLE_HIT(fighter, *HIT_STATUS_XLU); // Makes Ryu invincible.
-                    MotionModule::set_rate(fighter.module_accessor, 0.001);
-                    macros::SLOW_OPPONENT(fighter, 100.0, 10.0);
-
                     
+                    VANISH_BUTTON[entry_id] = false;
+                    EFFECTS_ON[entry_id] = true;
 
                     if CAMERA[entry_id] == false { // Exists so all of this code will only happen once.
                         
@@ -269,21 +257,11 @@ pub static mut DOWN : [bool; 8] = [false; 8];
                     if VANISH_TIMER[entry_id] > 1.0 {
                         VANISH[entry_id] = false;
                         CAMERA[entry_id] = false;
-                        MotionModule::set_rate(fighter.module_accessor, 1.0);
-                        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_GRAVITY_STABLE_UNABLE); 
-                        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK); 
-                        macros::SET_SPEED_EX(fighter, 0, 0.5, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-                        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
-                        VisibilityModule::set_whole(fighter.module_accessor, true);
-                        if status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK { //Make the opponent invisible too, for the illusion of vanish
-                            VisibilityModule::set_whole(opponent_boma, true);
-                        }
-                        //VisibilityModule::set_whole(opponent_boma, true);
-                        MotionModule::set_rate(fighter.module_accessor, 1.0);
-                        SlowModule::clear_whole(fighter.module_accessor);
-                        //macros::WHOLE_HIT(fighter, *HIT_STATUS_NORMAL);
-                        JostleModule::set_status(fighter.module_accessor, true);
+                        EFFECTS_OFF[entry_id] = true;
+
+
                         VANISH_TIMER[entry_id] = 0.0; // Resets the interpolation timer.
+                        VANISH_COUNTER[entry_id] = true;
                         
                     }
                     
@@ -293,6 +271,48 @@ pub static mut DOWN : [bool; 8] = [false; 8];
                     VANISH[entry_id] = false;
                     //ACTIVATE_VANISH[entry_id] = true;
                     //macros::WHOLE_HIT(fighter, *HIT_STATUS_NORMAL);
+                }
+
+                //EFFECTS ON/OFF
+                if EFFECTS_ON[entry_id] {
+
+                    if ! status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK { //Don't turn around on grab attack
+                        PostureModule::reverse_lr(fighter.module_accessor); 
+                    }
+                    if status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK { //Make the opponent invisible too, for the illusion of vanish
+                        VisibilityModule::set_whole(opponent_boma, false);
+                    }
+                    //EffectModule::req_emit(fighter.module_accessor, Hash40::new("sys_aura_light"), 0);
+                    //macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
+                    VisibilityModule::set_whole(fighter.module_accessor, false);
+                    JostleModule::set_status(fighter.module_accessor, false); // Turns off body blocking for Ryu every frame Secret Sensation is true
+                    //macros::WHOLE_HIT(fighter, *HIT_STATUS_XLU); // Makes Ryu invincible.
+                    MotionModule::set_rate(fighter.module_accessor, 0.001);
+                    macros::SLOW_OPPONENT(fighter, 100.0, 10.0);
+                    EFFECTS_ON[entry_id] = false;
+                }
+                if EFFECTS_OFF[entry_id] {
+
+                    if (fighter_kind == *FIGHTER_KIND_POPO || fighter_kind == *FIGHTER_KIND_NANA || fighter_kind == *FIGHTER_KIND_ICE_CLIMBER) {
+                        VisibilityModule::set_whole(fighter.module_accessor, true);
+                    }
+                    else {
+                        VisibilityModule::set_whole(fighter.module_accessor, true);                       
+                    }
+
+                    SlowModule::clear_whole(fighter.module_accessor);
+                    MotionModule::set_rate(fighter.module_accessor, 1.0); 
+                    JostleModule::set_status(fighter.module_accessor, true);                        
+                    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_GRAVITY_STABLE_UNABLE); 
+                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK); 
+                    macros::SET_SPEED_EX(fighter, 0, 0.5, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+                    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
+                    
+                    if status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK { //Make the opponent invisible too, for the illusion of vanish
+                        VisibilityModule::set_whole(opponent_boma, true);
+                    }
+                    //VisibilityModule::set_whole(opponent_boma, true);    
+                    EFFECTS_OFF[entry_id] = false;                
                 }
 
             }

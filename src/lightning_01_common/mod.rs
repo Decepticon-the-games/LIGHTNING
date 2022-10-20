@@ -7,13 +7,17 @@ use smashline::*;
 use smash_script::*;
 //use smash::phx::Hash40;
 //use smash::hash40;
+use crate::lightning_01_vanish::VANISH_READY;
+use crate::hooks::PROJECTILE_HIT;
 
+
+pub static mut ATTACK_CANCEL : [bool; 8] = [false; 8];
 
 
 #[fighter_frame_callback]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
-        //let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let fighter_kind = utility::get_kind(&mut *fighter.module_accessor);
         let status_kind = StatusModule::status_kind(fighter.module_accessor);
         //let prev_status_kind = StatusModule::prev_status_kind(fighter.module_accessor, 1);
@@ -22,7 +26,44 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let frame = MotionModule::frame(fighter.module_accessor);
         let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
         //let cat2 = ControlModule::get_command_flag_cat(fighter.module_accessor, 1);
+        let popo_nana = (fighter_kind == *FIGHTER_KIND_POPO || fighter_kind == *FIGHTER_KIND_NANA);
         
+
+
+        
+        //ATTACK CANCELS
+        if ATTACK_CANCEL[entry_id] && ! WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STATUS) {
+            if AttackModule::is_attack_occur(fighter.module_accessor) { 
+                if ! SlowModule::is_slow(fighter.module_accessor) {
+                    CancelModule::enable_cancel(fighter.module_accessor);
+                }                
+                if popo_nana {
+                    VANISH_READY[entry_id] = false;   
+                }
+                else {
+                    VANISH_READY[entry_id] = true; 
+                }
+            }
+            else {
+                VANISH_READY[entry_id] = false; 
+            }
+        }
+        else  {
+            ATTACK_CANCEL[entry_id] = false;
+        }        
+
+        if PROJECTILE_HIT[entry_id] == true && frame <= 30.0 {
+            if popo_nana {
+                VANISH_READY[entry_id] = false;   
+            }
+            else {
+                VANISH_READY[entry_id] = true; 
+            } 
+        }
+        else {
+            VANISH_READY[entry_id] = false; 
+        }
+
         
 
         //REMOVE INVINCIBILITY ON SHIELD BREAK 

@@ -3,7 +3,7 @@ use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smashline::*;
 use crate::lightning_01_lightning_mode::{LIGHTNING, LIGHTNING_BUTTON};
-use crate::lightning_01_vanish::{VANISH_COUNT, CAN_VANISH, VANISH_BUTTON};
+use crate::lightning_01_vanish::{VANISH_COUNT, VANISH_COUNTER, CAN_VANISH, VANISH_BUTTON};
 use crate::lightning_01_ultrainstinct::{CROSS_CANCEL_BUTTON};
 use crate::lightning_01_crimson_cancel::{CRIMSON_CANCEL_BUTTON};
 use crate::lightning_01_lightning_fsmeter::{FINAL_SMASH_BUTTON};
@@ -53,8 +53,6 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || LIGHTNING_BUTTON[entry_id];
         || FINAL_SMASH_BUTTON[entry_id];
 
-        //println!("vanish count: {}", VANISH_COUNT[entry_id]);
-        //println!("vanish count: {}", CAN_VANISH[entry_id]);
 
         //AS MANY AIRDODGES AS YOU HAVE JUMPS
 
@@ -111,6 +109,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //VANISHES
 
             //if SPECIAL_MECHANICS_METER_COUNT[entry_id] == 100 {
+                if VANISH_COUNTER[entry_id] {
+                   VANISH_COUNT[entry_id] += 1; 
+                   VANISH_COUNTER[entry_id] = false;
+                } 
+
                 if LIGHTNING[entry_id] == false {//Vanish only once
                     if VANISH_COUNT[entry_id] <1 {
                         CAN_VANISH[entry_id] = true;

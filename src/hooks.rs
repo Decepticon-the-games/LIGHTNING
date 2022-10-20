@@ -45,7 +45,7 @@ move_type_again: bool) -> u64 {
     
     let attacker_boma = sv_battle_object::module_accessor(attacker_object_id);
     let defender_boma = sv_battle_object::module_accessor(defender_object_id);
-    let oboma = sv_battle_object::module_accessor((WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32); // links weapon to whatever may ownn it  
+    let oboma = sv_battle_object::module_accessor((WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID)) as u32); // links weapon to whatever may ownn it  
 
     let attacker_fighter_kind = sv_battle_object::kind(attacker_object_id);
     //let defender_fighter_kind = sv_battle_object::kind(defender_object_id);
@@ -53,7 +53,7 @@ move_type_again: bool) -> u64 {
     //let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let a_entry_id = WorkModule::get_int(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let d_entry_id = WorkModule::get_int(defender_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    let o_entry_id = WorkModule::get_int(oboma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize; //links weapon to whatever may own it
+    let o_entry_id = WorkModule::get_int(&mut *oboma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize; //links weapon to whatever may own it
 
     let o_fighter_kind = smash::app::utility::get_kind(&mut *oboma);
     let o_status_kind = StatusModule::status_kind(oboma); 
@@ -116,38 +116,33 @@ move_type_again: bool) -> u64 {
                         
                         DIRECT_HIT[a_entry_id] = true;
                         WHO_GOT_HIT_BOMA[a_entry_id] = defender_object_id; //Store the id of the person who got hit up until vanish is pressed
-                        if ! (attacker_fighter_kind == *FIGHTER_KIND_POPO || attacker_fighter_kind == *FIGHTER_KIND_NANA) {
-                            VANISH_READY[a_entry_id] = true; 
-                        }
+                        //VANISH_READY[a_entry_id] = true; 
                     } 
                 }    
             
         
             
-            //IF THE ATTACKER IS A WEAPON AND THE DEFENDER IS A FIGHTER/COLLIDES WITH ANOTHER ATTACKER WEAPON, GET THE OWNER'S POSITION
+            //IF THE ATTACKER IS A WEAPON 
                 if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON {//if the attacker is a weaponn (projectile) 
 
-                    // Check to see if the owner of what you hit is a Fighter or not
+                    // Check to see if the owner of what you hit is a Fighter or not. If yes...
 
                     if utility::get_category(&mut *oboma) == *BATTLE_OBJECT_CATEGORY_FIGHTER { // If the object that was hit is owned by a fighter, stores that fighter's position
                     
                         PROJECTILE_HIT[o_entry_id] = true; 
                         WHO_GOT_HIT_BOMA[o_entry_id] = defender_object_id; //Store the id of the person who got hit up until vanish is pressed
-                        if ! (o_fighter_kind == *FIGHTER_KIND_POPO || o_fighter_kind == *FIGHTER_KIND_NANA) {
-                            VANISH_READY[a_entry_id] = true; 
-                        }
+                        //VANISH_READY[o_entry_id] = true; 
                     }    
                 
 
-            //IF THE ATTACKER IS A WEAPON AND THE DEFENDER IS A FIGHTER, GET THE DEFENDER'S POSITION
+                    //If a weapon...
                 
                     else if utility::get_category(&mut *oboma) == *BATTLE_OBJECT_CATEGORY_WEAPON { // If the object that was hit is a fighter, stores the opponent's position
 
                         PROJECTILE_HIT[o_entry_id] = true; 
                         WHO_GOT_HIT_BOMA[o_entry_id] = defender_object_id; //Store the id of the person who got hit up until vanish is pressed
-                        if ! (o_fighter_kind == *FIGHTER_KIND_POPO || o_fighter_kind == *FIGHTER_KIND_NANA) {
-                            VANISH_READY[a_entry_id] = true; 
-                        }
+                        //VANISH_READY[o_entry_id] = true; 
+
                     }    
                 }                 
             //}

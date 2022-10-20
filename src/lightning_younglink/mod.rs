@@ -3,6 +3,7 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::{L2CFighterCommon};
 use smash::lib::lua_const::*;
 use smashline::*;
+use crate::lightning_01_common::ATTACK_CANCEL;
 
 
 
@@ -12,7 +13,7 @@ use smashline::*;
 #[fighter_frame( agent = FIGHTER_KIND_YOUNGLINK )]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
-        //let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let frame = MotionModule::frame(fighter.module_accessor);
         let motion_kind = MotionModule::motion_kind(fighter.module_accessor);  
@@ -29,18 +30,16 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
  
         //Up Smash
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 && MotionModule::frame(module_accessor) >39.0 {            
-            if AttackModule::is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor){
-                CancelModule::enable_cancel(fighter.module_accessor);
-            }
+ATTACK_CANCEL[entry_id] = true; 
         }
 
         //Up Special
         if (motion_kind == smash::hash40("special_hi") && frame >= 43.0) || (motion_kind == smash::hash40("special_air_hi") && frame >= 46.0)  {
-            if AttackModule:: is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor) {
+
                 if jump_guard_dash_upspecial_pressed {
-                    CancelModule::enable_cancel(fighter.module_accessor);
+                    ATTACK_CANCEL[entry_id] = true; 
                 }
-            }
+
         }
         
     
@@ -53,9 +52,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4)
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-            if AttackModule::is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(module_accessor) {
-                CancelModule::enable_cancel(fighter.module_accessor);
-            }
+ATTACK_CANCEL[entry_id] = true; 
         }
 
         //ENHANCES

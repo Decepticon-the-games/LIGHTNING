@@ -8,6 +8,7 @@ use smash_script::*;
 //use smash::phx::Hash40;
 use crate::hooks::PROJECTILE_HIT;
 use crate::hooks::DIRECT_HIT;
+use crate::lightning_01_common::ATTACK_CANCEL;
 
 
 pub static mut VANISH : [bool; 8] = [false; 8];
@@ -50,7 +51,7 @@ static mut EFFECTS_OFF : [bool; 8] = [false; 8];
             //let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
             let opponent_boma = sv_battle_object::module_accessor(WHO_GOT_HIT_BOMA[entry_id]);
             let l_stick_out = ControlModule::get_stick_x(fighter.module_accessor) > 0.8|| ControlModule::get_stick_x(fighter.module_accessor) < -0.8 || ControlModule::get_stick_y(fighter.module_accessor) > 0.8 || ControlModule::get_stick_y(fighter.module_accessor) < -0.8;
-
+            let popo_nana = (fighter_kind == *FIGHTER_KIND_POPO || fighter_kind == *FIGHTER_KIND_NANA);
 
             if entry_id < 8 { 
 
@@ -75,9 +76,39 @@ static mut EFFECTS_OFF : [bool; 8] = [false; 8];
                 }
 
                 println!("vready: {}", VANISH_READY[entry_id]);    
+                println!("phit: {}", PROJECTILE_HIT[entry_id]);
                     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STATUS)  {
                        VANISH_READY[entry_id] = false;
                     }
+
+                
+                    if ATTACK_CANCEL[entry_id] && ! WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STATUS) {
+                        if AttackModule::is_attack_occur(fighter.module_accessor) {                
+                            if popo_nana {
+                                VANISH_READY[entry_id] = false;   
+                            }
+                            else {
+                                VANISH_READY[entry_id] = true; 
+                            }
+                        }
+                        else {
+                            VANISH_READY[entry_id] = false; 
+                        }
+                    }      
+            
+                    if PROJECTILE_HIT[entry_id] && frame <= 30.0 {
+                        if popo_nana {
+                            VANISH_READY[entry_id] = false;   
+                        }
+                        else {
+                            VANISH_READY[entry_id] = true; 
+                        } 
+                    }
+                    else {
+                        PROJECTILE_HIT[entry_id] = false; 
+                    }                    
+                
+
 
                     if VANISH_READY[entry_id] 
                     && CAN_VANISH[entry_id] 
@@ -116,7 +147,7 @@ static mut EFFECTS_OFF : [bool; 8] = [false; 8];
                             
                             
                             else {
-                                PROJECTILE_HIT[entry_id] = false; 
+                                //PROJECTILE_HIT[entry_id] = false; 
                                 VANISH_BUTTON[entry_id] = false;
                             }
                         

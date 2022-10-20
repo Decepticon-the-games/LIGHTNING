@@ -45,16 +45,21 @@ move_type_again: bool) -> u64 {
     
     let attacker_boma = sv_battle_object::module_accessor(attacker_object_id);
     let defender_boma = sv_battle_object::module_accessor(defender_object_id);
+    let oboma = sv_battle_object::module_accessor((WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID)) as u32); // links weapon to whatever may ownn it  
 
     let attacker_fighter_kind = sv_battle_object::kind(attacker_object_id);
     //let defender_fighter_kind = sv_battle_object::kind(defender_object_id);
+    let o_fighter_kind = smash::app::utility::get_kind(&mut *oboma);
 
     //let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let a_entry_id = WorkModule::get_int(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let d_entry_id = WorkModule::get_int(defender_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let o_entry_id = WorkModule::get_int(&mut *oboma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize; //links weapon to whatever may own it
 
-    let o_fighter_kind = smash::app::utility::get_kind(&mut *oboma);
     let o_status_kind = StatusModule::status_kind(oboma); 
+
+    
+
     //ULTRA INSTINCT (DEFENDER)
 
         if utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
@@ -70,8 +75,6 @@ move_type_again: bool) -> u64 {
                     }
                 }
                 else if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON {
-                    let oboma = sv_battle_object::module_accessor((WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID)) as u32); // links weapon to whatever may ownn it  
-                    let o_entry_id = WorkModule::get_int(&mut *oboma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize; //links weapon to whatever may own it
 
                     if utility::get_category(&mut *oboma) != *BATTLE_OBJECT_CATEGORY_FIGHTER {
                         OPPONENT_X[d_entry_id] = PostureModule::pos_x(defender_boma);
@@ -124,8 +127,6 @@ move_type_again: bool) -> u64 {
             
             //IF THE ATTACKER IS A WEAPON 
                 if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON {//if the attacker is a weaponn (projectile) 
-                    let oboma = sv_battle_object::module_accessor((WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID)) as u32); // links weapon to whatever may ownn it  
-                    let o_entry_id = WorkModule::get_int(&mut *oboma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize; //links weapon to whatever may own it
 
                     // Check to see if the owner of what you hit is a Fighter or not. If yes...
 

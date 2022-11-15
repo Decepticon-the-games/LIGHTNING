@@ -25,23 +25,29 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let status_kind = StatusModule::status_kind(module_accessor);
+        let hitlag = (AttackModule::is_attack_occur(module_accessor) && SlowModule::is_slow(module_accessor));
 
         if CRIMSON_CANCEL_TIMER[entry_id] == -1 
         && CAN_CRIMSON_CANCEL[entry_id] {
             
-            if DamageModule::damage(module_accessor, 0) >= 50.0
-            && (! CaptureModule::is_capture(module_accessor) || StopModule::is_hit(module_accessor)) 
-            { //Can't spark while being hit in hitlag or being held in a grab/throw, wastes it 
-                
-            
-                if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) 
-                //&& ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH) 
-                {
+            if DamageModule::damage(module_accessor, 0) >= 50.0 {
+                if ! (CaptureModule::is_capture(module_accessor))
+                && ! (StopModule::is_hit(module_accessor))
+                && ! (hitlag)
+                { //Can't spark while atacking in hitlag, being hit in hitlag or being held in a grab/throw, wastes it 
                     
-                    CRIMSON_CANCEL_BUTTON[entry_id] = true;
-
-                }
+                    
+                    if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) 
+                    //&& ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH) 
+                    {
+                        
+                        CRIMSON_CANCEL_BUTTON[entry_id] = true;
+                        CAN_CRIMSON_CANCEL_TEMP = CAN_CRIMSON_CANCEL;
+                        CAN_CRIMSON_CANCEL = [false; 8];
+                    }
+                }                
             }
+
             
         }
 
@@ -68,9 +74,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
 
             CRIMSON_CANCEL_EFFECTS[entry_id] = false;
-            CAN_CRIMSON_CANCEL_TEMP = CAN_CRIMSON_CANCEL;
-            CAN_CRIMSON_CANCEL = [false; 8];
-            
+
         }
         if CRIMSON_CANCEL_TIMER[entry_id] >= 60 
         && (MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw_l") || MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw_r")) 
@@ -86,16 +90,13 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         }            
 
         
-        //When the timer runs out or you get KO'd, the effects wear off
-        else if CRIMSON_CANCEL_TIMER[entry_id] == 0 || status_kind == *FIGHTER_STATUS_KIND_DEAD {
+        //When you attack next, the timer runs out or you get KO'd, the effects wear off
+        if CRIMSON_CANCEL_TIMER[entry_id] == 0 || status_kind == *FIGHTER_STATUS_KIND_DEAD || (hitlag) {
+            CAN_CRIMSON_CANCEL = CAN_CRIMSON_CANCEL_TEMP;
             macros::WHOLE_HIT(fighter, *HIT_STATUS_NORMAL);
             macros::CANCEL_FILL_SCREEN(fighter, 0, 5.0);
             macros::SLOW_OPPONENT(fighter, 0.0, 0.0);
             macros::EFFECT_OFF_KIND(fighter, smash::phx::Hash40::new("sys_aura_dark"), true, true);
-            
-            CRIMSON_CANCEL_EFFECTS[entry_id] = false;
-            CRIMSON_CANCEL_BUTTON[entry_id] = false;
-            CRIMSON_CANCEL_TIMER[entry_id] = -1;
             
         }
 
@@ -109,9 +110,6 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if status_kind == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false  {
             CRIMSON_CANCEL_TIMER[entry_id] = -1;
             CAN_CRIMSON_CANCEL[entry_id] = true;
-            CRIMSON_CANCEL_BUTTON[entry_id] = false; 
-            CRIMSON_CANCEL_EFFECTS[entry_id] = false;
-            CAN_CRIMSON_CANCEL = CAN_CRIMSON_CANCEL_TEMP;
         } 
     }
 }

@@ -204,25 +204,6 @@ pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObje
             return ret;
         }
     }
-    if CRIMSON_CANCEL_TIMER[entry_id] >= 1 {
-        if (term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK 
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_S3
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_S4
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI3
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW3
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW
-        ) {
-            return false;
-        }
-        else {
-            return ret;
-        } 
-    }
     else {
         return ret;
     }

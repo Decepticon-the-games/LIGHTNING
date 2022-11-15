@@ -33,6 +33,7 @@ static mut FLASH_TIMER : [i16; 8] = [-1; 8];
             let fighter_kind = utility::get_kind(&mut *fighter.module_accessor);
             let status_kind = StatusModule::status_kind(fighter.module_accessor);
             let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+            let up_taunt_motion = (motion_kind == smash::hash40("appeal_hi_l")||motion_kind == smash::hash40("appeal_hi_r"));
 
             if entry_id < 8 {
 
@@ -46,7 +47,7 @@ static mut FLASH_TIMER : [i16; 8] = [-1; 8];
                 //Button 
                 if //(ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) 
                 //&& ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_R))
-                motion_kind == smash::hash40("appeal_hi_l")||motion_kind == smash::hash40("appeal_hi_r")
+                up_taunt_motion
                 && StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_GROUND 
                 {
                     CROSS_CANCEL_BUTTON[entry_id] = true;
@@ -63,7 +64,7 @@ static mut FLASH_TIMER : [i16; 8] = [-1; 8];
                     CROSS_CANCEL_BUTTON[entry_id] = false;
                 }
 
-                if CROSS_CANCEL_SETUP[entry_id] && SECRET_SENSATION [entry_id] == false 
+                if CROSS_CANCEL_SETUP[entry_id] && SECRET_SENSATION [entry_id] == false && up_taunt_motion
                 {
                     //StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, false);
                     if MotionModule::frame(fighter.module_accessor) == 4.0 {

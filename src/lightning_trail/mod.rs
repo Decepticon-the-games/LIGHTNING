@@ -45,14 +45,16 @@ ATTACK_CANCEL[entry_id] = true;
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         && ! (motion_kind== smash::hash40("attack_s3"))
         && ! (motion_kind== smash::hash40("attack_s3_2"))
-        //&& ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
+        && ! (motion_kind== smash::hash40("attack_s3_3"))
         && ! (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
         && ! (motion_kind== smash::hash40("attack_air_n"))
         && ! (motion_kind== smash::hash40("attack_air_n2"))
+        && ! (motion_kind== smash::hash40("attack_air_f3"))
         && ! (motion_kind== smash::hash40("attack_air_f"))
         && ! (motion_kind== smash::hash40("attack_air_f2"))
-        //&& ! (status_kind == *FIGHTER_TRAIL_STATUS_KIND_ATTACK_AIR_N)
-        //&& ! (status_kind == FIGHTER_TRAIL_STATUS_KIND_ATTACK_AIR_F)
+        && ! (motion_kind== smash::hash40("attack_air_f3"))
+        && ! (motion_kind== smash::hash40("attack_air_n3"))
+        
         && ! (status_kind == *FIGHTER_STATUS_KIND_THROW) {
 ATTACK_CANCEL[entry_id] = true;  
 }

@@ -1,0 +1,47 @@
+[package]
+name = "lightning"
+version = "0.1.0-tests"
+authors = ["DECEPTICON"]
+edition = "2018"
+
+[package.metadata.skyline]
+titleid = "01006A800016E000"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+skyline = "0.2.1"
+skyline_smash = { git = "https://github.com/blu-dev/skyline-smash", features = ["weak_l2cvalue"]}
+smashline = { git = "https://github.com/blu-dev/smashline", branch = "development" }
+fighters = { path = "../fighters" }
+skyline-web = { git = "https://github.com/skyline-rs/skyline-web", optional = true }
+rand = { git = "https://github.com/skyline-rs/rand" }
+ninput = { git = "https://github.com/blu-dev/ninput" }
+smash-arc = { version = "0.5", features = ["smash-runtime", "rust-zstd"]}
+
+[patch.crates-io]
+ring = { git = "https://github.com/skyline-rs/ring", branch = "0.16.20" }
+webpki = { git = "https://github.com/skyline-rs/webpki" }
+getrandom = { git = "https://github.com/skyline-rs/getrandom" }
+
+
+# [patch.'https://github.com/skyline-rs/skyline-web']
+# skyline-web = { git = "https://github.com/blu-dev/skyline-web", branch = "less-panics" }
+
+[features]
+default = ["skyline-web"]
+
+main_nro = ["skyline-web"]
+add_status = []
+runtime = ["fighters/ignore-common", "fighters/runtime"]
+
+
+
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+lto = true

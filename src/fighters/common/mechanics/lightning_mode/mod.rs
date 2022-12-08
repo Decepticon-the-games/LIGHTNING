@@ -9,7 +9,7 @@ use smash::hash40;
 use smash::phx::Hash40;
 use smash_script::*;
 
-use crate::mechanics::vanish::ACTIVATE_VANISH;
+use crate::fighters::common::mechanics::vanish::ACTIVATE_VANISH;
 //use crate::lightning_02_up_special_callbacks::ENTRY_ID;
 
 pub static mut FIGHTER_MANAGER_ADDR: usize = 0;

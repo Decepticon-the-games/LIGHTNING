@@ -6,9 +6,9 @@ use smash::phx::Vector2f;
 use smashline::*;
 use smash_script::*;
 //use smash::phx::Hash40;
-use crate::function_hooks::cross_cancel_vanish::PROJECTILE_HIT;
-use crate::function_hooks::cross_cancel_vanish::DIRECT_HIT;
-use crate::mechanics::attack_cancels::ATTACK_CANCEL;
+use crate::fighters::common::function_hooks::cross_cancel_vanish::PROJECTILE_HIT;
+use crate::fighters::common::function_hooks::cross_cancel_vanish::DIRECT_HIT;
+use crate::fighters::common::mechanics::attack_cancels::ATTACK_CANCEL;
 
 
 pub static mut VANISH : [bool; 8] = [false; 8];

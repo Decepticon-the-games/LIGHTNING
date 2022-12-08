@@ -9,9 +9,9 @@ use smash::lua2cpp::{L2CFighterCommon};
 use smashline::*;
 use smash::hash40;
 use smash::phx::Hash40;
-use crate::mechanics::crimson_cancel::CRIMSON_CANCEL_TIMER;
-use crate::mechanics::lightning_mode::LIGHTNING;
-use crate::mechanics::ultrainstinct::SEC_SEN_STATE;
+use crate::fighters::common::mechanics::crimson_cancel::CRIMSON_CANCEL_TIMER;
+use crate::fighters::common::mechanics::lightning_mode::LIGHTNING;
+use crate::fighters::common::mechanics::ultrainstinct::SEC_SEN_STATE;
 
 pub static mut FIGHTER_MANAGER_ADDR: usize = 0;
 //pub static mut START_FS: [bool;9] = [false;9]; //Used for canceling taunt startup into FS

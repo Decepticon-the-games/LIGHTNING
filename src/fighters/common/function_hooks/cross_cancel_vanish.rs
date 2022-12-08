@@ -5,9 +5,9 @@ use smash::hash40;
 use skyline::hooks::{getRegionAddress, Region};
 use smash::app::FighterManager;
 
-use crate::mechanics::ultrainstinct::{SEC_SEN_STATE, SECRET_SENSATION, OPPONENT_X, OPPONENT_Y, OPPONENT_BOMA, CROSS_CANCEL_BUTTON};
-use crate::mechanics::vanish::{ACTIVATE_VANISH, VANISH, VANISH_READY, WHO_GOT_HIT_BOMA, VANISH_BUTTON};
-use crate::mechanics::lightning_mode::{LIGHTNING_BUTTON};
+use crate::fighters::common::mechanics::ultrainstinct::{SEC_SEN_STATE, SECRET_SENSATION, OPPONENT_X, OPPONENT_Y, OPPONENT_BOMA, CROSS_CANCEL_BUTTON};
+use crate::fighters::common::mechanics::vanish::{ACTIVATE_VANISH, VANISH, VANISH_READY, WHO_GOT_HIT_BOMA, VANISH_BUTTON};
+use crate::fighters::common::mechanics::lightning_mode::{LIGHTNING_BUTTON};
 
 pub static mut PROJECTILE_HIT : [bool; 8] = [false; 8];
 pub static mut DIRECT_HIT : [bool; 8] = [false; 8];
@@ -162,3 +162,14 @@ move_type_again: bool) -> u64 {
     original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)
 }
 
+pub fn install() {
+    unsafe{
+        let text_ptr = getRegionAddress(Region::Text) as *const u8;
+        let text_size = (getRegionAddress(Region::Rodata) as usize) - (text_ptr as usize);
+        let text = std::slice::from_raw_parts(text_ptr, text_size);
+        if let Some(offset) = find_subsequence(text, NOTIFY_LOG_EVENT_COLLISION_HIT_SEARCH_CODE) {
+            NOTIFY_LOG_EVENT_COLLISION_HIT_OFFSET = offset;
+        }
+    }
+    skyline::install_hook!(notify_log_event_collision_hit_replace);
+}

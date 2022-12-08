@@ -2,11 +2,11 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smashline::*;
-use crate::mechanics::lightning_mode::{LIGHTNING, LIGHTNING_BUTTON};
-use crate::mechanics::vanish::{VANISH_COUNT, VANISH_COUNTER, CAN_VANISH, VANISH_BUTTON};
-use crate::mechanics::ultrainstinct::{CROSS_CANCEL_BUTTON};
-use crate::mechanics::crimson_cancel::{CRIMSON_CANCEL_BUTTON};
-use crate::mechanics::lightning_fsmeter::{FINAL_SMASH_BUTTON};
+use crate::fighters::common::mechanics::lightning_mode::{LIGHTNING, LIGHTNING_BUTTON};
+use crate::fighters::common::mechanics::vanish::{VANISH_COUNT, VANISH_COUNTER, CAN_VANISH, VANISH_BUTTON};
+use crate::fighters::common::mechanics::ultrainstinct::{CROSS_CANCEL_BUTTON};
+use crate::fighters::common::mechanics::crimson_cancel::{CRIMSON_CANCEL_BUTTON};
+use crate::fighters::common::mechanics::lightning_fsmeter::{FINAL_SMASH_BUTTON};
 use smash::phx::Hash40;
 use smash::hash40;
 

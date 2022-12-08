@@ -1,11 +1,21 @@
 use super::*;
+use smash::app::*;
+use smash::app::lua_bind::*;
+use smash::lua2cpp::L2CFighterCommon;
+use smash::lib::lua_const::*;
+use smashline::*;
+
+use smash_script::*;
+use crate::fighters::common::mechanics::vanish::{VANISH_READY, CANCEL_INTO_VANISH};
+use crate::fighters::common::function_hooks::cross_cancel_vanish::PROJECTILE_HIT;
 
 pub static mut ATTACK_CANCEL : [bool; 8] = [false; 8];
 
 #[fighter_frame_callback]
 pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
     unsafe {
-
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let status_kind = StatusModule::status_kind(fighter.module_accessor);
         //ATTACK CANCELS
         if ATTACK_CANCEL[entry_id] 
         && ! (WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STATUS) || status_kind == *FIGHTER_STATUS_KIND_FINAL) {

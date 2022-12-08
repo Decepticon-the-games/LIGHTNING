@@ -1,11 +1,11 @@
 use super::*;
 
-use crate::mechanics::ultrainstinct::{SECRET_SENSATION, CROSS_CANCEL_BUTTON};
-use crate::mechanics::vanish::{VANISH, VANISH_BUTTON};
-use crate::mechanics::upbtransitions::DISABLE_UP_SPECIAL;
-use crate::mechanics::lightning_fsmeter::{DISABLE_FINAL, FINAL_SMASH_BUTTON};
-use crate::mechanics::crimson_cancel::{CRIMSON_CANCEL_BUTTON, CRIMSON_CANCEL_TIMER};
-use crate::mechanics::lightning_mode::{LIGHTNING_BUTTON};
+use crate::fighters::common::mechanics::ultrainstinct::{SECRET_SENSATION, CROSS_CANCEL_BUTTON};
+use crate::fighters::common::mechanics::vanish::{VANISH, VANISH_BUTTON};
+use crate::fighters::common::mechanics::upbtransitions::DISABLE_UP_SPECIAL;
+use crate::fighters::common::mechanics::lightning_fsmeter::{DISABLE_FINAL, FINAL_SMASH_BUTTON};
+use crate::fighters::common::mechanics::crimson_cancel::{CRIMSON_CANCEL_BUTTON, CRIMSON_CANCEL_TIMER};
+use crate::fighters::common::mechanics::lightning_mode::{LIGHTNING_BUTTON};
 
 #[skyline::hook(replace = smash::app::lua_bind::WorkModule::is_enable_transition_term )]
 pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObjectModuleAccessor, term: i32) -> bool {

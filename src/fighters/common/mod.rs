@@ -4,7 +4,7 @@
 #![feature(repr_simd)]
 
 
-mod mechanics;
+pub mod mechanics;
 mod function_hooks;
 
 pub fn install() {

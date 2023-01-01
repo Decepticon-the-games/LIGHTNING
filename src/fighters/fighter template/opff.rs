@@ -12,10 +12,6 @@ use {
 use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 
-
-
-
-
 #[fighter_frame( agent = FIGHTER_KIND_CODENAMEHERE )]
 
     pub fn codenamehere_opff(fighter : &mut L2CFighterCommon) {
@@ -29,7 +25,7 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-//Enable cancel subtitle here.   
+//Enable cancel   
 
             //else if for every new move.  
             if move_here {
@@ -46,12 +42,12 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             }
 
 
-//New subtitle for any other code, if not applicable just delete the lines
+//New subtititle for any other code, if not applicable just delete the lines
 
         }
     }
 
 pub fn install() {
-    smashline::install_agent_frames!(enable_cancel, subtitlehere);
+    smashline::install_agent_frames!(codenamehere_opff);
 
 }

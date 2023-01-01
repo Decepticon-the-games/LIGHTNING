@@ -12,9 +12,9 @@ use {
 use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 
-#[fighter_frame( agent = FIGHTER_KIND_CODENAMEHERE )]
+#[fighter_frame( agent = FIGHTER_KIND_YOUNGLINK )]
 
-    pub fn codenamehere_opff(fighter : &mut L2CFighterCommon) {
+    pub fn younglink_opff(fighter : &mut L2CFighterCommon) {
         unsafe {
             let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
@@ -27,17 +27,37 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 //Enable cancel   
 
-            //else if for every new move.  
-            if move_here {
+            //Up Special
+            if motion_kind == smash::hash40("special_hi") {
+                if frame >= 43.0 {
+                    ENABLE_ATTACK_CANCEL[entry_id] = true;
+                }
+                else {
+                    ENABLE_ATTACK_CANCEL[entry_id] = false;
+                }
+            else if motion_kind == smash::hash40("special_air_hi") {
+                if frame >= 46.0 {
+                    ENABLE_ATTACK_CANCEL[entry_id] = true;
+                }
+                else {
+                    ENABLE_ATTACK_CANCEL[entry_id] = false;
+                }
+            }
+            //Up smash  
+            else if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
                 
-                if frame >= 0.0 {
+                if frame >= 39.0 {
+                    ENABLE_ATTACK_CANCEL[entry_id] = true;
+                }
+                else {
                     ENABLE_ATTACK_CANCEL[entry_id] = false;
                 }  
             }
-            //else if move {
-
-            //}
-            else {//This stays at the bottom
+            //Side smash
+            else if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 {
+                ENABLE_ATTACK_CANCEL[entry_id] = false;
+            }
+            else {
                 ENABLE_ATTACK_CANCEL[entry_id] = true;
             }
 
@@ -48,6 +68,6 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
     }
 
 pub fn install() {
-    smashline::install_agent_frames!(codenamehere_opff);
+    smashline::install_agent_frames!(younglink_opff);
 
 }

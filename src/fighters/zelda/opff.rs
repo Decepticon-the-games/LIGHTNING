@@ -12,9 +12,9 @@ use {
 use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 
-#[fighter_frame( agent = FIGHTER_KIND_CODENAMEHERE )]
+#[fighter_frame( agent = FIGHTER_KIND_ZELDA )]
 
-    pub fn codenamehere_opff(fighter : &mut L2CFighterCommon) {
+    pub fn zelda_opff(fighter : &mut L2CFighterCommon) {
         unsafe {
             let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
@@ -27,27 +27,12 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 //Enable cancel   
 
-            //else if for every new move.  
-            if move_here {
-                
-                if frame >= 0.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                }  
-            }
-            //else if move {
-
-            //}
-            else {//This stays at the bottom
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
-            }
-
-
-//New subtititle for any other code, if not applicable just delete the lines
+            ENABLE_ATTACK_CANCEL[entry_id] = true;
 
         }
     }
 
 pub fn install() {
-    smashline::install_agent_frames!(codenamehere_opff);
+    smashline::install_agent_frames!(zelda_opff);
 
 }

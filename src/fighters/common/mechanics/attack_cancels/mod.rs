@@ -27,7 +27,6 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
         || (((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD) != 0) && situation_kind == *SITUATION_KIND_GROUND) 
         || (((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0) && situation_kind == *SITUATION_KIND_AIR);
 
-        println!("count: {}", ATTACK_CANCEL_COUNT[entry_id]);
 
         //ENABLE ATTACK CANCELS// this instance prevents cancelling more than a certain amount without first moving
 

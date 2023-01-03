@@ -11,10 +11,12 @@ use smash::phx::Hash40;
 use smash::hash40;
 
 //static mut MOTION_CHECK : [i32; 8] = [0; 8]; // Gets status kind while jump_guard_dash_upspecial_pressed. This is to avoid spam when u have no jumps/dodges left, so the status being checked would be the status being spammed. If it tdetects jump/dodge, it'll do nothing.
-static mut CANCEL_IN_NEUTRAL : [bool; 8] = [false; 8];
+pub static mut CANCEL_IN_NEUTRAL : [bool; 8] = [false; 8];
+pub static mut DISABLE_CANCEL_IN_NEUTRAL : [bool; 8] = [false; 8];
 static mut AIRDODGE_BUTTON : [bool; 8] = [false; 8];// for only running the code within it 1 frame.
 static mut AIRDODGE_COUNT : [i32; 8] = [0; 8]; //  You start off with one airdodge. Every other airdodge after that before touching the ground increases the number up to how many jumps that fighter has.
-
+pub static mut SIDE_SPECIAL_COUNTER : [bool; 8] = [false; 8];
+pub static mut SIDE_SPECIAL_COUNT : [i32; 8] = [0; 8];
 
 
 
@@ -145,7 +147,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if CANCEL_IN_NEUTRAL [entry_id] {
 
             //CANCEL FOR AS MANY JUMPS AS YOU HAVE    
-                if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0 {
+                if (ControlModule::is_enable_flick_jump(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0 {
                     
                     if situation_kind == *SITUATION_KIND_GROUND {
                         StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
@@ -185,7 +187,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
 
         //
-        if CANCEL_IN_NEUTRAL [entry_id] == false && ! AttackModule::is_attack_occur(fighter.module_accessor) {
+        if CANCEL_IN_NEUTRAL [entry_id] == false 
+        && ! DISABLE_CANCEL_IN_NEUTRAL[entry_id]
+        && ! AttackModule::is_attack_occur(fighter.module_accessor) {
 
             if fighter_kind == *FIGHTER_KIND_MARIO 
                 && (
@@ -546,8 +550,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_air_lw") && frame > 25.0 )
                     || (motion_kind == smash::hash40("special_n") && frame > 122.0 )
                     || (motion_kind == smash::hash40("special_air_n") && frame >122.0 )
-                    || (motion_kind == smash::hash40("special_s") && frame > 38.0 )
-                    || (motion_kind == smash::hash40("special_air_s") && frame >38.0 )
+                    || (motion_kind == smash::hash40("special_s") && frame > 21.0 )
+                    || (motion_kind == smash::hash40("special_air_s") && frame >21.0 )
                     ||(motion_kind == smash::hash40("special_hi") && frame == 0.0 )
                     ||(motion_kind == smash::hash40("special_air_hi") && frame >33.0 )
                     || (motion_kind == smash::hash40("special_lw") && frame == 0.0 )

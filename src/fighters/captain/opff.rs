@@ -47,7 +47,7 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 //Side special cancel taunt
             if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
-                frame>= 20.0 {
+                if frame >= 20.0 {
                     if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI)
                     || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW)
                     || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_L)

@@ -19,7 +19,7 @@ pub mod popo;
 pub mod nana;
 pub mod sheik;
 pub mod zelda;
-pub mod mariod
+pub mod mariod;
 pub mod pichu;
 pub mod falco;
 pub mod marth;

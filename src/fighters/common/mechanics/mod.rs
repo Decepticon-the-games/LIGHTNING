@@ -15,6 +15,7 @@ pub mod edgecancelling;
 pub mod lightning_fsmeter;
 //mod custom_meters;
 pub mod vanish;
+pub mod misc;
 
 pub fn install() {
     attack_cancels::install();
@@ -27,4 +28,5 @@ pub fn install() {
     upbcancels::install();
     upbtransitions::install();
     edgecancelling::install();
+    misc::install();
 }

@@ -28,7 +28,7 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
 //Enable cancel   
 
             //else if for every new move.  
-            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S {
+            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 {
                 
                 if frame >= 19.0 {
                     ENABLE_ATTACK_CANCEL[entry_id] = true;

@@ -168,7 +168,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //if fighter_kind == *FIGHTER_KIND_SAMUS || fighter_kind == *FIGHTER_KIND_SAMUSD {
             //    if motion_kind == smash::hash40("special_hi") || motion_kind == smash::hash40("special_air_hi") {
             //        if frame == 20.0 {
-            //            CancelModule::enable_cancel(fighter.module_accessor);
+            //            crate::fighters::common::utility::enable_cancel_real(fighter);
             //        }
             //    }
             //}

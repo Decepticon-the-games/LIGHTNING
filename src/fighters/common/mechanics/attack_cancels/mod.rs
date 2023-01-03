@@ -80,7 +80,7 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
         && ! (WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STATUS) || status_kind == *FIGHTER_STATUS_KIND_FINAL) {
             
             if AttackModule::is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) { 
-                CancelModule::enable_cancel(fighter.module_accessor);
+                crate::fighters::common::utility::enable_cancel_real(fighter);
             }
             
             

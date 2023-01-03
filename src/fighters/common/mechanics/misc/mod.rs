@@ -28,13 +28,13 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
 //EASIER WAVEDASH CHAINS// 
         if status_kind == *FIGHTER_STATUS_KIND_LANDING && frame >10.0 {
-            CancelModule::enable_cancel(fighter.module_accessor);
+            crate::fighters::common::utility::enable_cancel_real(fighter);
         }
             
 
 //REMOVE LANDING LAG
         if (status_kind == *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR || status_kind == *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL) && frame >1.0 {
-            CancelModule::enable_cancel(fighter.module_accessor);
+            crate::fighters::common::utility::enable_cancel_real(fighter);
         }
 
 //AIRDASH
@@ -44,7 +44,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             //PERFECT || DELAYED
             if frame == 2.0 && frame >= 8.0 {
                 
-                CancelModule::enable_cancel(fighter.module_accessor);
+                crate::fighters::common::utility::enable_cancel_real(fighter);
                 
             }
         }
@@ -93,7 +93,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //if status_kind == *FIGHTER_STATUS_KIND_THROW && AttackModule::is_attack_occur(fighter.module_accessor) {
             
         //    if ! (fighter_kind == *FIGHTER_KIND_SHULK && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0) { //so shulk's monado arts don't break
-        //        CancelModule::enable_cancel(fighter.module_accessor);
+        //        crate::fighters::common::utility::enable_cancel_real(fighter);
         //    }
             
         //}

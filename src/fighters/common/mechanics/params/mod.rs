@@ -32,7 +32,7 @@ fn params_main(params_info: &ParamsInfo<'_>) {
         common.damage_fly_correction_max = 18.0;
 
         //Roll sensitivity
-        common.escape_fb_flick_x =2
+        common.escape_fb_flick_x =2;
 
         //Shield Pressure
 

@@ -161,7 +161,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                         || (max_jumps == 6 && jumps_used <6)
                         || (edgde_one_wing_max_jumps == 3 && jumps_used <3)
                         {
-                            CancelModule::enable_cancel(fighter.module_accessor);
+                            crate::fighters::common::utility::enable_cancel_real(fighter);
                         }
                     }
                 }
@@ -172,7 +172,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 || special_mechanics_button
                 {
                  
-                    CancelModule::enable_cancel(fighter.module_accessor);
+                    crate::fighters::common::utility::enable_cancel_real(fighter);
                 }
                 CANCEL_IN_NEUTRAL [entry_id] = false;           
         }

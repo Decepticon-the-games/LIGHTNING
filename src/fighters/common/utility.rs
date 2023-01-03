@@ -26,22 +26,22 @@ pub unsafe fn enable_cancel_real(fighter: &mut L2CFighterCommon) -> bool {
         *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_WALL_JUMP,
         *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_JUMP_AERIAL
     ];
-    let ids = [
-        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_WALK,
-        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN,
-        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH,
-        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH,
-    ];
+    // let ids = [
+    //     *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_WALK,
+    //     *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN,
+    //     *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH,
+    //     *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH,
+    // ];
     let mut is_group_enabled = [false; 18];
-    let mut is_id_enabled = [false; 4];
+    // let mut is_id_enabled = [false; 4];
     for x in 0..groups.len() {
         is_group_enabled[x] = WorkModule::is_enable_transition_term_group(fighter.module_accessor, groups[x]);
         WorkModule::enable_transition_term_group(fighter.module_accessor, groups[x]);
     }
-    for x in 0..ids.len() {
-        is_id_enabled[x] = WorkModule::is_enable_transition_term_group(fighter.module_accessor, ids[x]);
-        WorkModule::enable_transition_term(fighter.module_accessor, ids[x]);
-    }
+    // for x in 0..ids.len() {
+    //     is_id_enabled[x] = WorkModule::is_enable_transition_term_group(fighter.module_accessor, ids[x]);
+    //     WorkModule::enable_transition_term(fighter.module_accessor, ids[x]);
+    // }
     let is_crouching = [
         *FIGHTER_STATUS_KIND_ATTACK_LW3
     ].contains(&StatusModule::status_kind(fighter.module_accessor));
@@ -52,10 +52,10 @@ pub unsafe fn enable_cancel_real(fighter: &mut L2CFighterCommon) -> bool {
             WorkModule::unable_transition_term_group(fighter.module_accessor, groups[x]);
         }
     }
-    for x in 0..ids.len() {
-        if !is_id_enabled[x] {
-            WorkModule::unable_transition_term(fighter.module_accessor, ids[x]);
-        }
-    }
+    // for x in 0..ids.len() {
+    //     if !is_id_enabled[x] {
+    //         WorkModule::unable_transition_term(fighter.module_accessor, ids[x]);
+    //     }
+    // }
     cancel
 }

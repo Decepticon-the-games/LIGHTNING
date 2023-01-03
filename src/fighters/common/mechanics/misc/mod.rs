@@ -42,7 +42,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         
         if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
             //PERFECT || DELAYED
-            if frame == 2.0 && frame >= 8.0 {
+            if frame == 2.0 || frame >= 8.0 {
                 
                 crate::fighters::common::utility::enable_cancel_real(fighter);
                 

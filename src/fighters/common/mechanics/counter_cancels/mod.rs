@@ -26,7 +26,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_hit") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw_hit") {
                 if MotionModule::frame(fighter.module_accessor) >1.0 {
                     if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
-                        crate::fighters::common::utility::enable_cancel_real(fighter);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }   
@@ -35,7 +35,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if fighter_kind == *FIGHTER_KIND_SHULK {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_hit") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw_hit") {
                 if ! ((cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) || (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0)) {
-                    crate::fighters::common::utility::enable_cancel_real(fighter);
+                    CancelModule::enable_cancel(fighter.module_accessor);
                 }
             }
         }
@@ -44,7 +44,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_hit") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw_hit") {
                 if MotionModule::frame(fighter.module_accessor) >2.0 {
                     if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
-                        crate::fighters::common::utility::enable_cancel_real(fighter);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }   
@@ -54,7 +54,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_split") {
                 if MotionModule::frame(fighter.module_accessor) >1.0 {
                     if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
-                        crate::fighters::common::utility::enable_cancel_real(fighter);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }   
@@ -64,7 +64,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_hit") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw_hit") {
                 if MotionModule::frame(fighter.module_accessor) >1.0 {
                     if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
-                        crate::fighters::common::utility::enable_cancel_real(fighter);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }   
@@ -74,7 +74,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_counter") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw_counter") {
                 if MotionModule::frame(fighter.module_accessor) >1.0 {
                     if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
-                        crate::fighters::common::utility::enable_cancel_real(fighter);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }   
@@ -84,7 +84,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw1_catch") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw1_catch") {
                 if MotionModule::frame(fighter.module_accessor) >1.0 {
                     if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
-                        crate::fighters::common::utility::enable_cancel_real(fighter);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }   
@@ -94,7 +94,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw1_hit") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw1_hit") {
                 if MotionModule::frame(fighter.module_accessor) >1.0 {
                     if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
-                        crate::fighters::common::utility::enable_cancel_real(fighter);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }   
@@ -104,7 +104,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_attack") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw_attack") {
                 if MotionModule::frame(fighter.module_accessor) >1.0 {
                     if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
-                        crate::fighters::common::utility::enable_cancel_real(fighter);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }   
@@ -115,7 +115,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_n_hit") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_n_hit") {
                 if MotionModule::frame(fighter.module_accessor) >1.0 {
                     if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
-                        crate::fighters::common::utility::enable_cancel_real(fighter);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }   
@@ -125,7 +125,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_hit") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw_hit") {
                 if MotionModule::frame(fighter.module_accessor) >1.0 {
                     if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
-                        crate::fighters::common::utility::enable_cancel_real(fighter);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }   
@@ -137,7 +137,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_rebound") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw_rebound") {
                 if MotionModule::frame(fighter.module_accessor) >1.0 {
                     if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
-                        crate::fighters::common::utility::enable_cancel_real(fighter);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }   

@@ -6,6 +6,7 @@ use crate::fighters::common::mechanics::upbtransitions::DISABLE_UP_SPECIAL;
 use crate::fighters::common::mechanics::lightning_fsmeter::{DISABLE_FINAL, FINAL_SMASH_BUTTON};
 use crate::fighters::common::mechanics::crimson_cancel::{CRIMSON_CANCEL_BUTTON, CRIMSON_CANCEL_TIMER};
 use crate::fighters::common::mechanics::lightning_mode::{LIGHTNING_BUTTON};
+use crate::fighters::common::mechanics::misc::{TRANSITION_TERM_NONE};
 
 #[skyline::hook(replace = smash::app::lua_bind::WorkModule::is_enable_transition_term )]
 pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObjectModuleAccessor, term: i32) -> bool {
@@ -21,6 +22,9 @@ pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObje
         return false;
     }
     if VANISH[entry_id] {
+        return false;
+    }
+    if TRANSITION_TERM_NONE[entry_id] {
         return false;
     }
     //if special_mechanics_button 

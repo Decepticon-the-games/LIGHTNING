@@ -6,7 +6,7 @@
 
 pub mod mechanics;
 mod function_hooks;
-pub mod utility;
+//pub mod utility;
 
 pub fn install() {
 

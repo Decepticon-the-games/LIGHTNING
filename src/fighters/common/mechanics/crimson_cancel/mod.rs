@@ -79,7 +79,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if CRIMSON_CANCEL_TIMER[entry_id] >= 60 
         && (MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw_l") || MotionModule::motion_kind(module_accessor) == smash::hash40("appeal_lw_r")) 
         && ! ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) {    
-            crate::fighters::common::utility::enable_cancel_real(fighter); //Cancels the taunt to gain maximum spark time   
+            CancelModule::enable_cancel(fighter.module_accessor); //Cancels the taunt to gain maximum spark time   
         }
         //Countdown sequence
         if CRIMSON_CANCEL_TIMER[entry_id] >= 1 {

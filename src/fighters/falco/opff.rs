@@ -66,7 +66,7 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             || motion_kind == smash::hash40("special_air_lw_r") {
                 if frame >= 7.0 {
                     if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0  {
-                        crate::fighters::common::utility::enable_cancel_real(fighter);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }
@@ -74,7 +74,7 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             if status_kind == *FIGHTER_STATUS_KIND_JUMP_SQUAT 
             && frame > 1.0 {
                 if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0 {
-                    crate::fighters::common::utility::enable_cancel_real(fighter);
+                    CancelModule::enable_cancel(fighter.module_accessor);
                 }
             }
         }

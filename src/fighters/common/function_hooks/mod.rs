@@ -8,9 +8,11 @@ use smash::app::FighterManager;
 pub mod cross_cancel_vanish;
 mod remove_sdi_stamina_mode;
 mod transition_terms;
+//pub mod airdodge;
 
 pub fn install() {
     cross_cancel_vanish::install();
     remove_sdi_stamina_mode::install();
     transition_terms::install();    
+    //airdodge::install();    
 }

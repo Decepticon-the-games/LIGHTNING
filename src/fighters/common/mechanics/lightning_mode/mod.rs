@@ -82,7 +82,7 @@ pub fn lightning(fighter : &mut L2CFighterCommon) {
             macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
             ModelModule::enable_gold_eye(module_accessor);	
             //EffectModule::req_emit(module_accessor, Hash40::new("sys_final_aura2"), 1);
-            //macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
+            macros::LAST_PARTICLE_SET_COLOR(fighter, 0.0, 0.851, 1.0);
 
             if dead_count == 0 {
                 LIGHTNING_TIMER [entry_id] = 1200; //20 seconds

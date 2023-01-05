@@ -61,7 +61,7 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
                     || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_L)
                     || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_R)
                     || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-                        crate::fighters::common::utility::enable_cancel_real(fighter);
+                        CancelModule::enable_cancel(fighter.module_accessor);
                     }
                 }
             }

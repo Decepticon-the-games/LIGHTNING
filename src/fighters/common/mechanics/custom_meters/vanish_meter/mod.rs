@@ -29,7 +29,7 @@ fn vanish_meter(fighter : &mut L2CFighterCommon) {
         
 //SPECIAL MECHANICS METER:: 100 pts, every special mechanic will cost meter. No meter, no mechanic
 
-        println!("meter: {}", SPECIAL_MECHANICS_METER_COUNT[entry_id]);
+        //println!("meter: {}", SPECIAL_MECHANICS_METER_COUNT[entry_id]);
         //println!("stick x: {}", );
 
 

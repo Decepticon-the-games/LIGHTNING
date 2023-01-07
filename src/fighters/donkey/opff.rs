@@ -34,7 +34,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         static mut UP_SPECIAL_HIT : [bool; 8] = [false; 8];
         static mut UP_SPECIAL_HIT_COUNT : [i32; 8] = [0; 8];
 
-        
+
 
         if motion_kind == hash40("special_hi") || motion_kind == hash40("special_air_hi") {
             ENABLE_ATTACK_CANCEL[entry_id] = false;

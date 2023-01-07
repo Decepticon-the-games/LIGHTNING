@@ -28,5 +28,6 @@ pub fn install() {
     upbcancels::install();
     upbtransitions::install();
     edgecancelling::install();
+    //vanish::install();
     misc::install();
 }

@@ -25,9 +25,11 @@ use crate::fighters::common::mechanics::motioncancels::{CANCEL_IN_NEUTRAL, DISAB
             let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-//Enable cancel   
+//Enable cancel  
+
 
             ENABLE_ATTACK_CANCEL[entry_id] = true;
+        
 
 
 //Limit side special cancel to 2 times before having to 30 frames to reset it

@@ -31,6 +31,7 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
               
 //Enable cancel 
 
+
             //Up Smash
             if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4  {
 
@@ -53,7 +54,7 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 //Cancel Up smash up to 2 times
 
-            println!("count: {}", UPSMASH_CANCEL_COUNTER[entry_id]);
+            
 
             static mut UPSMASH_CANCEL_COUNT : [bool; 8] = [false; 8];
             static mut UPSMASH_CANCEL_COUNTER : [i32; 8] = [0; 8];

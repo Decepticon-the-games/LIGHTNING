@@ -31,8 +31,10 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 //Enable cancel 
 
+    if AttackModule::is_attack_occur(fighter.module_accessor) {
 
             ENABLE_ATTACK_CANCEL[entry_id] = true;
+    }
             
 
 

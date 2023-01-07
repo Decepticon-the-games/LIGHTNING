@@ -28,8 +28,20 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
         || (((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0) && situation_kind == *SITUATION_KIND_AIR);
 
         //println!("enable: {}", ENABLE_ATTACK_CANCEL[entry_id]);
-        //ENABLE ATTACK CANCELS// this instance prevents cancelling more than a certain amount without first moving
+        
+        //NON CANCELLABLE MOVES
+        if (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK) 
+        || (status_kind == *FIGHTER_STATUS_KIND_FINAL)
+        || (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI)
+        || (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
+        || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
+        || (status_kind == *FIGHTER_STATUS_KIND_THROW) {
+            
+            ENABLE_ATTACK_CANCEL[entry_id] = false;
+        }    
 
+//ENABLE ATTACK CANCELS// this instance prevents cancelling more than a certain amount without first moving
+        
         if ENABLE_ATTACK_CANCEL[entry_id] {
             
             if AttackModule::is_attack_occur(fighter.module_accessor) {
@@ -57,18 +69,7 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
             }
             ENABLE_ATTACK_CANCEL[entry_id] = false;        
         }  
-        if (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK) 
-        || (status_kind == *FIGHTER_STATUS_KIND_FINAL)
-        || (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI)
-        || (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
-        || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
-        || (status_kind == *FIGHTER_STATUS_KIND_THROW) {
-            
-            ENABLE_ATTACK_CANCEL[entry_id] = false;
-        }   
-        else {
-            ENABLE_ATTACK_CANCEL[entry_id] = true;
-        }         
+       
 
         //RESETS
         if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false {

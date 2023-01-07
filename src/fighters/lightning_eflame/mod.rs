@@ -34,6 +34,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         else {
             ENABLE_ATTACK_CANCEL[entry_id] = true;
         }
+}
     }
 
 }

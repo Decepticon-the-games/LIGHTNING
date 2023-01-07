@@ -77,9 +77,9 @@ static mut EFFECTS_OFF : [bool; 8] = [false; 8];
                     VANISH_BUTTON[entry_id] = false;
                 }
 
-                println!("cancelv: {}",CANCEL_INTO_VANISH[entry_id]);
-                println!("vready: {}", VANISH_READY[entry_id]);    
-                println!("phit: {}", PROJECTILE_HIT[entry_id]);
+                //println!("cancelv: {}",CANCEL_INTO_VANISH[entry_id]);
+                //println!("vready: {}", VANISH_READY[entry_id]);    
+                //println!("phit: {}", PROJECTILE_HIT[entry_id]);
                 
                     if vanish_conditions  {
                        VANISH_READY[entry_id] = false;
@@ -176,13 +176,13 @@ static mut EFFECTS_OFF : [bool; 8] = [false; 8];
 
                 
                 if VANISH[entry_id] {
-                    
+
                     VANISH_BUTTON[entry_id] = false;
                     EFFECTS_ON[entry_id] = true;
 
                     if CAMERA[entry_id] == false { // Exists so all of this code will only happen once.
-                        
-                        
+
+
                         YOU_X[entry_id] = PostureModule::pos_x(fighter.module_accessor); // Gets Ryu's position
                         YOU_Y[entry_id] = PostureModule::pos_y(fighter.module_accessor);
 
@@ -302,12 +302,17 @@ static mut EFFECTS_OFF : [bool; 8] = [false; 8];
                 //EFFECTS ON/OFF
                 if EFFECTS_ON[entry_id] {
 
+
                     if ! status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK { //Don't turn around on grab attack
                         PostureModule::reverse_lr(fighter.module_accessor); 
                     }
                     if status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK { //Make the opponent invisible too, for the illusion of vanish
                         VisibilityModule::set_whole(opponent_boma, false);
                     }
+
+   
+                    EffectModule::req_on_joint(fighter.module_accessor, smash::phx::Hash40::new("sys_attack_speedline"), smash::phx::Hash40::new("body"), &smash::phx::Vector3f {x:0.0,y:0.0,z:0.0}, &smash::phx::Vector3f {x:0.0,y:0.0,z:90.0}, 1.0, &smash::phx::Vector3f {x:0.0,y:0.0,z:0.0}, &smash::phx::Vector3f {x:0.0,y:0.0,z:0.0}, false, 0, 0, 0);
+                    //macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.0, 0.0);             
                     //EffectModule::req_emit(fighter.module_accessor, Hash40::new("sys_aura_light"), 0);
                     //macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
                     VisibilityModule::set_whole(fighter.module_accessor, false);
@@ -323,9 +328,9 @@ static mut EFFECTS_OFF : [bool; 8] = [false; 8];
                         VisibilityModule::set_whole(fighter.module_accessor, true);
                     }
                     else {
-                        VisibilityModule::set_whole(fighter.module_accessor, true);                       
+                        VisibilityModule::set_whole(opponent_boma, true);                       
                     }
-
+                    EffectModule::req_on_joint(fighter.module_accessor, smash::phx::Hash40::new("sys_attack_speedline"), smash::phx::Hash40::new("body"), &smash::phx::Vector3f {x:0.0,y:0.0,z:0.0}, &smash::phx::Vector3f {x:0.0,y:0.0,z:90.0}, 1.0, &smash::phx::Vector3f {x:0.0,y:0.0,z:0.0}, &smash::phx::Vector3f {x:0.0,y:0.0,z:0.0}, false, 0, 0, 0);
                     SlowModule::clear_whole(fighter.module_accessor);
                     MotionModule::set_rate(fighter.module_accessor, 1.0); 
                     JostleModule::set_status(fighter.module_accessor, true);                        

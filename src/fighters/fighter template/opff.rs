@@ -25,18 +25,20 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-//Enable cancel   
+//Enable cancel  
+
 
             //else if for every new move.  
-            if move_here {
+            if status_kind == /motion_kind == smash::hash40("") {
                 
                 if frame >= 0.0 {
+                    ENABLE_ATTACK_CANCEL[entry_id] = true;
+                } 
+                else {
                     ENABLE_ATTACK_CANCEL[entry_id] = false;
-                }  
+                } 
             }
-            //else if move {
 
-            //}
             else {//This stays at the bottom
                 ENABLE_ATTACK_CANCEL[entry_id] = true;
             }

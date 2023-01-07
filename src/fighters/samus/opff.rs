@@ -28,6 +28,7 @@ pub fn samus_opff(fighter : &mut L2CFighterCommon) {
 
 //Enable cancel 
 
+
         //Up Smash            
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
             

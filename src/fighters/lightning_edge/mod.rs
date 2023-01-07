@@ -37,7 +37,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             if frame >22.0 {
                 ENABLE_ATTACK_CANCEL[entry_id] = true;  
             }
-            else {
+            else {//This stays at the bottom
                 ENABLE_ATTACK_CANCEL[entry_id] = true;
             } 
         } 

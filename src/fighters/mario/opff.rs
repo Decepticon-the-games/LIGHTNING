@@ -27,7 +27,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         ////let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
         let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         
-        
+
         //Cancel Dair only right before last hit
         if motion_kind == hash40("attack_air_lw") {
             
@@ -46,6 +46,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         else {
             ENABLE_ATTACK_CANCEL[entry_id] = true;
         }
+
     }
 }
 

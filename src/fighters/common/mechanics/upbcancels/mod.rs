@@ -13,7 +13,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let fighter_kind = smash::app::utility::get_kind(module_accessor);
         let motion_kind = MotionModule::motion_kind(module_accessor);       
         let frame = MotionModule::frame(module_accessor);
-        let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
+        let status_kind = StatusModule::status_kind(module_accessor);
         //let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
         let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         

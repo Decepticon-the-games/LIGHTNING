@@ -16,7 +16,7 @@ fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let motion_kind = MotionModule::motion_kind(module_accessor);  
-        let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
+        let status_kind = StatusModule::status_kind(module_accessor);
         //let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
         //let prev_status_kind = StatusModule::prev_status_kind(fighter.module_accessor, 1);
         //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
@@ -32,6 +32,9 @@ fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //else 
         if motion_kind == smash::hash40("attack_air_lw") {
             ENABLE_ATTACK_CANCEL[entry_id] = false;  
+        }
+        else if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD {
+            ENABLE_ATTACK_CANCEL[entry_id] = false; 
         }
         else {
             ENABLE_ATTACK_CANCEL[entry_id] = true; 

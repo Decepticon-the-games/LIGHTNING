@@ -19,7 +19,7 @@ use crate::fighters::common::mechanics::motioncancels::{CANCEL_IN_NEUTRAL, DISAB
         unsafe {
             let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-            let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
+            let status_kind = StatusModule::status_kind(module_accessor);
             let motion_kind = MotionModule::motion_kind(fighter.module_accessor);       
             let frame = MotionModule::frame(fighter.module_accessor);
             ////let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);

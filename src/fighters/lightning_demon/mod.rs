@@ -15,7 +15,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
         let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let status_kind = smash::app::lua_bind::StatusModule::status_kind(module_accessor);
+        let status_kind = StatusModule::status_kind(module_accessor);
         let motion_kind = MotionModule::motion_kind(module_accessor);       
         let frame = MotionModule::frame(module_accessor);
         ////let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
@@ -91,10 +91,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //|| (motion_kind == smash::hash40("attack_squat3") && frame <10.0 )
         //|| (motion_kind == smash::hash40("attack_squat4") && frame <12.0 )
         //|| (motion_kind == smash::hash40("attack_step2") && frame <12.0 )
-
-        //|| (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4)
-        //|| (status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3)
-        || (status_kind == *FIGHTER_STATUS_KIND_THROW) {
+        {
             ENABLE_ATTACK_CANCEL[entry_id] = false;  
         }
         else {

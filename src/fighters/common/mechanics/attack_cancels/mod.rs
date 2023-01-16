@@ -19,7 +19,9 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
     unsafe {
         let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let status_kind = StatusModule::status_kind(fighter.module_accessor);
-        let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(fighter.module_accessor);
+        let fighter_kind = utility::get_kind(&mut *fighter.module_accessor);
+        let motion_kind = MotionModule::motion_kind(fighter.module_accessor);     
+        let situation_kind = StatusModule::situation_kind(fighter.module_accessor);
         let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
         let cat2 = ControlModule::get_command_flag_cat(fighter.module_accessor, 1);
         let movement_cancel = (ControlModule::is_enable_flick_jump(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) 
@@ -32,13 +34,24 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
         //NON CANCELLABLE MOVES
         if (status_kind == *FIGHTER_STATUS_KIND_CATCH_ATTACK) 
         || (status_kind == *FIGHTER_STATUS_KIND_FINAL)
-        || (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI)
+        || (status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && ! fighter_kind == *FIGHTER_KIND_DONKEY)
         || (status_kind == *FIGHTER_STATUS_KIND_ATTACK)
         || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_100)
         || (status_kind == *FIGHTER_STATUS_KIND_THROW) {
             
             ENABLE_ATTACK_CANCEL[entry_id] = false;
         }    
+//JAB FINISHERS CAN CANCEL
+        if motion_kind == smash::hash40("attack_13") 
+        && (AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL) && ! SlowModule::is_slow(fighter.module_accessor)){
+            if fighter_kind == *FIGHTER_KIND_DEMON {
+                ENABLE_ATTACK_CANCEL[entry_id] = false;
+            }
+            else {
+                ENABLE_ATTACK_CANCEL[entry_id] = true;
+            }
+            
+        }
 
 //ENABLE ATTACK CANCELS// this instance prevents cancelling more than a certain amount without first moving
         

@@ -58,7 +58,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             //Cancel
             if frame >= 8.0 {
                 CancelModule::enable_cancel(fighter.module_accessor);
-            }            
+            }           
         }
         else {
             macros::EFFECT_OFF_KIND(fighter, smash::phx::Hash40::new("sys_attack_speedline"), true, true);

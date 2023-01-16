@@ -300,6 +300,10 @@ static mut EFFECTS_OFF : [bool; 8] = [false; 8];
                 }
 
                 //EFFECTS ON/OFF
+
+                    let zero = smash::phx::Vector3f {x:0.0,y:0.0,z:0.0};
+                    let rotation = smash::phx::Vector3f {x:0.0,y:0.0,z:90.0};
+
                 if EFFECTS_ON[entry_id] {
 
 
@@ -310,8 +314,8 @@ static mut EFFECTS_OFF : [bool; 8] = [false; 8];
                         VisibilityModule::set_whole(opponent_boma, false);
                     }
 
-   
-                    EffectModule::req_on_joint(fighter.module_accessor, smash::phx::Hash40::new("sys_attack_speedline"), smash::phx::Hash40::new("body"), &smash::phx::Vector3f {x:0.0,y:0.0,z:0.0}, &smash::phx::Vector3f {x:0.0,y:0.0,z:90.0}, 1.0, &smash::phx::Vector3f {x:0.0,y:0.0,z:0.0}, &smash::phx::Vector3f {x:0.0,y:0.0,z:0.0}, false, 0, 0, 0);
+
+                    EffectModule::req_on_joint(fighter.module_accessor, smash::phx::Hash40::new("sys_attack_speedline"), smash::phx::Hash40::new("body"), &zero, &rotation, 1.0, &zero, &zero, false, 0, 0, 0);
                     //macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.0, 0.0);             
                     //EffectModule::req_emit(fighter.module_accessor, Hash40::new("sys_aura_light"), 0);
                     //macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
@@ -328,9 +332,9 @@ static mut EFFECTS_OFF : [bool; 8] = [false; 8];
                         VisibilityModule::set_whole(fighter.module_accessor, true);
                     }
                     else {
-                        VisibilityModule::set_whole(opponent_boma, true);                       
+                        VisibilityModule::set_whole(fighter.module_accessor, true);                       
                     }
-                    EffectModule::req_on_joint(fighter.module_accessor, smash::phx::Hash40::new("sys_attack_speedline"), smash::phx::Hash40::new("body"), &smash::phx::Vector3f {x:0.0,y:0.0,z:0.0}, &smash::phx::Vector3f {x:0.0,y:0.0,z:90.0}, 1.0, &smash::phx::Vector3f {x:0.0,y:0.0,z:0.0}, &smash::phx::Vector3f {x:0.0,y:0.0,z:0.0}, false, 0, 0, 0);
+                    EffectModule::req_on_joint(fighter.module_accessor, smash::phx::Hash40::new("sys_attack_speedline"), smash::phx::Hash40::new("body"), &zero, &rotation, 1.0, &zero, &zero, false, 0, 0, 0);
                     SlowModule::clear_whole(fighter.module_accessor);
                     MotionModule::set_rate(fighter.module_accessor, 1.0); 
                     JostleModule::set_status(fighter.module_accessor, true);                        

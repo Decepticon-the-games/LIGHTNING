@@ -9,7 +9,7 @@ use smash_script::*;
 use crate::fighters::common::function_hooks::cross_cancel_vanish::PROJECTILE_HIT;
 use crate::fighters::common::function_hooks::cross_cancel_vanish::DIRECT_HIT;
 use crate::fighters::common::mechanics::attack_cancels::ATTACK_CANCEL;
-
+use crate::fighters::common::mechanics::motioncancels::CANCEL_IN_NEUTRAL;
 
 pub static mut VANISH : [bool; 8] = [false; 8];
 pub static mut VANISH_READY : [bool; 8] = [false; 8];
@@ -27,6 +27,8 @@ static mut YOU_X : [f32; 8] = [0.0; 8];
 static mut YOU_Y : [f32; 8] = [0.0; 8];
 static mut VANISH_TIMER : [f32; 8] = [0.0; 8];
 pub static mut ACTIVATE_VANISH : [bool; 8] = [false; 8];
+pub static mut ATTACK_VERSION : [bool; 8] = [false; 8];
+pub static mut NEUTRAL_VERSION : [bool; 8] = [false; 8];
 static mut VA_OPPONENT_DIRECTION_Y : [f32; 8] = [12.0; 8];
 static mut VA_OPPONENT_DIRECTION_X : [f32; 8] = [12.0; 8];
 //pub static mut WHO_GOT_HIT : [i32; 8] = [0; 8];
@@ -38,6 +40,9 @@ pub static mut UP : [bool; 8] = [false; 8];
 pub static mut DOWN : [bool; 8] = [false; 8];
 static mut EFFECTS_ON : [bool; 8] = [false; 8];
 static mut EFFECTS_OFF : [bool; 8] = [false; 8];
+pub static mut VANISH_TO_ENTRY_ID : [u32; 8] = [0; 8];
+
+
 
 // VANISH
 
@@ -46,28 +51,50 @@ static mut EFFECTS_OFF : [bool; 8] = [false; 8];
         unsafe {
             //module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
             let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+            let opponent_boma = sv_battle_object::module_accessor(WHO_GOT_HIT_BOMA[entry_id]);
+            let vanish_in_neutral_boma = sv_battle_object::module_accessor(VANISH_TO_ENTRY_ID[entry_id]);
+            let vanish_entry_id = WorkModule::get_int(vanish_in_neutral_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+            
             let fighter_kind = utility::get_kind(&mut *fighter.module_accessor);
             let status_kind = StatusModule::status_kind(fighter.module_accessor);
             let frame = MotionModule::frame(fighter.module_accessor);
             //let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
-            let opponent_boma = sv_battle_object::module_accessor(WHO_GOT_HIT_BOMA[entry_id]);
-            let l_stick_out = ControlModule::get_stick_x(fighter.module_accessor) > 0.8|| ControlModule::get_stick_x(fighter.module_accessor) < -0.8 || ControlModule::get_stick_y(fighter.module_accessor) > 0.8 || ControlModule::get_stick_y(fighter.module_accessor) < -0.8;
+            
+            let l_stick_out = ControlModule::get_stick_x(fighter.module_accessor) > 0.8 || ControlModule::get_stick_x(fighter.module_accessor) < -0.8 || ControlModule::get_stick_y(fighter.module_accessor) > 0.8 || ControlModule::get_stick_y(fighter.module_accessor) < -0.8;
             let popo_nana = (fighter_kind == *FIGHTER_KIND_POPO || fighter_kind == *FIGHTER_KIND_NANA);
-            let vanish_conditions = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STATUS) || StopModule::is_hit(fighter.module_accessor);
+            let vanish_conditions = ! (WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STATUS) || StopModule::is_hit(fighter.module_accessor));
+
+            let idles = (status_kind == *FIGHTER_STATUS_KIND_WAIT
+            || status_kind == *FIGHTER_STATUS_KIND_FALL
+            || status_kind == *FIGHTER_STATUS_KIND_FALL_AERIAL);
+
+            let walks_runs_jumps_falls = (status_kind == *FIGHTER_STATUS_KIND_WALK
+            || status_kind == *FIGHTER_STATUS_KIND_DASH
+            || status_kind == *FIGHTER_STATUS_KIND_TURN_DASH
+            || status_kind == *FIGHTER_STATUS_KIND_JUMP
+            || status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL);
+
+            let dpad_up = ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI);
+            let dpad_down = ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW);
+            let dpad_left = ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_L);
+            let dpad_right = ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_R);
+
+            let dpad_up_right = dpad_up && dpad_right;
+            let dpad_up_left = dpad_up && dpad_left;
+            let dpad_down_right = dpad_down && dpad_right;
+            let dpad_down_left = dpad_down && dpad_left;
+
+            let vanish_buttons = (dpad_up || dpad_down || dpad_left || dpad_right || dpad_up_left || dpad_up_right || dpad_down_left || dpad_down_right);
 
             if entry_id < 8 { 
-
                 
-                
-                   
-                // Reset Vars
-
+            //RESETS
                 if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false { //Also include a false for if the opponent is gonna be ko'ed
                     
                     VANISH_READY[entry_id] = false;
                     VANISH[entry_id] = false;
                     VANISH_BUTTON[entry_id] = false;
-                    //ACTIVATE_VANISH[entry_id] = true;
+                    VANISH_TO_ENTRY_ID[vanish_entry_id] = 8; 
                     
                 }
                 if status_kind == *FIGHTER_STATUS_KIND_DEAD {
@@ -76,108 +103,154 @@ static mut EFFECTS_OFF : [bool; 8] = [false; 8];
                     VANISH[entry_id] = false;
                     VANISH_BUTTON[entry_id] = false;
                 }
+                if idles || walks_runs_jumps_falls {
+                    CANCEL_INTO_VANISH[entry_id] = true;
+                }
 
-                //println!("cancelv: {}",CANCEL_INTO_VANISH[entry_id]);
-                //println!("vready: {}", VANISH_READY[entry_id]);    
-                //println!("phit: {}", PROJECTILE_HIT[entry_id]);
-                
+                if CANCEL_INTO_VANISH[entry_id] { 
                     if vanish_conditions  {
-                       VANISH_READY[entry_id] = false;
-                    }
 
-                    if PROJECTILE_HIT[entry_id] && frame == 10.0 {
-                        PROJECTILE_HIT[entry_id] = false;
-                    }  
-
-                    if ! WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STATUS) {
-                        if CANCEL_INTO_VANISH[entry_id] {                                        
-                            if popo_nana {
-                                VANISH_READY[entry_id] = false;   
-                            }
-                            else {
-                                VANISH_READY[entry_id] = true; 
-                            }
+                        if PROJECTILE_HIT[entry_id] && frame == 10.0 {
+                            PROJECTILE_HIT[entry_id] = false;
+                        }  
+                                                        
+                        if popo_nana {
+                            VANISH_READY[entry_id] = false;   
                         }
                         else {
-                            VANISH_READY[entry_id] = false;  
-                        }    
-                        
+                            VANISH_READY[entry_id] = true; 
+                        }
                     }
-                    
-                
-
-
-                    if VANISH_READY[entry_id] 
-                    && CAN_VANISH[entry_id] 
-                    {
-
-                        //Set the directional input before pressing the vanish button
-                        
-                        
-                        
-
-
-                            if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI)
-                            { 
-                                VANISH_BUTTON[entry_id] = true;// Only used to replicate a button_pad_trigger, runs only 1 frame pt 1
+                }
+                else {
+                    VANISH_READY[entry_id] = false;  
+                }    
+            //SETUP            
+                if VANISH_READY[entry_id] 
+                && CAN_VANISH[entry_id] 
+                {
+                        if vanish_buttons
+                        {
+                            if dpad_up {
+                                VANISH_TO_ENTRY_ID[vanish_entry_id] = 196608;    
+                            }
+                            else if dpad_up_right {
+                                VANISH_TO_ENTRY_ID[vanish_entry_id] = 65536;    
+                            }
+                            else if dpad_right {
+                                VANISH_TO_ENTRY_ID[vanish_entry_id] = 131072;    
+                            }
+                            else if dpad_down_right {
+                                VANISH_TO_ENTRY_ID[vanish_entry_id] = 196608;   
+                            }
+                            else if dpad_down {
+                                VANISH_TO_ENTRY_ID[vanish_entry_id] = 4;   
+                            }
+                            else if dpad_down_left {
+                                VANISH_TO_ENTRY_ID[vanish_entry_id] = 5;   
+                            }
+                            else if dpad_left {
+                                VANISH_TO_ENTRY_ID[vanish_entry_id] = 6;    
+                            }
+                            else if dpad_up_left {
+                                VANISH_TO_ENTRY_ID[vanish_entry_id] = 7;   
                             }
                             else {
-                                //PROJECTILE_HIT[entry_id] = false; 
-                                VANISH_BUTTON[entry_id] = false;
-                            }   
-
-                            if l_stick_out {
-
-                                if ControlModule::get_stick_x(fighter.module_accessor) > 0.8 { //RIGHT 
-                                    RIGHT[entry_id] = true;
-                                }
-                                else if ControlModule::get_stick_x(fighter.module_accessor) < -0.8 {//LEFT
-                                    LEFT[entry_id] = true;
-                                } 
-                                else if ControlModule::get_stick_y(fighter.module_accessor) > 0.8 { //UP 
-                                    UP[entry_id] = true;
-                                }
-                                else if ControlModule::get_stick_y(fighter.module_accessor) < -0.8 {//DOWN
-                                    DOWN[entry_id] = true;
-                                } 
-                            }
-                            
-                            
-                            
-
+                                VANISH_TO_ENTRY_ID[vanish_entry_id] = 8;
+                            }                
                         
-
-                        if VANISH_BUTTON[entry_id] {// Only used to replicate a button_pad_trigger, runs only 1 frame pt 2
+                            VANISH_BUTTON[entry_id] = true;// Only used to replicate a button_pad_trigger, runs only 1 frame pt 1
                             
-                            if ! SlowModule::is_slow(fighter.module_accessor)
-                            {
-                                GET_CURRENT_POSITION[entry_id] = true;
-                                
+                            if (CANCEL_IN_NEUTRAL[entry_id] && ! AttackModule::is_attack_occur(fighter.module_accessor)) 
+                            || idles 
+                            || walks_runs_jumps_falls {
+                                NEUTRAL_VERSION[entry_id] = true;
+                            }
+                            else {
+                                NEUTRAL_VERSION[entry_id] = false;
+                            }
+                            if AttackModule::is_attack_occur(fighter.module_accessor) {
+                                ATTACK_VERSION[entry_id] = true;
+                            }
+                            else {
+                                ATTACK_VERSION[entry_id] = false;
                             }
                             
                         }
+                        else {
+                            //PROJECTILE_HIT[entry_id] = false; 
+                            VANISH_BUTTON[entry_id] = false;
+                            //NEUTRAL_VERSION[entry_id] = false;
+                            //ATTACK_VERSION[entry_id] = false;
+                        }   
+
+                        if l_stick_out {//Set the directional input before pressing the vanish button
+
+                            if ControlModule::get_stick_x(fighter.module_accessor) > 0.8 { //RIGHT 
+                                RIGHT[entry_id] = true;
+                            }
+                            else if ControlModule::get_stick_x(fighter.module_accessor) < -0.8 {//LEFT
+                                LEFT[entry_id] = true;
+                            } 
+                            else if ControlModule::get_stick_y(fighter.module_accessor) > 0.8 { //UP 
+                                UP[entry_id] = true;
+                            }
+                            else if ControlModule::get_stick_y(fighter.module_accessor) < -0.8 {//DOWN
+                                DOWN[entry_id] = true;
+                            } 
+                        }
+                        
+                        
+                        
+
+                    
+
+                    if VANISH_BUTTON[entry_id] {// Only used to replicate a button_pad_trigger, runs only 1 frame pt 2
+                        
+                        if ! SlowModule::is_slow(fighter.module_accessor)
+                        {
+                            GET_CURRENT_POSITION[entry_id] = true;
+                            
+                        }
+                        
                     }
+                }
 
                 
 
                 if GET_CURRENT_POSITION[entry_id] { //RECALL PLAYER ID VARIABLE, and store their position
 
-                    VA_OPPONENT_X[entry_id] = PostureModule::pos_x(opponent_boma);
-                    VA_OPPONENT_Y[entry_id] = PostureModule::pos_y(opponent_boma);
-                    VA_OPPONENT_BOMA[entry_id] = (&mut *opponent_boma as *mut BattleObjectModuleAccessor) as u64;
-                    if utility::get_category(&mut *opponent_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-                        JostleModule::set_status(&mut *opponent_boma, false);
+                    if ATTACK_VERSION[entry_id] {
+                        VA_OPPONENT_X[entry_id] = PostureModule::pos_x(opponent_boma);
+                        VA_OPPONENT_Y[entry_id] = PostureModule::pos_y(opponent_boma);
+                        VA_OPPONENT_BOMA[entry_id] = (&mut *opponent_boma as *mut BattleObjectModuleAccessor) as u64;
+                        if utility::get_category(&mut *opponent_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+                            JostleModule::set_status(&mut *opponent_boma, false);
+                        }
+                        
                     }
+                    else if NEUTRAL_VERSION[entry_id] {
+                        VA_OPPONENT_X[entry_id] = PostureModule::pos_x(vanish_in_neutral_boma);
+                        VA_OPPONENT_Y[entry_id] = PostureModule::pos_y(vanish_in_neutral_boma);
+                        VA_OPPONENT_BOMA[entry_id] = (&mut *vanish_in_neutral_boma as *mut BattleObjectModuleAccessor) as u64;
+                        if utility::get_category(&mut *vanish_in_neutral_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+                            JostleModule::set_status(&mut *vanish_in_neutral_boma, false);
+                        }
+                        
+                    }
+                    
                     VANISH[entry_id] = true; 
                     VANISH_READY[entry_id] = false; 
                     GET_CURRENT_POSITION[entry_id] = false;
+                    ATTACK_VERSION[entry_id] = false;
+                    NEUTRAL_VERSION[entry_id] = false;
                 }
-                // VANISH
+            // VANISH
 
-                
                 if VANISH[entry_id] {
 
                     VANISH_BUTTON[entry_id] = false;
+                    CANCEL_INTO_VANISH[entry_id] = false;
                     EFFECTS_ON[entry_id] = true;
 
                     if CAMERA[entry_id] == false { // Exists so all of this code will only happen once.
@@ -350,8 +423,13 @@ static mut EFFECTS_OFF : [bool; 8] = [false; 8];
                     EFFECTS_OFF[entry_id] = false;                
                 }
 
-            }
-        }
+            } 
+            //println!("cancel: {}", VANISH_TO_ENTRY_ID[vanish_entry_id]);
+            //println!("neutral: {}", VANISH_TO_ENTRY_ID[vanish_entry_id]);    
+            //println!("attack: {}", WHO_GOT_HIT_BOMA[entry_id]);
+            println!("X: {}", PostureModule::pos_x(vanish_in_neutral_boma));
+            //println!("boma: {}", vanish_in_neutral_boma);
+        }   
     }
 
 pub fn install() {

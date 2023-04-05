@@ -1,4 +1,3 @@
-use super::*;
 use {
     smash::{
         lua2cpp::{L2CAgentBase,L2CFighterCommon},
@@ -70,12 +69,12 @@ pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, par
 #[fighter_frame_callback]
 pub fn prints(fighter : &mut L2CFighterCommon) {
     unsafe { 
-        println!("value: {}", WorkModule::get_param_float(fighter.module_accessor, hash40("battle_object"), hash40("hitstop_frame_add")));
+        //NEUTRAL_VERSION[entry_id] = true;
 
     }
 }
 pub fn install() {
     //skyline::install_hook!(get_param_float_replace);
     skyline::install_hook!(get_param_int_replace);
-    smashline::install_agent_frame_callbacks!(prints);
+    //smashline::install_agent_frame_callbacks!(prints);
 }

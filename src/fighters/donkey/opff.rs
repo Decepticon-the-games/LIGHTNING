@@ -60,7 +60,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }
         }
         else {
-            ENABLE_ATTACK_CANCEL[entry_id] = true; 
+            //ENABLE_ATTACK_CANCEL[entry_id] = true; 
             UP_SPECIAL_HIT_COUNT[entry_id] = 0;
         }
     }

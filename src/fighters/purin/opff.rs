@@ -32,8 +32,9 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             static mut DAIR_REST_HIT : [bool; 8] = [false; 8];
             static mut DAIR_REST_COUNT : [i32; 8] = [0; 8];
 
-            //Limit dair to cancel after 3 successful hits
+            //Dair
             if motion_kind == hash40("attack_air_lw") {
+                //Limit dair to cancel after 3 successful hits
                 if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL) {
                     if UP_SPECIAL_HIT[entry_id] == false {
                         UP_SPECIAL_HIT_COUNT[entry_id] +=1;

@@ -9,7 +9,7 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
+use crate::fighters::common::mechanics::attack_cancels::{ENABLE_ATTACK_CANCEL, ENABLE_MULTIHIT_CANCEL, MOVEMENT_CANCEL};
 
 
 
@@ -23,7 +23,7 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
             let status_kind = StatusModule::status_kind(module_accessor);
-            //let motion_kind = MotionModule::motion_kind(fighter.module_accessor);       
+            let motion_kind = MotionModule::motion_kind(fighter.module_accessor);       
             let frame = MotionModule::frame(fighter.module_accessor);
             ////let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
@@ -46,6 +46,40 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             else if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 {
                 ENABLE_ATTACK_CANCEL[entry_id] = false; 
             }
+            //Fair
+            else if motion_kind == smash::hash40("attack_air_f") {
+
+                if frame >= 14.0 {
+                    ENABLE_MULTIHIT_CANCEL[entry_id] = true;
+                }
+                else {
+                    ENABLE_MULTIHIT_CANCEL[entry_id] = false;
+                }
+                if frame >= 22.0 {
+                    ENABLE_ATTACK_CANCEL[entry_id] = true; 
+                }
+                else {
+                    ENABLE_ATTACK_CANCEL[entry_id] = false; 
+                }
+                
+            } 
+            //Bair
+            else if motion_kind == smash::hash40("attack_air_b")  {
+
+                if frame >= 6.0 {
+                    ENABLE_MULTIHIT_CANCEL[entry_id] = true;
+                }
+                else {
+                   ENABLE_MULTIHIT_CANCEL[entry_id] = false;
+                }
+
+                if frame >= 15.0 {
+                    ENABLE_ATTACK_CANCEL[entry_id] = true; 
+                }
+                else {
+                    ENABLE_ATTACK_CANCEL[entry_id] = false; 
+                }
+            } 
             else {//This stays at the bottom
                 ENABLE_ATTACK_CANCEL[entry_id] = true;
             }
@@ -54,6 +88,7 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 //Cancel Up smash up to 2 times
 
+            //println!("enable: {}", ENABLE_MULTIHIT_CANCEL[entry_id]);
             
 
             static mut UPSMASH_CANCEL_COUNT : [bool; 8] = [false; 8];
@@ -66,7 +101,6 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
                         UPSMASH_CANCEL_COUNTER[entry_id] +=1;
                         UPSMASH_CANCEL_COUNT[entry_id] = true; 
                     }
-
                 }
                 else {
                     UPSMASH_CANCEL_COUNT[entry_id] = false;
@@ -74,23 +108,30 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
                 //Disable cancel
                 if UPSMASH_CANCEL_COUNTER[entry_id] >2 {//How many times you can cancel
                     UPSMASH_CANCEL_COUNTER[entry_id] = 3;//How  many hits before disabling cancel
-                    ENABLE_ATTACK_CANCEL[entry_id] = false; 
+                    ENABLE_MULTIHIT_CANCEL[entry_id] = false; 
                 }
                 else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true; 
+                    if frame <40.0 {
+                        ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
+                    }
+                    else {
+                        ENABLE_MULTIHIT_CANCEL[entry_id] = false;
+                    }
                 }
                 //Reset
-                if frame >= 40.0 {
-                    if UPSMASH_CANCEL_COUNTER[entry_id] == 2 {
+                if MOVEMENT_CANCEL[entry_id] {
+                    if UPSMASH_CANCEL_COUNTER[entry_id] == 3 {
                         UPSMASH_CANCEL_COUNTER[entry_id] = 0;
-                        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+                        ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
                     }    
+                    MOVEMENT_CANCEL[entry_id] = false; 
                 }
             }
 
             //Resets
             if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false {
                 UPSMASH_CANCEL_COUNTER[entry_id] = 0;
+                ENABLE_MULTIHIT_CANCEL[entry_id] = false; 
             }
         }
     }

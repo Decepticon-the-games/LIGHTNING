@@ -10,7 +10,7 @@ pub mod opff;
 
 
 pub fn install() {
-    //acmd::install();
+    acmd::install();
     //status::install();
     opff::install();
 }

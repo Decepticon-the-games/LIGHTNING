@@ -1,5 +1,4 @@
 use super::*;
-
 use crate::fighters::common::mechanics::ultrainstinct::{SECRET_SENSATION, CROSS_CANCEL_BUTTON};
 use crate::fighters::common::mechanics::vanish::{VANISH, VANISH_BUTTON};
 use crate::fighters::common::mechanics::upbtransitions::DISABLE_UP_SPECIAL;

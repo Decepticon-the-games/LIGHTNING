@@ -47,7 +47,10 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             }        
 
             if status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_S3_FALL {
-                CancelModule::enable_cancel(fighter.module_accessor);
+                if frame >= 40.0 {
+                   CancelModule::enable_cancel(fighter.module_accessor); 
+                }
+                
             }
 
 

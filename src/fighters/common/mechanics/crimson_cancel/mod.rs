@@ -12,7 +12,7 @@ use smash_script::*;
 
 pub static mut TIME_SLOW_EFFECT_VECTOR: smash::phx::Vector3f = smash::phx::Vector3f {x:-3.0,y:3.0,z:0.0};
 pub const TIME_SLOW_EFFECT_HASH: u64 = smash::hash40("sys_sp_flash");
-pub static mut CRIMSON_CANCEL_TIMER : [i32; 8] = [-1;  8];
+pub static mut CRIMSON_CANCEL_TIMER : [i32; 8] = [-1; 8];
 pub static mut CAN_CRIMSON_CANCEL : [bool; 8] = [true; 8];//the ability to crimson cancel
 static mut CAN_CRIMSON_CANCEL_TEMP : [bool; 8] = [true; 8];
 pub static mut CRIMSON_CANCEL_BUTTON : [bool; 8] = [false; 8];//run only 1 frame
@@ -43,7 +43,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                         
                         CRIMSON_CANCEL_BUTTON[entry_id] = true;
                         CAN_CRIMSON_CANCEL_TEMP = CAN_CRIMSON_CANCEL;
-                        CAN_CRIMSON_CANCEL = [false; 8];
+                        CAN_CRIMSON_CANCEL[entry_id] = false;
                     }
                 }                
             }
@@ -91,8 +91,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
         
         //When you attack next, the timer runs out or you get KO'd, the effects wear off
-        if CRIMSON_CANCEL_TIMER[entry_id] == 0 || status_kind == *FIGHTER_STATUS_KIND_DEAD || (hitlag) {
+        if CRIMSON_CANCEL_TIMER[entry_id] == 0 || status_kind == *FIGHTER_STATUS_KIND_DEAD || (CRIMSON_CANCEL_TIMER[entry_id]  >=1 && (hitlag)) {
             CAN_CRIMSON_CANCEL = CAN_CRIMSON_CANCEL_TEMP;
+            CRIMSON_CANCEL_TIMER[entry_id] = -1;
             macros::WHOLE_HIT(fighter, *HIT_STATUS_NORMAL);
             macros::CANCEL_FILL_SCREEN(fighter, 0, 5.0);
             macros::SLOW_OPPONENT(fighter, 0.0, 0.0);
@@ -107,7 +108,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
         //RESET EACH STOCK
         
-        if status_kind == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false  {
+        if status_kind == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false {
             CRIMSON_CANCEL_TIMER[entry_id] = -1;
             CAN_CRIMSON_CANCEL[entry_id] = true;
         } 

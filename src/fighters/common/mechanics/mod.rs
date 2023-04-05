@@ -22,12 +22,12 @@ pub fn install() {
     counter_cancels::install();
     detector_boxes::install();
     motioncancels::install();
-    crimson_cancel::install();
-    lightning_mode::install();
-    ultrainstinct::install();
+    //crimson_cancel::install();
+    //lightning_mode::install();
+    //ultrainstinct::install();
     upbcancels::install();
     upbtransitions::install();
     edgecancelling::install();
-    vanish::install();
+    //vanish::install();
     misc::install();
 }

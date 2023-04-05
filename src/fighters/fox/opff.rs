@@ -45,7 +45,6 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
                 WorkModule::set_flag(module_accessor, true, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
             }
 
-
 //jump cancel shine (multishine)
             if status_kind == *FIGHTER_STATUS_KIND_JUMP_SQUAT 
             && frame > 1.0 {

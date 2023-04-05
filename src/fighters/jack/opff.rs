@@ -30,7 +30,7 @@ pub fn jack_opff(fighter : &mut L2CFighterCommon) {
         
 
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 {
-            if frame >=20.0 {
+            if frame >=23.0 {
                 ENABLE_ATTACK_CANCEL[entry_id] = true;
             }
             else {
@@ -47,8 +47,16 @@ pub fn jack_opff(fighter : &mut L2CFighterCommon) {
             }
             
         } 
+        else if status_kind == *FIGHTER_STATUS_KIND_ATTACK_DASH {
+            if frame >=19.0 {
+                ENABLE_ATTACK_CANCEL[entry_id] = true;
+            }
+            else {
+                ENABLE_ATTACK_CANCEL[entry_id] = false;
+            }
+            
+        } 
         else if motion_kind == smash::hash40("attack_air_hi") {
-                
             if frame >= 19.0 {
                 ENABLE_ATTACK_CANCEL[entry_id] = true;
             } 
@@ -62,6 +70,14 @@ pub fn jack_opff(fighter : &mut L2CFighterCommon) {
     }                                      
 }
 
+/*pub fn jack_mulithit_cancels(fighter : &mut L2CFighterCommon) {
+    unsafe {
+        let status_kind = StatusModule::status_kind(module_accessor);
+
+        if status_kind == *FIGHTER_STATUS_KIND_ATTACK_DASH && (frame >=12.0 || frame <15.0)
+    }
+
+}*/
 pub fn install() {
     smashline::install_agent_frames!(jack_opff);
 }

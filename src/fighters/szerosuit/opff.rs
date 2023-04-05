@@ -57,6 +57,9 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
                     ENABLE_ATTACK_CANCEL[entry_id] = false;
                 }
             }
+            else if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
+                ENABLE_ATTACK_CANCEL[entry_id] = false;
+            }
             else {//This stays at the bottom
                 ENABLE_ATTACK_CANCEL[entry_id] = true;
             }

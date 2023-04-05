@@ -1,14 +1,22 @@
-use smash::app::lua_bind::*;
-use smash::lua2cpp::L2CFighterCommon;
-use smash::lib::lua_const::*;
-use smashline::*;
-use crate::fighters::common::mechanics::lightning_mode::{LIGHTNING, LIGHTNING_BUTTON};
-use crate::fighters::common::mechanics::vanish::{VANISH_COUNT, VANISH_COUNTER, CAN_VANISH, VANISH_BUTTON};
-use crate::fighters::common::mechanics::ultrainstinct::{CROSS_CANCEL_BUTTON};
-use crate::fighters::common::mechanics::crimson_cancel::{CRIMSON_CANCEL_BUTTON};
-use crate::fighters::common::mechanics::lightning_fsmeter::{FINAL_SMASH_BUTTON};
-use smash::phx::Hash40;
-use smash::hash40;
+use {
+    smash::{
+        lua2cpp::L2CFighterCommon,
+        phx::Hash40,
+        app::{lua_bind::*, sv_animcmd::*,*},
+        lib::lua_const::*
+    },
+    smash_script::*,
+    smashline::*
+};
+
+use crate::fighters::common::mechanics::{
+    attack_cancels::{ENABLE_ATTACK_CANCEL},
+    lightning_mode::{LIGHTNING, LIGHTNING_BUTTON},
+    vanish::{VANISH_COUNT, VANISH_COUNTER, CAN_VANISH, VANISH_BUTTON, CANCEL_INTO_VANISH},
+    ultrainstinct::{CROSS_CANCEL_BUTTON},
+    crimson_cancel::{CRIMSON_CANCEL_BUTTON},
+    lightning_fsmeter::{FINAL_SMASH_BUTTON},
+};
 
 //static mut MOTION_CHECK : [i32; 8] = [0; 8]; // Gets status kind while jump_guard_dash_upspecial_pressed. This is to avoid spam when u have no jumps/dodges left, so the status being checked would be the status being spammed. If it tdetects jump/dodge, it'll do nothing.
 pub static mut CANCEL_IN_NEUTRAL : [bool; 8] = [false; 8];
@@ -50,158 +58,135 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || ControlModule::get_stick_y(fighter.module_accessor) > 0.7 
         || ControlModule::get_stick_y(fighter.module_accessor) < -0.7;
 
+        let idles = (status_kind == *FIGHTER_STATUS_KIND_WAIT
+        || status_kind == *FIGHTER_STATUS_KIND_FALL
+        || status_kind == *FIGHTER_STATUS_KIND_FALL_AERIAL);
+
+        let walks_runs_jumps_falls = (status_kind == *FIGHTER_STATUS_KIND_WALK
+        || status_kind == *FIGHTER_STATUS_KIND_DASH
+        || status_kind == *FIGHTER_STATUS_KIND_TURN_DASH
+        || status_kind == *FIGHTER_STATUS_KIND_JUMP
+        || status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL);
+
         let special_mechanics_button = CRIMSON_CANCEL_BUTTON[entry_id]
         || CROSS_CANCEL_BUTTON[entry_id]
         || VANISH_BUTTON[entry_id]
         || LIGHTNING_BUTTON[entry_id];
         || FINAL_SMASH_BUTTON[entry_id];
 
+        if entry_id == 0 {
+            println!("cin: {}", CANCEL_IN_NEUTRAL[entry_id]);
+        }
 
-        //AS MANY AIRDODGES AS YOU HAVE JUMPS
+        if idles || walks_runs_jumps_falls{
+            CANCEL_IN_NEUTRAL[entry_id] = false;
+        }
 
-            //if LIGHTNING[entry_id] {
+//AIRDODGE COUNTER
 
-                if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-                    if AIRDODGE_BUTTON[entry_id] == false {
-                        AIRDODGE_COUNT[entry_id] +=1;
-                        
-                        AIRDODGE_BUTTON[entry_id] = true; // This is so the counter only runs one frame.
-                        
-                    }
-                    if CANCEL_IN_NEUTRAL [entry_id] {
-                        CANCEL_IN_NEUTRAL [entry_id] = false; // This is so cancel in neutral only runs before cancelling, to avoid spams.
-                    }                  
-                }
-                else {
-                    AIRDODGE_BUTTON[entry_id] = false;  
-                }
+    if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
+        if AIRDODGE_BUTTON[entry_id] == false {
+            AIRDODGE_COUNT[entry_id] +=1; 
+            AIRDODGE_BUTTON[entry_id] = true; // This is so the counter only runs one frame. 
+        }
+        CANCEL_IN_NEUTRAL [entry_id] = false; // This is so cancel in neutral only runs before cancelling, to avoid spams.                  
+    }
+    else {
+        AIRDODGE_BUTTON[entry_id] = false;  
+    }
 
-                //Reset Airdodge count when u land
-                if situation_kind == *SITUATION_KIND_GROUND { 
-                    AIRDODGE_COUNT[entry_id] = 0;
-                }
+    //Reset Airdodge count when u land
+    if situation_kind == *SITUATION_KIND_GROUND { 
+        AIRDODGE_COUNT[entry_id] = 0;
+    }
 
-
-                if status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL 
-                || status_kind == *FIGHTER_STATUS_KIND_JUMP
-                //|| characters that have more than 2 jumps don't work?
-                || CANCEL_IN_NEUTRAL [entry_id] 
-                || LIGHTNING [entry_id] && status_kind != *FIGHTER_STATUS_KIND_ESCAPE_AIR //in lightning, you can cancel directly into airdodge as many times as you have it available
-                {//Account for all instances before inputing airdodge
-
-                    if (ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_GUARD) //(cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0  
-                    && situation_kind == *SITUATION_KIND_AIR) 
-                    && l_stick_out 
-                    {
-                        
-                        if (max_jumps == 2 && AIRDODGE_COUNT[entry_id] <2)
-                        || (max_jumps == 3 && AIRDODGE_COUNT[entry_id] <3) 
-                        || (max_jumps == 4 && AIRDODGE_COUNT[entry_id] <4) 
-                        || (max_jumps == 5 && AIRDODGE_COUNT[entry_id] <5) 
-                        || (max_jumps == 6 && AIRDODGE_COUNT[entry_id] <6)
-                        || (edgde_one_wing_max_jumps == 3 && AIRDODGE_COUNT[entry_id] <3)
-                        {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                            
-                        }  
-                        CANCEL_IN_NEUTRAL [entry_id] = false; // This is so cancel in neutral only runs before cancelling, to avoid spams.
-                    }
-                    
-                }                
-            //} 
-
-        //AS MANY JUMPS AS YOU HAVE JUMPS (SPECIFIC USE CASES IF ENABLE_CANCEL DOESN'T WORK)   
-                if JUMP_CANCEL[entry_id] {
-                    if (ControlModule::is_enable_flick_jump(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0 {
-                                
-                        if situation_kind == *SITUATION_KIND_GROUND {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
-                        }
-                        else if situation_kind == *SITUATION_KIND_AIR {
-
-                            if (max_jumps > jumps_used )
-                            {
-                                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, false);
-                            }
-                        }
-                    }
-                    JUMP_CANCEL[entry_id] = false;
-                }
                   
-        //VANISHES
+//VANISH COUNTER
 
-            //if SPECIAL_MECHANICS_METER_COUNT[entry_id] == 100 {
-                if VANISH_COUNTER[entry_id] {
-                   VANISH_COUNT[entry_id] += 1; 
-                   VANISH_COUNTER[entry_id] = false;
-                } 
+    if VANISH_COUNTER[entry_id] {
+        VANISH_COUNT[entry_id] += 1; 
+        VANISH_COUNTER[entry_id] = false;
+    } 
 
-                if LIGHTNING[entry_id] == false {//Vanish only once
-                    if VANISH_COUNT[entry_id] <1 {
-                        CAN_VANISH[entry_id] = true;
-                    }     
-                    else {
-                        CAN_VANISH[entry_id] = false;
-                    }               
+    if LIGHTNING[entry_id] == false {//Vanish only once
+        if VANISH_COUNT[entry_id] <1 {
+            CAN_VANISH[entry_id] = true;
+        }     
+        else {
+            CAN_VANISH[entry_id] = false;
+        }               
+    }
+
+
+//CANCEL FOR AS MANY JUMPS AS YOU HAVE
+        
+        if (CANCEL_IN_NEUTRAL [entry_id] )
+        || status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL {
+            if (max_jumps == 2 && AIRDODGE_COUNT[entry_id] <2)
+            || (max_jumps == 3 && AIRDODGE_COUNT[entry_id] <3) 
+            || (max_jumps == 4 && AIRDODGE_COUNT[entry_id] <4) 
+            || (max_jumps == 5 && AIRDODGE_COUNT[entry_id] <5) 
+            || (max_jumps == 6 && AIRDODGE_COUNT[entry_id] <6)
+            || (edgde_one_wing_max_jumps == 3 && AIRDODGE_COUNT[entry_id] <3)
+            {
+                if (ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_GUARD) //(cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0  
+                && situation_kind == *SITUATION_KIND_AIR) 
+                && l_stick_out {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+                    CANCEL_IN_NEUTRAL [entry_id] = false; // This is so cancel in neutral only runs before cancelling, to avoid spams.
                 }
-
-                else if LIGHTNING[entry_id] {// Vanish as many times as you can jump
-                    if (max_jumps == 2 && VANISH_COUNT[entry_id] <2)
-                    || (max_jumps == 3 && VANISH_COUNT[entry_id] <3) 
-                    || (max_jumps == 4 && VANISH_COUNT[entry_id] <4) 
-                    || (max_jumps == 5 && VANISH_COUNT[entry_id] <5) 
-                    || (max_jumps == 6 && VANISH_COUNT[entry_id] <6)
-                    || (edgde_one_wing_max_jumps == 3 && VANISH_COUNT[entry_id] <3)
-                    {
-                        CAN_VANISH[entry_id] = true; 
-                    }
-                    else {
-                        CAN_VANISH[entry_id] = false;
-                    }                    
-                }  
-            //}
-            
-
-
-
-        if CANCEL_IN_NEUTRAL [entry_id] {
-
-            //CANCEL FOR AS MANY JUMPS AS YOU HAVE    
+            }
+        }
+        else if (CANCEL_IN_NEUTRAL [entry_id] ) {
+            if (max_jumps == 2 && jumps_used <2)
+            || (max_jumps == 3 && jumps_used <3) 
+            || (max_jumps == 4 && jumps_used <4) 
+            || (max_jumps == 5 && jumps_used <5) 
+            || (max_jumps == 6 && jumps_used <6)
+            || (edgde_one_wing_max_jumps == 3 && jumps_used <3)
+            {
                 if (ControlModule::is_enable_flick_jump(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0 {
-                    
-                    if situation_kind == *SITUATION_KIND_GROUND {
-                        StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
-                    }
-                    else if situation_kind == *SITUATION_KIND_AIR {
-
-                        if (max_jumps == 2 && jumps_used <2)
-                        || (max_jumps == 3 && jumps_used <3) 
-                        || (max_jumps == 4 && jumps_used <4) 
-                        || (max_jumps == 5 && jumps_used <5) 
-                        || (max_jumps == 6 && jumps_used <6)
-                        || (edgde_one_wing_max_jumps == 3 && jumps_used <3)
-                        {
-                            CancelModule::enable_cancel(fighter.module_accessor);
-                        }
-                    }
-                }
-
-            //EVERYTHING ELSE
-                if (((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD) != 0) && situation_kind == *SITUATION_KIND_GROUND && ! grab) 
-                || ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 && situation_kind == *SITUATION_KIND_AIR) 
-                || special_mechanics_button
-                {
-                 
                     CancelModule::enable_cancel(fighter.module_accessor);
+                    CANCEL_IN_NEUTRAL [entry_id] = false;
                 }
-                CANCEL_IN_NEUTRAL [entry_id] = false;           
+            }
+        }
+        if LIGHTNING[entry_id] {// Vanish as many times as you can jump
+            if (max_jumps == 2 && VANISH_COUNT[entry_id] <2)
+            || (max_jumps == 3 && VANISH_COUNT[entry_id] <3) 
+            || (max_jumps == 4 && VANISH_COUNT[entry_id] <4) 
+            || (max_jumps == 5 && VANISH_COUNT[entry_id] <5) 
+            || (max_jumps == 6 && VANISH_COUNT[entry_id] <6)
+            || (edgde_one_wing_max_jumps == 3 && VANISH_COUNT[entry_id] <3)
+            {
+                CAN_VANISH[entry_id] = true; 
+            }
+            else {
+                CAN_VANISH[entry_id] = false;
+            }                    
+        } 
+
+//EVERYTHING ELSE
+
+        if CANCEL_IN_NEUTRAL [entry_id]  {
+        
+            if (((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD) != 0) && situation_kind == *SITUATION_KIND_GROUND && ! grab) 
+            || ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 && situation_kind == *SITUATION_KIND_AIR) 
+            || special_mechanics_button
+            {
+                CancelModule::enable_cancel(fighter.module_accessor);
+                CANCEL_IN_NEUTRAL [entry_id] = false;
+            }
+            CANCEL_INTO_VANISH[entry_id] = true;
+                        
         }
 
         //RESETS
             if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false {
                 AIRDODGE_COUNT[entry_id] = 0;
                 VANISH_COUNT[entry_id] = 0;
-                CAN_VANISH[entry_id] = true
+                CAN_VANISH[entry_id] = true;
+                CANCEL_IN_NEUTRAL[entry_id] = false;
             }         
 
 
@@ -209,15 +194,17 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //
         if CANCEL_IN_NEUTRAL [entry_id] == false 
         && ! DISABLE_CANCEL_IN_NEUTRAL[entry_id]
-        && ! (AttackModule::is_attack_occur(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_THROW) {
+        && ! (AttackModule::is_attack_occur(fighter.module_accessor) && status_kind != *FIGHTER_STATUS_KIND_THROW)
+        //&& ! CatchModule::is_catch(fighter.module_accessor) 
+        {
 
-            if fighter_kind == *FIGHTER_KIND_MARIO 
+            /*if fighter_kind == *FIGHTER_KIND_MARIO 
                 && (
                     ((motion_kind == smash::hash40("attack_s3_s") || motion_kind == smash::hash40("attack_s3_hi") || motion_kind == smash::hash40("attack_s3_lw")) && frame > 7.0 )
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >7.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >25.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >17.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >14.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >27.0 )
@@ -250,7 +237,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     }
                     
                 } 
-                    
+            */        
             if fighter_kind == *FIGHTER_KIND_DONKEY
                 && (
                     ((motion_kind == smash::hash40("attack_s3_s") 
@@ -259,7 +246,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame >11.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame >7.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame >24.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame >23.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >23.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame >16.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame >14.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame >26.0 )
@@ -295,7 +282,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame >12.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame >12.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame >23.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame >18.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >18.0 )
                     || (motion_kind == smash::hash40("attack_s4_s2") && frame >11.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame >45.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame >25.0 )
@@ -334,7 +321,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame >18.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame >8.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame >18.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame >11.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >11.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame >28.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame >18.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame >22.0 )
@@ -375,7 +362,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame >15.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame >10.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame >20.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame >16.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >16.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame >16.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame >23.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame >25.0 )
@@ -413,7 +400,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame >10.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame >6.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame >34.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame >19.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >19.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame >17.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame >19.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame >32.0 )
@@ -450,7 +437,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame > 7.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame > 8.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame > 15.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame > 14.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame > 14.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame > 11.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame > 7.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame > 23.0 )
@@ -462,8 +449,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("special_air_n_loop") && frame >1.0 )
                     || (motion_kind == smash::hash40("special_n_end") && frame > 1.0 )
                     || (motion_kind == smash::hash40("special_air_n_end") && frame >1.0 )
-                    || (motion_kind == smash::hash40("special_s") && frame > 28.0 )
-                    || (motion_kind == smash::hash40("special_air_s") && frame >28.0 )
+                    || (motion_kind == smash::hash40("special_s_end") && frame > 1.0 )
+                    || (motion_kind == smash::hash40("special_air_s_end") && frame >1.0 )
                     ||(motion_kind == smash::hash40("special_hi") && frame >20.0 )
                     ||(motion_kind == smash::hash40("special_air_hi") && frame >20.0 )
                     || (motion_kind == smash::hash40("special_lw") && frame >1.0 )
@@ -497,7 +484,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame > 14.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame > 9.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame > 13.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame > 30.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame > 30.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame > 18.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame > 22.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame > 23.0 )
@@ -533,7 +520,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame > 11.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame > 9.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame > 26.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame > 14.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame > 14.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame > 14.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame > 16.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame > 32.0 )
@@ -570,7 +557,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame > 9.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame > 5.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame > 25.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame > 23.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame > 23.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame == 0.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame == 0.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame > 16.0 )
@@ -607,7 +594,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame > 17.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame > 12.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame > 16.0 )
-                    || (motion_kind == smash::hash40("attack_s4") || motion_kind == smash::hash40("attack_s4_hi") || motion_kind == smash::hash40("attack_s4_lw") && frame > 30.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4  && frame > 30.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame > 29.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame > 30.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame > 15.0 )
@@ -645,7 +632,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >20.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >24.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >24.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >19.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >30.0 )
@@ -682,7 +669,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >9.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >19.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >17.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >20.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >31.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >19.0 )
@@ -719,7 +706,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >20.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >27.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >27.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >37.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >30.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >29.0 )
@@ -757,7 +744,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >27.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >14.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >13.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >23.0 )
@@ -792,7 +779,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >23.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >6.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >8.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >21.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >21.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >15.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >30.0 )
@@ -832,7 +819,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >19.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >12.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >24.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >24.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >34.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >14.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >23.0 )
@@ -871,7 +858,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >7.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >25.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >17.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >14.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >27.0 )
@@ -908,7 +895,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >14.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >8.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >15.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >33.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >33.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >24.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >27.0 )
@@ -945,7 +932,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >10.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >18.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >20.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >20.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >20.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >10.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >18.0 )
@@ -982,7 +969,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >8.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >16.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >13.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >23.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >21.0 )
@@ -1028,7 +1015,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame > 14.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame > 9.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame > 10.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame > 16.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame > 16.0 )
                     || (motion_kind == smash::hash40("attack_s4_s2") && frame >12.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame > 45.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame > 22.0 )
@@ -1070,7 +1057,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame > 64.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame > 12.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame > 19.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame > 31.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame > 31.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame > 25.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame > 38.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame > 26.0 )
@@ -1110,7 +1097,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame > 13.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame > 7.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame > 20.0 )
-                    || ((motion_kind == smash::hash40("attack_s4") 
+                    || ((status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 
                     || motion_kind == smash::hash40("attack_s4_hi") 
                     || motion_kind == smash::hash40("attack_s4_lw")) && frame > 22.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame > 25.0 )
@@ -1150,7 +1137,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame > 11.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame > 8.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame > 16.0 )
-                    || ((motion_kind == smash::hash40("attack_s4") 
+                    || ((status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 
                     || motion_kind == smash::hash40("attack_s4_hi") 
                     || motion_kind == smash::hash40("attack_s4_lw")) && frame > 14.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame > 23.0 )
@@ -1202,7 +1189,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame > 22.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame > 8.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame > 19.0 )
-                    || ((motion_kind == smash::hash40("attack_s4") 
+                    || ((status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 
                     || motion_kind == smash::hash40("attack_s4_hi") 
                     || motion_kind == smash::hash40("attack_s4_lw")) && frame > 18.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame > 25.0 )
@@ -1243,7 +1230,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >14.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >4.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >11.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >24.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >24.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >9.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >20.0 )
@@ -1280,7 +1267,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >7.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >9.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >22.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >22.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >18.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >20.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >25.0 )
@@ -1317,7 +1304,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >10.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >9.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >19.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >28.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >28.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >29.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >24.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >16.0 )
@@ -1357,7 +1344,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >19.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >5.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >23.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >19.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >19.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >27.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >42.0 )
@@ -1395,7 +1382,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >7.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >12.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >43.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >43.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >35.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >22.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >38.0 )
@@ -1435,7 +1422,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >21.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >8.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >19.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >35.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >35.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >31.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >36.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >22.0 )
@@ -1470,7 +1457,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >6.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >17.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >21.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >21.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >25.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >25.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >26.0 )
@@ -1507,7 +1494,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >6.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >19.0 )
-                    ||((motion_kind == smash::hash40("attack_s4") || motion_kind == smash::hash40("attack_s4_hi") || motion_kind == smash::hash40("attack_s4_lw")) && frame >20.0 )
+                    ||((status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 ) && frame >20.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >29.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >14.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >29.0 )
@@ -1542,7 +1529,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >10.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >20.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >24.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >24.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >19.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >20.0 )
@@ -1579,7 +1566,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >5.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >23.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >23.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >23.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >23.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >20.0 )
@@ -1618,7 +1605,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >4.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >17.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >15.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >15.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >54.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >41.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >26.0 )
@@ -1656,7 +1643,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >14.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >7.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >20.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >20.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >20.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >30.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >38.0 )
@@ -1691,7 +1678,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >41.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >40.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >40.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >24.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >22.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >29.0 )
@@ -1726,7 +1713,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >14.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >11.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >10.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >24.0 )
@@ -1761,7 +1748,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >15.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >22.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >22.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >23.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >18.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >21.0 )
@@ -1798,7 +1785,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >7.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >3.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >8.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >17.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >18.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >32.0 )
@@ -1833,7 +1820,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >10.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >9.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >17.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >15.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >18.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >14.0 )
@@ -1871,7 +1858,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >6.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >18.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >23.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >23.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >23.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >22.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >26.0 )
@@ -1908,7 +1895,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >25.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >23.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >20.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >20.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >34.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >31.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >23.0 )
@@ -1946,7 +1933,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >21.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >36.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >19.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >19.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >31.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >33.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >54.0 )
@@ -1983,7 +1970,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >13.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >19.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >19.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >19.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >21.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >13.0 )
@@ -2020,7 +2007,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >8.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >19.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >18.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >18.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >18.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >33.0 )
@@ -2057,7 +2044,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >10.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >4.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >9.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >15.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >15.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >18.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >2.0 )
@@ -2094,7 +2081,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >6.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >11.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >15.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >15.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >21.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >19.0 )
@@ -2132,7 +2119,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >25.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >27.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >17.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >20.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >20.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >35.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >19.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >30.0 )
@@ -2169,7 +2156,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >10.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >9.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >37.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >29.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >29.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >28.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >28.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >19.0 )
@@ -2206,7 +2193,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >14.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >8.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >18.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >27.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >27.0 )
                     ||((motion_kind == smash::hash40("attack_hi4") || motion_kind == smash::hash40("attack_hi4_2")) && frame >32.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >28.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >28.0 )
@@ -2243,7 +2230,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >23.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >13.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >23.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >23.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >33.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >42.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >30.0 )
@@ -2280,7 +2267,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >14.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >25.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >26.0 )
-                    ||((motion_kind == smash::hash40("attack_s4") || motion_kind == smash::hash40("attack_s4_hi") ||motion_kind == smash::hash40("attack_s4_lw")) && frame >37.0 )
+                    ||((status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 || motion_kind == smash::hash40("attack_s4_hi") ||motion_kind == smash::hash40("attack_s4_lw")) && frame >37.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >23.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >14.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >19.0 )
@@ -2317,7 +2304,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >7.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >19.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >30.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >30.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >29.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >29.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >37.0 )
@@ -2357,7 +2344,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_lw3_s") && frame >3.0 )
                     ||(motion_kind == smash::hash40("attack_lw3_w") && frame > 7.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >15.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >17.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >6.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >31.0 )
@@ -2397,7 +2384,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >9.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >18.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >28.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >28.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >23.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >15.0 )
@@ -2442,7 +2429,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >7.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >23.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >18.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >18.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >15.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >19.0 )
@@ -2497,7 +2484,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >15.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >8.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >26.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >4.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >4.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >8.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >25.0 )
@@ -2538,7 +2525,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >15.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >13.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >17.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >20.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >24.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >9.0 )
@@ -2579,7 +2566,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >13.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >21.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >21.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >27.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >20.0 )
@@ -2625,7 +2612,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >22.0 )
                     ||(motion_kind == smash::hash40("attack_lw3_2") && frame >28.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >24.0 )
-                    ||((motion_kind == smash::hash40("attack_s4") || motion_kind == smash::hash40("attack_s4_hi") || motion_kind == smash::hash40("attack_s4_lw")) && frame >25.0 )
+                    ||((status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 ) && frame >25.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >18.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >21.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >27.0 )
@@ -2662,7 +2649,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >15.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >25.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >20.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >20.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >23.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >25.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >30.0 )
@@ -2699,7 +2686,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >10.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >19.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >19.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >19.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >18.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >25.0 )
@@ -2736,7 +2723,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >15.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >18.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >18.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >18.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >20.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >25.0 )
@@ -2774,7 +2761,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >13.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >10.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >14.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >17.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >18.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >15.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >19.0 )
@@ -2812,7 +2799,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame >23.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame >14.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame >21.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame >19.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >19.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame >14.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame >17.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame >27.0 )
@@ -2855,7 +2842,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame >11.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame >10.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame >23.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame >19.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >19.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame >17.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame >21.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame >16.0 )
@@ -2969,7 +2956,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame >14.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame >21.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame >20.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame >21.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >21.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame >27.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame >17.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame >32.0 )
@@ -3005,7 +2992,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame >11.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame >9.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame >22.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame >21.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >21.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame >14.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame >11.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame >19.0 )
@@ -3055,7 +3042,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame >15.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame >15.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame >11.0 )
-                    || ((motion_kind == smash::hash40("attack_s4") || motion_kind == smash::hash40("attack_s4_hi") || motion_kind == smash::hash40("attack_s4_lw")) && frame >25.0 )
+                    || ((status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4) && frame >25.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame >29.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame >31.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame >28.0 )
@@ -3096,7 +3083,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame >15.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame >19.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame >16.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame == 0.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame == 0.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame >16.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame >8.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame >32.0 )
@@ -3132,7 +3119,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame >9.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame >12.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame >13.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame >15.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >15.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame >8.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame >35.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame >6.0 )
@@ -3170,7 +3157,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     || (motion_kind == smash::hash40("attack_hi3") && frame >25.0 )
                     || (motion_kind == smash::hash40("attack_lw3") && frame >22.0 )
                     || (motion_kind == smash::hash40("attack_dash") && frame >19.0 )
-                    || (motion_kind == smash::hash40("attack_s4") && frame >25.0 )
+                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >25.0 )
                     || (motion_kind == smash::hash40("attack_hi4") && frame >28.0 )
                     || (motion_kind == smash::hash40("attack_lw4") && frame >22.0 )
                     || (motion_kind == smash::hash40("attack_air_n") && frame >11.0 )
@@ -3213,7 +3200,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >11.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >18.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >23.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >23.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >33.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >20.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >22.0 )
@@ -3250,7 +3237,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >7.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >10.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >17.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >27.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >19.0 )
@@ -3290,7 +3277,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 ||(motion_kind == smash::hash40("attack_hi3_2") && frame >16.0 )
                 ||(motion_kind == smash::hash40("attack_lw3") && frame >18.0 )
                 ||(motion_kind == smash::hash40("attack_dash") && frame >19.0 )
-                ||(motion_kind == smash::hash40("attack_s4") && frame >26.0 )
+                ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >26.0 )
                 ||(motion_kind == smash::hash40("attack_s4_transform") && frame >26.0 )
                 ||(motion_kind == smash::hash40("attack_hi4") && frame >16.0 )
                 ||(motion_kind == smash::hash40("attack_hi4_transform") && frame >22.0 )
@@ -3353,7 +3340,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >36.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >10.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >24.0 )
-                    ||(motion_kind == smash::hash40("attack_s4") && frame >20.0 )
+                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >20.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >19.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >22.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >20.0 )
@@ -3399,7 +3386,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >8.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >17.0 )
-                    ||((motion_kind == smash::hash40("attack_s4") || motion_kind == smash::hash40("attack_s4_hi") ||motion_kind == smash::hash40("attack_s4_lw")) && frame >18.0 )
+                    ||((status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 || motion_kind == smash::hash40("attack_s4_hi") ||motion_kind == smash::hash40("attack_s4_lw")) && frame >18.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >14.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >10.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >29.0 )
@@ -3461,7 +3448,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >9.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >10.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >14.0 )
-                    ||((motion_kind == smash::hash40("attack_s4") || motion_kind == smash::hash40("attack_s4_hi") ||motion_kind == smash::hash40("attack_s4_lw")) && frame >40.0 )
+                    ||((status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 || motion_kind == smash::hash40("attack_s4_hi") ||motion_kind == smash::hash40("attack_s4_lw")) && frame >40.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >28.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >25.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >21.0 )
@@ -3518,7 +3505,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     ||(motion_kind == smash::hash40("attack_hi3") && frame >12.0 )
                     ||(motion_kind == smash::hash40("attack_lw3") && frame >6.0 )
                     ||(motion_kind == smash::hash40("attack_dash") && frame >10.0 )
-                    ||((motion_kind == smash::hash40("attack_s4") || motion_kind == smash::hash40("attack_s4_hi") ||motion_kind == smash::hash40("attack_s4_lw")) && frame >17.0 )
+                    ||((status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 || motion_kind == smash::hash40("attack_s4_hi") ||motion_kind == smash::hash40("attack_s4_lw")) && frame >17.0 )
                     ||(motion_kind == smash::hash40("attack_hi4") && frame >22.0 )
                     ||(motion_kind == smash::hash40("attack_lw4") && frame >16.0 )
                     ||(motion_kind == smash::hash40("attack_air_n") && frame >23.0 )
@@ -3575,7 +3562,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 }
         }
         else {
-            CANCEL_IN_NEUTRAL [entry_id] = false;
+            //CANCEL_IN_NEUTRAL [entry_id] = false;
         }
     }
 }

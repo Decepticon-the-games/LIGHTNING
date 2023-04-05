@@ -9,7 +9,7 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
+use crate::fighters::common::mechanics::attack_cancels::{ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL};
 
 
 
@@ -33,12 +33,18 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             
             if frame >=13.0 {
                 if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3) != 0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false; 
+                    ENABLE_MULTIHIT_CANCEL[entry_id] = false; 
                 }
                 else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true; 
+                    ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
                 } 
             } 
+            else {
+                ENABLE_MULTIHIT_CANCEL[entry_id] = false; 
+            }
+            if frame >=23.0 {
+                ENABLE_ATTACK_CANCEL[entry_id] = true;
+            }
             else {
                 ENABLE_ATTACK_CANCEL[entry_id] = false;
             }  

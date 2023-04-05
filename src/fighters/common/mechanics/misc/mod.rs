@@ -33,7 +33,29 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         if status_kind == *FIGHTER_STATUS_KIND_LANDING && frame >10.0 {
             CancelModule::enable_cancel(fighter.module_accessor);
         }
+//STEP DASH
+
+//STEP VANISH
+        /*if status_kind == *FIGHTER_STATUS_KIND_ESCAPE
+        //|| status_kind == *FIGHTER_STATUS_KIND_ESCAPE_F
+        //|| status_kind == *FIGHTER_STATUS_KIND_ESCAPE_B 
+        {
             
+            let hitstatus = HitModule::get_whole(fighter.module_accessor, 0);
+            let zero = smash::phx::Vector3f {x:0.0,y:0.0,z:0.0};
+            let rotation = smash::phx::Vector3f {x:0.0,y:0.0,z:0.0};
+            //Speedline effect
+            EffectModule::req_on_joint(fighter.module_accessor, smash::phx::Hash40::new("sys_attack_speedline"), smash::phx::Hash40::new("body"), &zero, &rotation, 1.0, &zero, &zero, false, 0, 0, 0);
+            //Invisible effect
+            if hitstatus == *HIT_STATUS_XLU {
+                VisibilityModule::set_whole(fighter.module_accessor, false);
+                
+            }
+        }  
+        else {
+            VisibilityModule::set_whole(fighter.module_accessor, true);
+            //macros::EFFECT_OFF_KIND(fighter, smash::phx::Hash40::new("sys_attack_speedline"), true, true);
+        }*/         
 
 //REMOVE LANDING LAG
         if (status_kind == *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR || status_kind == *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL) && frame >1.0 {
@@ -88,8 +110,8 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             HitModule::set_whole(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_INVINCIBLE), 0);    
             
         }
-    }
-}
+    
+
 
 // ROLL??
         //if motion_kind== smash::hash40("escape_f") || motion_kind== smash::hash40("escape_b")  {
@@ -113,13 +135,27 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //}
 
 //GRAB COMBOS
-        //if status_kind == *FIGHTER_STATUS_KIND_THROW && AttackModule::is_attack_occur(fighter.module_accessor) {
+        if status_kind == *FIGHTER_STATUS_KIND_THROW {
+            /*if AttackModule::is_attack_occur(fighter.module_accessor) {
             
-        //    if ! (fighter_kind == *FIGHTER_KIND_SHULK && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0) { //so shulk's monado arts don't break
-        //        CancelModule::enable_cancel(fighter.module_accessor);
-        //    }
+                if ! (fighter_kind == *FIGHTER_KIND_SHULK && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0) { //so shulk's monado arts don't break
+                    CancelModule::enable_cancel(fighter.module_accessor);
+                }
+            }*/
             
-        //}
+               if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH) {
+                    //AttackModule::set_power_mul(fighter.module_accessor, 1.0);
+                    AttackModule::set_damage_reaction_mul(fighter.module_accessor, 0.4);
+                } 
+            
+            
+        }
+        else {
+            AttackModule::set_reaction_mul(fighter.module_accessor, 1.0);
+        }
+//
+    }
+}
 
 pub fn install() {
     smashline::install_agent_frame_callbacks!(once_per_fighter_frame);

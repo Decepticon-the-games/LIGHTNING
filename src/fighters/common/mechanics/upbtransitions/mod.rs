@@ -124,7 +124,7 @@ pub fn set_bool(fighter: &mut L2CFighterCommon) {
         || (fighter_kind == *FIGHTER_KIND_NESS 
                 && status_kind == *FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_REFLECT)
         || StopModule::is_damage(module_accessor)
-        || StopModule::is_stop(module_accessor)
+        //|| StopModule::is_stop(module_accessor)
         || status_kind == *FIGHTER_STATUS_KIND_THROWN
         || status_kind == *FIGHTER_STATUS_KIND_REBIRTH
         || status_kind == *FIGHTER_STATUS_KIND_CLUNG_DIDDY

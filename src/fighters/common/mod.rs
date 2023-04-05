@@ -1,7 +1,7 @@
-#![deny(deprecated)]
-#![allow(unused)]
-#![allow(non_snake_case)]
-#![feature(repr_simd)]
+//#![deny(deprecated)]
+//#![allow(unused)]
+//#![allow(non_snake_case)]
+//#![feature(repr_simd)]
 
 
 pub mod mechanics;

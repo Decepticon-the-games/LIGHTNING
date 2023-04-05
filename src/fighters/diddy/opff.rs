@@ -38,9 +38,18 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
                     ENABLE_ATTACK_CANCEL[entry_id] = false;
                 } 
             }
-            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
+            else if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
                 
                 if frame >= 18.0 {
+                    ENABLE_ATTACK_CANCEL[entry_id] = true;
+                } 
+                else {
+                    ENABLE_ATTACK_CANCEL[entry_id] = false;
+                } 
+            }
+            else if status_kind == *FIGHTER_STATUS_KIND_ATTACK_DASH {
+                
+                if frame >= 24.0 {
                     ENABLE_ATTACK_CANCEL[entry_id] = true;
                 } 
                 else {

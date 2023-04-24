@@ -65,8 +65,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let walks_runs_jumps_falls = (status_kind == *FIGHTER_STATUS_KIND_WALK
         || status_kind == *FIGHTER_STATUS_KIND_DASH
         || status_kind == *FIGHTER_STATUS_KIND_TURN_DASH
-        || status_kind == *FIGHTER_STATUS_KIND_JUMP
-        || status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL);
+        || status_kind == *FIGHTER_STATUS_KIND_JUMP);
 
         let special_mechanics_button = CRIMSON_CANCEL_BUTTON[entry_id]
         || CROSS_CANCEL_BUTTON[entry_id]
@@ -74,12 +73,15 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || LIGHTNING_BUTTON[entry_id];
         || FINAL_SMASH_BUTTON[entry_id];
 
-        if entry_id == 0 {
+        /*if entry_id == 0 {
             println!("cin: {}", CANCEL_IN_NEUTRAL[entry_id]);
-        }
+        }*/
 
         if idles || walks_runs_jumps_falls{
             CANCEL_IN_NEUTRAL[entry_id] = false;
+        }
+        if status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL {
+            CANCEL_IN_NEUTRAL[entry_id] = true;
         }
 
 //AIRDODGE COUNTER
@@ -118,10 +120,11 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     }
 
 
-//CANCEL FOR AS MANY JUMPS AS YOU HAVE
+//CANCEL FOR AS MANY JUMPS/AIRDODGES AS YOU HAVE
         
-        if (CANCEL_IN_NEUTRAL [entry_id] )
-        || status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL {
+        if CANCEL_IN_NEUTRAL [entry_id] 
+        {
+            //AIRDODGES
             if (max_jumps == 2 && AIRDODGE_COUNT[entry_id] <2)
             || (max_jumps == 3 && AIRDODGE_COUNT[entry_id] <3) 
             || (max_jumps == 4 && AIRDODGE_COUNT[entry_id] <4) 
@@ -129,15 +132,13 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             || (max_jumps == 6 && AIRDODGE_COUNT[entry_id] <6)
             || (edgde_one_wing_max_jumps == 3 && AIRDODGE_COUNT[entry_id] <3)
             {
-                if (ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_GUARD) //(cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0  
-                && situation_kind == *SITUATION_KIND_AIR) 
-                && l_stick_out {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+                if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
+                    CancelModule::enable_cancel(fighter.module_accessor);
+                    StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                     CANCEL_IN_NEUTRAL [entry_id] = false; // This is so cancel in neutral only runs before cancelling, to avoid spams.
                 }
             }
-        }
-        else if (CANCEL_IN_NEUTRAL [entry_id] ) {
+            //JUMPS
             if (max_jumps == 2 && jumps_used <2)
             || (max_jumps == 3 && jumps_used <3) 
             || (max_jumps == 4 && jumps_used <4) 
@@ -237,7 +238,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     }
                     
                 } 
-            */        
+                    
             if fighter_kind == *FIGHTER_KIND_DONKEY
                 && (
                     ((motion_kind == smash::hash40("attack_s3_s") 
@@ -393,7 +394,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                         }
                    }
                 } 
-
+*/
             if fighter_kind == *FIGHTER_KIND_KIRBY
                 && (
                     ((motion_kind == smash::hash40("attack_s3_s") || motion_kind == smash::hash40("attack_s3_hi") || motion_kind == smash::hash40("attack_s3_lw")) && frame > 8.0 )

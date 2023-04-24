@@ -78,7 +78,7 @@ pub fn lightning(fighter : &mut L2CFighterCommon) {
 
         if LIGHTNING_EFFECTS[entry_id] {
 
-            EffectModule::req_emit(module_accessor, Hash40::new("sys_final_aura2"), 0);
+            EffectModule::req_emit(module_accessor, Hash40::new("sys_damage_aura"), 0);
             macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.851, 1.0);
             ModelModule::enable_gold_eye(module_accessor);	
             //EffectModule::req_emit(module_accessor, Hash40::new("sys_final_aura2"), 1);

@@ -110,14 +110,14 @@ use crate::fighters::common::mechanics::attack_cancels::{ENABLE_ATTACK_CANCEL, E
                     UPSMASH_CANCEL_COUNTER[entry_id] = 3;//How  many hits before disabling cancel
                     ENABLE_MULTIHIT_CANCEL[entry_id] = false; 
                 }
-                else {
+                /*else {
                     if frame <40.0 {
                         ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
                     }
                     else {
                         ENABLE_MULTIHIT_CANCEL[entry_id] = false;
                     }
-                }
+                }*/
                 //Reset
                 if MOVEMENT_CANCEL[entry_id] {
                     if UPSMASH_CANCEL_COUNTER[entry_id] == 3 {

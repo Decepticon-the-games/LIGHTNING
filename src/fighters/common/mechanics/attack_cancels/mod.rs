@@ -40,11 +40,14 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
         || status_kind == *FIGHTER_STATUS_KIND_JUMP
         || status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL);
 
-        if entry_id == 0 {
-            println!("enable: {}", ENABLE_ATTACK_CANCEL[entry_id]);
-        }
+        /*if entry_id == 0 {
+            println!("occur: {}", AttackModule::is_attack_occur(fighter.module_accessor));
+            println!("is: {}", AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL));
+            println!("has: {}", AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_ALL));
+            println!("multi: {}", ENABLE_MULTIHIT_CANCEL[entry_id]);
+        }*/
         
-        //println!("multi: {}", ENABLE_MULTIHIT_CANCEL[entry_id]);
+
         if idles || walks_runs_jumps_falls{
             ENABLE_ATTACK_CANCEL[entry_id] = false;
             ENABLE_MULTIHIT_CANCEL[entry_id] = false;
@@ -64,7 +67,7 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
 
         /*static mut JAB_CANCEL_COUNT : [bool; 8] = [false; 8];
         static mut JAB_CANCEL_COUNTER : [i32; 8] = [0; 8];
-
+*
         if (motion_kind == smash::hash40("attack_11") 
         || motion_kind == smash::hash40("attack_12")
         || motion_kind == smash::hash40("attack_13"))
@@ -100,7 +103,6 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
 //ENABLE ATTACK CANCELS// this instance prevents cancelling more than a certain amount without first moving
         
         if ENABLE_ATTACK_CANCEL[entry_id]
-        //|| ENABLE_MULTIHIT_CANCEL[entry_id] 
         {
             if AttackModule::is_attack_occur(fighter.module_accessor) {
                 if ATTACK_CANCEL_COUNTER[entry_id] == false {
@@ -125,9 +127,10 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
                 ATTACK_CANCEL_COUNT[entry_id] = 0; 
             }  
         }  
-        else if ENABLE_MULTIHIT_CANCEL[entry_id] {
+        /*else if ENABLE_MULTIHIT_CANCEL[entry_id] {
             //WRITE SYSTEM HERE
         }
+        */
         
 
 //RESETS
@@ -145,6 +148,8 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
             if AttackModule::is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) { 
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
+        
+            
             
             
 

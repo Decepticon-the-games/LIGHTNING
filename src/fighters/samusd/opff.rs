@@ -16,7 +16,7 @@ use crate::fighters::common::mechanics::attack_cancels::{ENABLE_ATTACK_CANCEL,EN
 
 
 
-#[fighter_frame( agent = FIGHTER_KIND_SAMUS )]
+#[fighter_frame( agent = FIGHTER_KIND_SAMUSD )]
 pub fn samus_opff(fighter : &mut L2CFighterCommon) {
     unsafe {
         let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
@@ -27,64 +27,15 @@ pub fn samus_opff(fighter : &mut L2CFighterCommon) {
         //let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
         //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
 
-//Enable cancel 
-
-
-        //Up Special            
-        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
-                    
-            if MotionModule::frame(module_accessor) >= 26.0 {
-                ENABLE_ATTACK_CANCEL[entry_id] = true; 
-            }
-            else {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
-            }
-        }
-        //Up Smash
-        else if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
-            
-            if MotionModule::frame(module_accessor) >= 27.0 {
-                ENABLE_ATTACK_CANCEL[entry_id] = true; 
-            }
-            else {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
-            }
-        }
-        //Fair
-        else if motion_kind == hash40("attack_air_f") {
-            
-            if MotionModule::frame(module_accessor) >= 30.0 {
-                ENABLE_ATTACK_CANCEL[entry_id] = true; 
-            }
-            else {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
-            }
-        }
-        //Upair
-        else if motion_kind == hash40("attack_air_hi") {
-            
-            if MotionModule::frame(module_accessor) >= 16.0 {
-                ENABLE_ATTACK_CANCEL[entry_id] = true; 
-            }
-            else {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
-            }
-        }
-        else {
-            ENABLE_ATTACK_CANCEL[entry_id] = true;
-        }
-
-
-        //
+//
             static mut CANCEL_COUNT : [bool; 8] = [false; 8];
             static mut CANCEL_COUNTER : [i32; 8] = [0; 8];
 
-            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4
-            || status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
+            /*if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
             || motion_kind == hash40("attack_air_f")
             || motion_kind == hash40("attack_air_hi")
             {
-                if AttackModule::is_attack_occur(fighter.module_accessor) {
+                //if AttackModule::is_attack_occur(fighter.module_accessor) {
                     //Counter 
                     //if CANCEL_COUNT[entry_id] == false {
                     //    CANCEL_COUNTER[entry_id] +=1;
@@ -99,9 +50,6 @@ pub fn samus_opff(fighter : &mut L2CFighterCommon) {
                 //    CANCEL_COUNTER[entry_id] = 6;//How  many hits before disabling cancel
                 //    ENABLE_MULTIHIT_CANCEL[entry_id] = false; 
                 //}
-                //else {
-                    ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
-                }
 
                 //Reset
                 //if MOVEMENT_CANCEL[entry_id] {
@@ -116,7 +64,7 @@ pub fn samus_opff(fighter : &mut L2CFighterCommon) {
             //Resets
             if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false {
                 CANCEL_COUNTER[entry_id] = 0;
-            }
+            }*/
     }
 }
 

@@ -75,7 +75,12 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 let zero = smash::phx::Vector3f {x:0.0,y:0.0,z:0.0};
                 let rotation = smash::phx::Vector3f {x:0.0,y:0.0,z:stick_degrees};
                 EffectModule::req_on_joint(fighter.module_accessor, smash::phx::Hash40::new("sys_attack_speedline"), smash::phx::Hash40::new("body"), &zero, &rotation, 1.0, &zero, &zero, false, 0, 0, 0);
-            
+                
+                //Perfect Airdash
+                //if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK)
+                //|| ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+                //    CancelModule::enable_cancel(fighter.module_accessor);
+                //}
             }
             //Cancel
             if frame >= 8.0 {

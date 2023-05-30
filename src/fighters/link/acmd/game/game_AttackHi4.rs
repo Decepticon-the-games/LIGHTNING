@@ -19,7 +19,9 @@ unsafe fn game_attackhi4(fighter: &mut L2CAgentBase) {
         AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 2, 3.0, false);
         AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 3, 3.0, false);
         AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 4, 3.0, false);
-        ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
+        if ENABLE_MULTIHIT_CANCEL[entry_id] {
+    ENABLE_ATTACK_CANCEL[entry_id] = true;
+}
     }
     else {
        ENABLE_MULTIHIT_CANCEL[entry_id] = false;  
@@ -44,7 +46,9 @@ unsafe fn game_attackhi4(fighter: &mut L2CAgentBase) {
         AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 2, 3.0, false);
         AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 3, 3.0, false);
         AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 4, 3.0, false);
-        ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
+        if ENABLE_MULTIHIT_CANCEL[entry_id] {
+    ENABLE_ATTACK_CANCEL[entry_id] = true;
+}
     }
     else {
        ENABLE_MULTIHIT_CANCEL[entry_id] = false;  
@@ -65,9 +69,7 @@ unsafe fn game_attackhi4(fighter: &mut L2CAgentBase) {
         macros::ATTACK(fighter, 3, 0, Hash40::new("top"), 9.0, 90, 101, 0, 60, 5.2, 0.0, 11.0, -0.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ENABLE_ATTACK_CANCEL[entry_id] = true; 
     }
-    else {
-       ENABLE_ATTACK_CANCEL[entry_id] = false;  
-    }
+
     wait(fighter.lua_state_agent, 5.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);

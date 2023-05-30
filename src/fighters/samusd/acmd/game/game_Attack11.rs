@@ -13,9 +13,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         AttackModule::set_add_reaction_frame(fighter.module_accessor, 2, 4.0, false);
         ENABLE_ATTACK_CANCEL[entry_id] = true; 
     }
-    else {
-       ENABLE_ATTACK_CANCEL[entry_id] = false;  
-    }    wait(fighter.lua_state_agent, 2.0);
+    wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
         CANCEL_IN_NEUTRAL[entry_id] = true;

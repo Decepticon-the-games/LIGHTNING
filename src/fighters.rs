@@ -1,25 +1,6 @@
-use {
-    smash::{
-        lua2cpp::L2CAgentBase,
-        phx::{Hash40,Vector3f},
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*,
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::{
-    common::{
-        mechanics::{
-            attack_cancels::{
-                ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL
-            },
-            motioncancels::{
-                CANCEL_IN_NEUTRAL
-            }
-        }
-    }
-};
+#![deny(deprecated)]
+#![allow(unused)]
+#![allow(non_snake_case)]
 
 //static entry_id: WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 
@@ -119,15 +100,15 @@ pub mod zelda;
 
 pub fn install() {
     common::install();
-    bayonetta::install();
-    brave::install();
-    buddy::install();
+    //bayonetta::install();
+    //brave::install();
+    //buddy::install();
     captain::install();
-    cloud::install();
-    dedede::install();
-    demon::install();
-    diddy::install();
-    dolly::install();
+    //cloud::install();
+    //dedede::install();
+    //demon::install();
+    //diddy::install();
+    //dolly::install();
     donkey::install();
     duckhunt::install();
     edge::install();

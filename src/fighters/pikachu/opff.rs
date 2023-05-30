@@ -9,8 +9,8 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
-
+use crate::fighters::common::mechanics::attack_cancels::{ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL};
+use crate::fighters::common::mechanics::lightning_mode::LIGHTNING;
 
 
 
@@ -32,32 +32,37 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
 //Enable cancel subtitle here.   
 
              
-            if motion_kind == smash::hash40("attack_air_n") {//Nair
-                if frame >= 19.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
+            if ENABLE_MULTIHIT_CANCEL[entry_id] && LIGHTNING[entry_id] {
+                
+                static mut MULTIHIT : [bool; 8] = [false; 8];
+                static mut MULTIHIT_COUNT : [i32; 8] = [0; 8];
+
+                if motion_kind == smash::hash40("attack_air_n") 
+                || motion_kind == smash::hash40("attack_air_f") 
+                || motion_kind == smash::hash40("attack_air_b") {
+                    ENABLE_ATTACK_CANCEL[entry_id] = false;
+                    if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL) {
+                        if MULTIHIT[entry_id] == false {
+                            MULTIHIT_COUNT[entry_id] +=1;
+                            MULTIHIT[entry_id] = true; 
+                        }         
+                    }
+                    else {
+                        MULTIHIT[entry_id] = false;
+                    }  
+
+                    if MULTIHIT_COUNT[entry_id] >= 3 { //how many hits
+                        MULTIHIT_COUNT[entry_id] = 3;  //how many hits
+                        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+                    }
+                    else {
+                        ENABLE_ATTACK_CANCEL[entry_id] = false;
+                    } 
                 }
                 else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                }
-            }
-            else if motion_kind == smash::hash40("attack_air_f") {//Fair
-                if frame >= 26.0  {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                }
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                }
-            }
-            else if motion_kind == smash::hash40("attack_air_b") {//Bair
-                if frame >= 19.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                }
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                }
-            }
-            else {//This stays at the bottom
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
+                    //ENABLE_ATTACK_CANCEL[entry_id] = true; 
+                    MULTIHIT_COUNT[entry_id] = 0;
+                }    
             }
         }
     }

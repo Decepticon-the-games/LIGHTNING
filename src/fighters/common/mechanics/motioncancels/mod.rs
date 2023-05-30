@@ -22,6 +22,8 @@ use crate::fighters::common::mechanics::{
 pub static mut CANCEL_IN_NEUTRAL : [bool; 8] = [false; 8];
 pub static mut DISABLE_CANCEL_IN_NEUTRAL : [bool; 8] = [false; 8];
 pub static mut JUMP_CANCEL : [bool; 8] = [false; 8];
+pub static mut AIRDASH : [bool; 8] = [false; 8];
+pub static mut AIRDODGE_PLUS : [bool; 8] = [false; 8];
 static mut AIRDODGE_BUTTON : [bool; 8] = [false; 8];// for only running the code within it 1 frame.
 static mut AIRDODGE_COUNT : [i32; 8] = [0; 8]; //  You start off with one airdodge. Every other airdodge after that before touching the ground increases the number up to how many jumps that fighter has.
 pub static mut SIDE_SPECIAL_COUNTER : [bool; 8] = [false; 8];
@@ -65,7 +67,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         let walks_runs_jumps_falls = (status_kind == *FIGHTER_STATUS_KIND_WALK
         || status_kind == *FIGHTER_STATUS_KIND_DASH
         || status_kind == *FIGHTER_STATUS_KIND_TURN_DASH
-        || status_kind == *FIGHTER_STATUS_KIND_JUMP);
+        || status_kind == *FIGHTER_STATUS_KIND_JUMP
+        || status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL
+        );
 
         let special_mechanics_button = CRIMSON_CANCEL_BUTTON[entry_id]
         || CROSS_CANCEL_BUTTON[entry_id]
@@ -73,58 +77,39 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         || LIGHTNING_BUTTON[entry_id];
         || FINAL_SMASH_BUTTON[entry_id];
 
-        /*if entry_id == 0 {
-            println!("cin: {}", CANCEL_IN_NEUTRAL[entry_id]);
-        }*/
+        
+        println!("count: {}", AIRDODGE_COUNT[entry_id]);
+        
 
         if idles || walks_runs_jumps_falls{
             CANCEL_IN_NEUTRAL[entry_id] = false;
         }
-        if status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL {
-            CANCEL_IN_NEUTRAL[entry_id] = true;
+        if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR
+        || status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL {
+            AIRDODGE_PLUS[entry_id] = true;
         }
 
 //AIRDODGE COUNTER
 
-    if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-        if AIRDODGE_BUTTON[entry_id] == false {
-            AIRDODGE_COUNT[entry_id] +=1; 
-            AIRDODGE_BUTTON[entry_id] = true; // This is so the counter only runs one frame. 
+        if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
+            if AIRDODGE_BUTTON[entry_id] == false {
+                AIRDODGE_COUNT[entry_id] +=1; 
+                AIRDODGE_BUTTON[entry_id] = true; // This is so the counter only runs one frame. 
+            }
+            CANCEL_IN_NEUTRAL [entry_id] = false; // This is so cancel in neutral only runs before cancelling, to avoid spams.                  
         }
-        CANCEL_IN_NEUTRAL [entry_id] = false; // This is so cancel in neutral only runs before cancelling, to avoid spams.                  
-    }
-    else {
-        AIRDODGE_BUTTON[entry_id] = false;  
-    }
-
-    //Reset Airdodge count when u land
-    if situation_kind == *SITUATION_KIND_GROUND { 
-        AIRDODGE_COUNT[entry_id] = 0;
-    }
-
-                  
-//VANISH COUNTER
-
-    if VANISH_COUNTER[entry_id] {
-        VANISH_COUNT[entry_id] += 1; 
-        VANISH_COUNTER[entry_id] = false;
-    } 
-
-    if LIGHTNING[entry_id] == false {//Vanish only once
-        if VANISH_COUNT[entry_id] <1 {
-            CAN_VANISH[entry_id] = true;
-        }     
         else {
-            CAN_VANISH[entry_id] = false;
-        }               
-    }
+            AIRDODGE_BUTTON[entry_id] = false;  
+        }
 
+        //Reset Airdodge count when u land
+        if situation_kind == *SITUATION_KIND_GROUND { 
+            AIRDODGE_COUNT[entry_id] = 0;
+        }
 
-//CANCEL FOR AS MANY JUMPS/AIRDODGES AS YOU HAVE
-        
-        if CANCEL_IN_NEUTRAL [entry_id] 
-        {
-            //AIRDODGES
+//MORE THAN ONE AIRDODGE
+
+        if AIRDODGE_PLUS[entry_id] {
             if (max_jumps == 2 && AIRDODGE_COUNT[entry_id] <2)
             || (max_jumps == 3 && AIRDODGE_COUNT[entry_id] <3) 
             || (max_jumps == 4 && AIRDODGE_COUNT[entry_id] <4) 
@@ -133,62 +118,104 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             || (edgde_one_wing_max_jumps == 3 && AIRDODGE_COUNT[entry_id] <3)
             {
                 if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
-                    CancelModule::enable_cancel(fighter.module_accessor);
-                    StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                    CANCEL_IN_NEUTRAL [entry_id] = false; // This is so cancel in neutral only runs before cancelling, to avoid spams.
+                    StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, true);
+                    AIRDODGE_BUTTON[entry_id] = false;//resets for the counter to count properly inbetween double airdodge
                 }
             }
-            //JUMPS
-            if (max_jumps == 2 && jumps_used <2)
-            || (max_jumps == 3 && jumps_used <3) 
-            || (max_jumps == 4 && jumps_used <4) 
-            || (max_jumps == 5 && jumps_used <5) 
-            || (max_jumps == 6 && jumps_used <6)
-            || (edgde_one_wing_max_jumps == 3 && jumps_used <3)
+            AIRDODGE_PLUS[entry_id] = false;
+        }
+
+                  
+//VANISH COUNTER
+
+        if VANISH_COUNTER[entry_id] {
+            VANISH_COUNT[entry_id] += 1; 
+            VANISH_COUNTER[entry_id] = false;
+        } 
+
+        if LIGHTNING[entry_id] == false {//Vanish only once
+            if VANISH_COUNT[entry_id] <1 {
+                CAN_VANISH[entry_id] = true;
+            }     
+            else {
+                CAN_VANISH[entry_id] = false;
+            }               
+        }
+
+
+//CANCEL FOR AS MANY JUMPS/AIRDODGES AS YOU HAVE
+        
+        if ! AttackModule::is_attack_occur(fighter.module_accessor) {
+
+            if CANCEL_IN_NEUTRAL [entry_id] 
             {
-                if (ControlModule::is_enable_flick_jump(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0 {
+                //AIRDODGES
+                if (max_jumps == 2 && AIRDODGE_COUNT[entry_id] <2)
+                || (max_jumps == 3 && AIRDODGE_COUNT[entry_id] <3) 
+                || (max_jumps == 4 && AIRDODGE_COUNT[entry_id] <4) 
+                || (max_jumps == 5 && AIRDODGE_COUNT[entry_id] <5) 
+                || (max_jumps == 6 && AIRDODGE_COUNT[entry_id] <6)
+                || (edgde_one_wing_max_jumps == 3 && AIRDODGE_COUNT[entry_id] <3)
+                {
+                    if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
+                        CancelModule::enable_cancel(fighter.module_accessor);
+                        AIRDODGE_PLUS[entry_id] = true;
+                        //StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+                        CANCEL_IN_NEUTRAL [entry_id] = false; // This is so cancel in neutral only runs before cancelling, to avoid spams.
+                    }
+                }
+                //JUMPS
+                if (max_jumps == 2 && jumps_used <2)
+                || (max_jumps == 3 && jumps_used <3) 
+                || (max_jumps == 4 && jumps_used <4) 
+                || (max_jumps == 5 && jumps_used <5) 
+                || (max_jumps == 6 && jumps_used <6)
+                || (edgde_one_wing_max_jumps == 3 && jumps_used <3)
+                {
+                    if (ControlModule::is_enable_flick_jump(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0 {
+                        CancelModule::enable_cancel(fighter.module_accessor);
+                        CANCEL_IN_NEUTRAL [entry_id] = false;
+                    }
+                }
+            }
+            if LIGHTNING[entry_id] {// Vanish as many times as you can jump
+                if (max_jumps == 2 && VANISH_COUNT[entry_id] <2)
+                || (max_jumps == 3 && VANISH_COUNT[entry_id] <3) 
+                || (max_jumps == 4 && VANISH_COUNT[entry_id] <4) 
+                || (max_jumps == 5 && VANISH_COUNT[entry_id] <5) 
+                || (max_jumps == 6 && VANISH_COUNT[entry_id] <6)
+                || (edgde_one_wing_max_jumps == 3 && VANISH_COUNT[entry_id] <3)
+                {
+                    CAN_VANISH[entry_id] = true; 
+                }
+                else {
+                    CAN_VANISH[entry_id] = false;
+                }                    
+            } 
+
+    //EVERYTHING ELSE
+
+            if CANCEL_IN_NEUTRAL [entry_id]  {
+            
+                if (((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD) != 0) && situation_kind == *SITUATION_KIND_GROUND && ! grab) 
+                || ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 && situation_kind == *SITUATION_KIND_AIR) 
+                {
                     CancelModule::enable_cancel(fighter.module_accessor);
                     CANCEL_IN_NEUTRAL [entry_id] = false;
                 }
+                CANCEL_INTO_VANISH[entry_id] = true;
+                            
             }
+
+            //RESETS
+                if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false {
+                    AIRDODGE_COUNT[entry_id] = 0;
+                    VANISH_COUNT[entry_id] = 0;
+                    CAN_VANISH[entry_id] = true;
+                    CANCEL_IN_NEUTRAL[entry_id] = false;
+                }         
+
         }
-        if LIGHTNING[entry_id] {// Vanish as many times as you can jump
-            if (max_jumps == 2 && VANISH_COUNT[entry_id] <2)
-            || (max_jumps == 3 && VANISH_COUNT[entry_id] <3) 
-            || (max_jumps == 4 && VANISH_COUNT[entry_id] <4) 
-            || (max_jumps == 5 && VANISH_COUNT[entry_id] <5) 
-            || (max_jumps == 6 && VANISH_COUNT[entry_id] <6)
-            || (edgde_one_wing_max_jumps == 3 && VANISH_COUNT[entry_id] <3)
-            {
-                CAN_VANISH[entry_id] = true; 
-            }
-            else {
-                CAN_VANISH[entry_id] = false;
-            }                    
-        } 
-
-//EVERYTHING ELSE
-
-        if CANCEL_IN_NEUTRAL [entry_id]  {
-        
-            if (((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD) != 0) && situation_kind == *SITUATION_KIND_GROUND && ! grab) 
-            || ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 && situation_kind == *SITUATION_KIND_AIR) 
-            || special_mechanics_button
-            {
-                CancelModule::enable_cancel(fighter.module_accessor);
-                CANCEL_IN_NEUTRAL [entry_id] = false;
-            }
-            CANCEL_INTO_VANISH[entry_id] = true;
-                        
-        }
-
-        //RESETS
-            if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false {
-                AIRDODGE_COUNT[entry_id] = 0;
-                VANISH_COUNT[entry_id] = 0;
-                CAN_VANISH[entry_id] = true;
-                CANCEL_IN_NEUTRAL[entry_id] = false;
-            }         
 
 
 
@@ -198,497 +225,9 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         && ! (AttackModule::is_attack_occur(fighter.module_accessor) && status_kind != *FIGHTER_STATUS_KIND_THROW)
         //&& ! CatchModule::is_catch(fighter.module_accessor) 
         {
-
-            /*if fighter_kind == *FIGHTER_KIND_MARIO 
-                && (
-                    ((motion_kind == smash::hash40("attack_s3_s") || motion_kind == smash::hash40("attack_s3_hi") || motion_kind == smash::hash40("attack_s3_lw")) && frame > 7.0 )
-                    ||(motion_kind == smash::hash40("attack_hi3") && frame >11.0 )
-                    ||(motion_kind == smash::hash40("attack_lw3") && frame >7.0 )
-                    ||(motion_kind == smash::hash40("attack_dash") && frame >25.0 )
-                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >17.0 )
-                    ||(motion_kind == smash::hash40("attack_hi4") && frame >12.0 )
-                    ||(motion_kind == smash::hash40("attack_lw4") && frame >14.0 )
-                    ||(motion_kind == smash::hash40("attack_air_n") && frame >27.0 )
-                    ||(motion_kind == smash::hash40("attack_air_f") && frame >21.0 )
-                    ||(motion_kind == smash::hash40("attack_air_b") && frame >10.0 )
-                    ||(motion_kind == smash::hash40("attack_air_hi") && frame >7.0 )
-                    ||(motion_kind == smash::hash40("attack_air_lw") && frame >23.0 )
-                    ||(motion_kind == smash::hash40("special_n") && frame >17.0 )
-                    ||(motion_kind == smash::hash40("special_air_n") && frame >17.0 )
-                    ||(motion_kind == smash::hash40("special_s") && frame >14.0 )
-                    ||(motion_kind == smash::hash40("special_air_s") && frame >14.0 )
-                    ||(motion_kind == smash::hash40("special_hi") && frame >20.0 )
-                    ||(motion_kind == smash::hash40("special_air_hi") && frame >20.0 )
-                    ||(motion_kind == smash::hash40("special_lw") && frame >21.0 )
-                    ||(motion_kind == smash::hash40("special_air_lw") && frame >21.0 )
-                    ||(motion_kind == smash::hash40("throw_f") && frame >=13.0 )
-                    ||(motion_kind == smash::hash40("throw_b") && frame >=44.0 )
-                    ||(motion_kind == smash::hash40("throw_hi") && frame >=18.0 )
-                    ||(motion_kind == smash::hash40("throw_lw") && frame >=18.0 )
-                    || (motion_kind == smash::hash40("catch") && frame >7.0)
-                    || (motion_kind == smash::hash40("catch_dash") && frame >10.0)
-                    || (motion_kind == smash::hash40("catch_turn") && frame >11.0)
-                ) {
-
-                    CANCEL_IN_NEUTRAL[entry_id] = true;
-                    if LIGHTNING[entry_id] {
-                        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                        }
-                    }
-                    
-                } 
-                    
-            if fighter_kind == *FIGHTER_KIND_DONKEY
-                && (
-                    ((motion_kind == smash::hash40("attack_s3_s") 
-                    || motion_kind == smash::hash40("attack_s3_hi") 
-                    || motion_kind == smash::hash40("attack_s3_lw")) && frame > 9.0 )
-                    || (motion_kind == smash::hash40("attack_hi3") && frame >11.0 )
-                    || (motion_kind == smash::hash40("attack_lw3") && frame >7.0 )
-                    || (motion_kind == smash::hash40("attack_dash") && frame >24.0 )
-                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >23.0 )
-                    || (motion_kind == smash::hash40("attack_hi4") && frame >16.0 )
-                    || (motion_kind == smash::hash40("attack_lw4") && frame >14.0 )
-                    || (motion_kind == smash::hash40("attack_air_n") && frame >26.0 )
-                    || (motion_kind == smash::hash40("attack_air_f") && frame >23.0 )
-                    || (motion_kind == smash::hash40("attack_air_b") && frame >16.0 )
-                    || (motion_kind == smash::hash40("attack_air_hi") && frame >10.0 )
-                    || (motion_kind == smash::hash40("attack_air_lw") && frame >16.0 )
-                    || (motion_kind == smash::hash40("special_n") && frame >27.0 )
-                    || (motion_kind == smash::hash40("special_s") && frame >21.0 )
-                    ||(motion_kind == smash::hash40("special_hi") && frame >62.0 )
-                    ||(motion_kind == smash::hash40("special_air_hi") && frame >43.0 )
-                    || (motion_kind == smash::hash40("special_lw") && frame >24.0 )
-                    || (motion_kind == smash::hash40("special_air_lw") && frame >30.0 )
-                    ||(motion_kind == smash::hash40("throw_f") && frame >=0.0 )
-                    ||(motion_kind == smash::hash40("throw_b") && frame >=15.0 )
-                    ||(motion_kind == smash::hash40("throw_hi") && frame >=14.0 )
-                    ||(motion_kind == smash::hash40("throw_lw") && frame >=19.0 )
-                    || (motion_kind == smash::hash40("catch") && frame >=10.0)
-                    || (motion_kind == smash::hash40("catch_dash") && frame >13.0)
-                    || (motion_kind == smash::hash40("catch_turn") && frame >14.0)
-                ) {
-                   CANCEL_IN_NEUTRAL[entry_id] = true;
-                    if LIGHTNING[entry_id] {
-                        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                        }
-                   }
-                } 
-
-            if fighter_kind == *FIGHTER_KIND_LINK
-                && (
-                    (motion_kind == smash::hash40("attack_s3_s") && frame > 19.0 )
-                    || (motion_kind == smash::hash40("attack_hi3") && frame >12.0 )
-                    || (motion_kind == smash::hash40("attack_lw3") && frame >12.0 )
-                    || (motion_kind == smash::hash40("attack_dash") && frame >23.0 )
-                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >18.0 )
-                    || (motion_kind == smash::hash40("attack_s4_s2") && frame >11.0 )
-                    || (motion_kind == smash::hash40("attack_hi4") && frame >45.0 )
-                    || (motion_kind == smash::hash40("attack_lw4") && frame >25.0 )
-                    || (motion_kind == smash::hash40("attack_air_n") && frame >31.0 )
-                    || (motion_kind == smash::hash40("attack_air_f") && frame >25.0 )
-                    || (motion_kind == smash::hash40("attack_air_b") && frame >17.0 )
-                    || (motion_kind == smash::hash40("attack_air_hi") && frame >40.0 )
-                    || (motion_kind == smash::hash40("attack_air_lw") && frame >64.0 )
-                    || (motion_kind == smash::hash40("link_special_n_end") && frame >18.0 )
-                    || (motion_kind == smash::hash40("link_special_air_n_end") && frame >18.0 )
-                    || (motion_kind == smash::hash40("special_s1") && frame >27.0 )
-                    || (motion_kind == smash::hash40("special_air_s1") && frame >27.0 )
-                    ||(motion_kind == smash::hash40("special_hi") && frame >39.0 )
-                    ||(motion_kind == smash::hash40("special_air_hi") && frame >49.0 )
-                    || (motion_kind == smash::hash40("special_lw") && frame >18.0 )
-                    || (motion_kind == smash::hash40("special_air_lw") && frame >18.0 )
-                    ||(motion_kind == smash::hash40("throw_f") && frame >=13.0 )
-                    ||(motion_kind == smash::hash40("throw_b") && frame >=14.0 )
-                    ||(motion_kind == smash::hash40("throw_hi") && frame >=28.0 )
-                    ||(motion_kind == smash::hash40("throw_lw") && frame >=24.0 )
-                    || (motion_kind == smash::hash40("catch") && frame >7.0)
-                    || (motion_kind == smash::hash40("catch_dash") && frame >10.0)
-                    || (motion_kind == smash::hash40("catch_turn") && frame >11.0)
-                ) {
-                   CANCEL_IN_NEUTRAL[entry_id] = true;
-                    if LIGHTNING[entry_id] {
-                        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                        }
-                   }
-                } 
-
-            if (fighter_kind == *FIGHTER_KIND_SAMUS || fighter_kind == *FIGHTER_KIND_SAMUSD)
-                && (
-                    ((motion_kind == smash::hash40("attack_s3_s") || motion_kind == smash::hash40("attack_s3_hi") || motion_kind == smash::hash40("attack_s3_lw")) && frame > 10.0 )
-                    || (motion_kind == smash::hash40("attack_hi3") && frame >18.0 )
-                    || (motion_kind == smash::hash40("attack_lw3") && frame >8.0 )
-                    || (motion_kind == smash::hash40("attack_dash") && frame >18.0 )
-                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >11.0 )
-                    || (motion_kind == smash::hash40("attack_hi4") && frame >28.0 )
-                    || (motion_kind == smash::hash40("attack_lw4") && frame >18.0 )
-                    || (motion_kind == smash::hash40("attack_air_n") && frame >22.0 )
-                    || (motion_kind == smash::hash40("attack_air_f") && frame >31.0 )
-                    || (motion_kind == smash::hash40("attack_air_b") && frame >14.0 )
-                    || (motion_kind == smash::hash40("attack_air_hi") && frame >17.0 )
-                    || (motion_kind == smash::hash40("attack_air_lw") && frame >23.0 )
-                    || (motion_kind == smash::hash40("air_catch") && frame >19.0 )
-                    || ((motion_kind == smash::hash40("special_n_f") 
-                    || motion_kind == smash::hash40("special_n_f_max")
-                    || motion_kind == smash::hash40("special_air_n_f")
-                    || motion_kind == smash::hash40("special_air_n_f_max")) && frame >1.0 )
-                    || (motion_kind == smash::hash40("special_s") && frame >18.0 )
-                    || (motion_kind == smash::hash40("special_air_s") && frame >18.0 )
-                    ||(motion_kind == smash::hash40("special_hi") && frame >28.0 )
-                    ||(motion_kind == smash::hash40("special_air_hi") && frame >28.0 )
-                    || (motion_kind == smash::hash40("special_lw") && frame >21.0 )
-                    || (motion_kind == smash::hash40("special_air_lw") && frame >33.0 )
-                    ||(motion_kind == smash::hash40("throw_f") && frame >=16.0 )
-                    ||(motion_kind == smash::hash40("throw_b") && frame >=12.0 )
-                    ||(motion_kind == smash::hash40("throw_hi") && frame >=16.0 )
-                    ||(motion_kind == smash::hash40("throw_lw") && frame >=21.0 )
-                    || (motion_kind == smash::hash40("catch") && frame >22.0)
-                    || (motion_kind == smash::hash40("catch_dash") && frame >24.0)
-                    || (motion_kind == smash::hash40("catch_turn") && frame >25.0)
-                ) {
-                   CANCEL_IN_NEUTRAL[entry_id] = true;
-                    if LIGHTNING[entry_id] {
-                        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                        }
-                   }
-                } 
-        
-            if fighter_kind == *FIGHTER_KIND_YOSHI
-                && (
-                    ((motion_kind == smash::hash40("attack_s3_s")|| motion_kind == smash::hash40("attack_s3_hi")|| motion_kind == smash::hash40("attack_s3_lw")) && frame > 7.0 )
-                    || (motion_kind == smash::hash40("attack_hi3") && frame >15.0 )
-                    || (motion_kind == smash::hash40("attack_lw3") && frame >10.0 )
-                    || (motion_kind == smash::hash40("attack_dash") && frame >20.0 )
-                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >16.0 )
-                    || (motion_kind == smash::hash40("attack_hi4") && frame >16.0 )
-                    || (motion_kind == smash::hash40("attack_lw4") && frame >23.0 )
-                    || (motion_kind == smash::hash40("attack_air_n") && frame >25.0 )
-                    || (motion_kind == smash::hash40("attack_air_f") && frame >20.0 )
-                    || (motion_kind == smash::hash40("attack_air_b") && frame >19.0 )
-                    || (motion_kind == smash::hash40("attack_air_hi") && frame >6.0 )
-                    || (motion_kind == smash::hash40("attack_air_lw") && frame >41.0 )
-                    || (motion_kind == smash::hash40("special_n") && frame >33.0 )
-                    || (motion_kind == smash::hash40("special_air_n") && frame >33.0 )
-                    || (motion_kind == smash::hash40("special_s") && frame == 0.0 )
-                    || (motion_kind == smash::hash40("special_air_s") && frame == 0.0 )
-                    ||(motion_kind == smash::hash40("special_hi") && frame >16.0 )
-                    ||(motion_kind == smash::hash40("special_air_hi") && frame >16.0 )
-                    || (motion_kind == smash::hash40("special_lw") && frame >21.0 )
-                    || (motion_kind == smash::hash40("special_air_lw") && frame == 0.0 )
-                    ||(motion_kind == smash::hash40("throw_f") && frame >=15.0 )
-                    ||(motion_kind == smash::hash40("throw_b") && frame >=20.0 )
-                    ||(motion_kind == smash::hash40("throw_hi") && frame >=13.0 )
-                    ||(motion_kind == smash::hash40("throw_lw") && frame >=25.0 )
-                    || (motion_kind == smash::hash40("catch") && frame >=21.0)
-                    || (motion_kind == smash::hash40("catch_dash") && frame >=23.0)
-                    || (motion_kind == smash::hash40("catch_turn") && frame >=24.0)
-                ) {
-                   CANCEL_IN_NEUTRAL[entry_id] = true;
-                    if LIGHTNING[entry_id] {
-                        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                        }
-                   }
-                } 
-*/
-            if fighter_kind == *FIGHTER_KIND_KIRBY
-                && (
-                    ((motion_kind == smash::hash40("attack_s3_s") || motion_kind == smash::hash40("attack_s3_hi") || motion_kind == smash::hash40("attack_s3_lw")) && frame > 8.0 )
-                    || (motion_kind == smash::hash40("attack_hi3") && frame >10.0 )
-                    || (motion_kind == smash::hash40("attack_lw3") && frame >6.0 )
-                    || (motion_kind == smash::hash40("attack_dash") && frame >34.0 )
-                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >19.0 )
-                    || (motion_kind == smash::hash40("attack_hi4") && frame >17.0 )
-                    || (motion_kind == smash::hash40("attack_lw4") && frame >19.0 )
-                    || (motion_kind == smash::hash40("attack_air_n") && frame >32.0 )
-                    || (motion_kind == smash::hash40("attack_air_f") && frame >27.0 )
-                    || (motion_kind == smash::hash40("attack_air_b") && frame >12.0 )
-                    || (motion_kind == smash::hash40("attack_air_hi") && frame >13.0 )
-                    || (motion_kind == smash::hash40("attack_air_lw") && frame >34.0 )
-                    || (motion_kind == smash::hash40("special_n") && frame >44.0 )
-                    || (motion_kind == smash::hash40("special_air_n") && frame >44.0 )
-                    || (motion_kind == smash::hash40("special_s") && frame >27.0 )
-                    || (motion_kind == smash::hash40("special_air_s") && frame >29.0 )
-                    || (motion_kind == smash::hash40("special_lw") && frame == 0.0 )
-                    || (motion_kind == smash::hash40("special_air_lw") && frame == 0.0 )
-                    ||(motion_kind == smash::hash40("throw_f") && frame >=45.0 )
-                    ||(motion_kind == smash::hash40("throw_b") && frame >=41.0 )
-                    ||(motion_kind == smash::hash40("throw_hi") && frame >=58.0 )
-                    ||(motion_kind == smash::hash40("throw_lw") && frame >=9.0 )
-                    || (motion_kind == smash::hash40("catch") && frame >=7.0)
-                    || (motion_kind == smash::hash40("catch_dash") && frame >10.0)
-                    || (motion_kind == smash::hash40("catch_turn") && frame >11.0)
-                ) {
-                   CANCEL_IN_NEUTRAL[entry_id] = true;
-                    if LIGHTNING[entry_id] {
-                        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                        }
-                   }
-                } 
-
-            
-            if fighter_kind == *FIGHTER_KIND_FOX
-                && (
-                    ((motion_kind == smash::hash40("attack_s3_s")|| motion_kind == smash::hash40("attack_s3_hi")|| motion_kind == smash::hash40("attack_s3_lw")) && frame > 8.0 )
-                    || (motion_kind == smash::hash40("attack_hi3") && frame > 7.0 )
-                    || (motion_kind == smash::hash40("attack_lw3") && frame > 8.0 )
-                    || (motion_kind == smash::hash40("attack_dash") && frame > 15.0 )
-                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame > 14.0 )
-                    || (motion_kind == smash::hash40("attack_hi4") && frame > 11.0 )
-                    || (motion_kind == smash::hash40("attack_lw4") && frame > 7.0 )
-                    || (motion_kind == smash::hash40("attack_air_n") && frame > 23.0 )
-                    || (motion_kind == smash::hash40("attack_air_f") && frame > 27.0 )
-                    || (motion_kind == smash::hash40("attack_air_b") && frame > 11.0 )
-                    || (motion_kind == smash::hash40("attack_air_hi") && frame > 13.0 )
-                    || (motion_kind == smash::hash40("attack_air_lw") && frame > 23.0 )
-                    || (motion_kind == smash::hash40("special_n_loop") && frame > 1.0 )
-                    || (motion_kind == smash::hash40("special_air_n_loop") && frame >1.0 )
-                    || (motion_kind == smash::hash40("special_n_end") && frame > 1.0 )
-                    || (motion_kind == smash::hash40("special_air_n_end") && frame >1.0 )
-                    || (motion_kind == smash::hash40("special_s_end") && frame > 1.0 )
-                    || (motion_kind == smash::hash40("special_air_s_end") && frame >1.0 )
-                    ||(motion_kind == smash::hash40("special_hi") && frame >20.0 )
-                    ||(motion_kind == smash::hash40("special_air_hi") && frame >20.0 )
-                    || (motion_kind == smash::hash40("special_lw") && frame >1.0 )
-                    || (motion_kind == smash::hash40("special_air_lw") && frame >1.0 )
-                    || (status_kind == *FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_LOOP && frame >1.0 )
-                    || (status_kind == *FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_HIT && frame >3.0 )
-                    || (motion_kind == smash::hash40("special_lw_end") && frame >1.0 )
-                    || (motion_kind == smash::hash40("special_air_lw_end") && frame >1.0 )
-                    ||(motion_kind == smash::hash40("throw_f") && frame >=11.0 )
-                    ||(motion_kind == smash::hash40("throw_b") && frame >=10.0 )
-                    ||(motion_kind == smash::hash40("throw_hi") && frame >=7.0 )
-                    ||(motion_kind == smash::hash40("throw_lw") && frame >=26.0 )
-                    || (motion_kind == smash::hash40("catch") && frame >7.0)
-                    || (motion_kind == smash::hash40("catch_dash") && frame >11.0)
-                    || (motion_kind == smash::hash40("catch_turn") && frame >12.0)
-                ) {
-                   CANCEL_IN_NEUTRAL[entry_id] = true;
-                    if LIGHTNING[entry_id] {
-                        if status_kind == *FIGHTER_FOX_STATUS_KIND_SPECIAL_HI_RUSH && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                        }
-                    }
-                    if (status_kind == *FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_LOOP && frame >1.0 )
-                    || (status_kind == *FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_HIT && frame >3.0 ) {
-                        JUMP_CANCEL[entry_id] = true;
-                    }
-                } 
-            
-            if fighter_kind == *FIGHTER_KIND_PIKACHU 
-                && ((motion_kind == smash::hash40("attack_s3_s") && frame > 9.0 )
-                    || (motion_kind == smash::hash40("attack_hi3") && frame > 14.0 )
-                    || (motion_kind == smash::hash40("attack_lw3") && frame > 9.0 )
-                    || (motion_kind == smash::hash40("attack_dash") && frame > 13.0 )
-                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame > 30.0 )
-                    || (motion_kind == smash::hash40("attack_hi4") && frame > 18.0 )
-                    || (motion_kind == smash::hash40("attack_lw4") && frame > 22.0 )
-                    || (motion_kind == smash::hash40("attack_air_n") && frame > 23.0 )
-                    || (motion_kind == smash::hash40("attack_air_f") && frame > 28.0 )
-                    || (motion_kind == smash::hash40("attack_air_b") && frame > 26.0 )
-                    || (motion_kind == smash::hash40("attack_air_hi") && frame > 9.0 )
-                    || (motion_kind == smash::hash40("attack_air_lw") && frame > 27.0 )
-                    || (motion_kind == smash::hash40("special_n") && frame > 20.0 )
-                    || (motion_kind == smash::hash40("special_air_n") && frame >20.0 )
-                    || (motion_kind == smash::hash40("special_s") && frame > 53.0 )
-                    || (motion_kind == smash::hash40("special_air_s") && frame >53.0 )
-                    ||(motion_kind == smash::hash40("special_hi_end") && frame >10.0 )
-                    ||(motion_kind == smash::hash40("special_air_hi_end") && frame >10.0 )
-                    || (motion_kind == smash::hash40("special_lw") && frame > 22.0 )
-                    ||(motion_kind == smash::hash40("throw_f") && frame >=11.0 )
-                    ||(motion_kind == smash::hash40("throw_b") && frame >=26.0 )
-                    ||(motion_kind == smash::hash40("throw_hi") && frame >=16.0 )
-                    ||(motion_kind == smash::hash40("throw_lw") && frame >=29.0 )
-                    || (motion_kind == smash::hash40("catch") && frame >8.0)
-                    || (motion_kind == smash::hash40("catch_dash") && frame >12.0)
-                    || (motion_kind == smash::hash40("catch_turn") && frame >13.0)
-                ) {
-                   CANCEL_IN_NEUTRAL[entry_id] = true;
-                    if LIGHTNING[entry_id] {
-                        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                        }
-                   }
-                }
-
-            if fighter_kind == *FIGHTER_KIND_LUIGI 
-                && ((motion_kind == smash::hash40("attack_s3_s") && frame > 7.0 )
-                    || (motion_kind == smash::hash40("attack_hi3") && frame > 11.0 )
-                    || (motion_kind == smash::hash40("attack_lw3") && frame > 9.0 )
-                    || (motion_kind == smash::hash40("attack_dash") && frame > 26.0 )
-                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame > 14.0 )
-                    || (motion_kind == smash::hash40("attack_hi4") && frame > 14.0 )
-                    || (motion_kind == smash::hash40("attack_lw4") && frame > 16.0 )
-                    || (motion_kind == smash::hash40("attack_air_n") && frame > 32.0 )
-                    || (motion_kind == smash::hash40("attack_air_f") && frame > 11.0 )
-                    || (motion_kind == smash::hash40("attack_air_b") && frame > 14.0 )
-                    || (motion_kind == smash::hash40("attack_air_hi") && frame > 12.0 )
-                    || (motion_kind == smash::hash40("attack_air_lw") && frame > 15.0 )
-                    || (motion_kind == smash::hash40("special_n") && frame > 18.0 )
-                    || (motion_kind == smash::hash40("special_air_n") && frame >18.0 )
-                    || (motion_kind == smash::hash40("special_s") && frame > 61.0 )
-                    || (motion_kind == smash::hash40("special_air_s") && frame >61.0 )
-                    ||(motion_kind == smash::hash40("special_hi") && frame >23.0 )
-                    ||(motion_kind == smash::hash40("special_air_hi") && frame >23.0 )
-                    || (motion_kind == smash::hash40("special_lw") && frame > 41.0 )
-                    || (motion_kind == smash::hash40("special_air_lw") && frame >41.0 )
-                    ||(motion_kind == smash::hash40("throw_f") && frame >=15.0 )
-                    ||(motion_kind == smash::hash40("throw_b") && frame >=15.0 )
-                    ||(motion_kind == smash::hash40("throw_hi") && frame >=18.0 )
-                    ||(motion_kind == smash::hash40("throw_lw") && frame >=29.0 )
-                    || (motion_kind == smash::hash40("catch") && frame >20.0)
-                    || (motion_kind == smash::hash40("catch_dash") && frame >22.0)
-                    || (motion_kind == smash::hash40("catch_turn") && frame >24.0)
-                ) {
-                   CANCEL_IN_NEUTRAL[entry_id] = true;
-                    if LIGHTNING[entry_id] {
-                        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                        }
-                   }
-                }
-
-            if fighter_kind == *FIGHTER_KIND_NESS  
-                && ((motion_kind == smash::hash40("attack_s3_s") && frame > 11.0 )
-                    || (motion_kind == smash::hash40("attack_hi3") && frame > 9.0 )
-                    || (motion_kind == smash::hash40("attack_lw3") && frame > 5.0 )
-                    || (motion_kind == smash::hash40("attack_dash") && frame > 25.0 )
-                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame > 23.0 )
-                    || (motion_kind == smash::hash40("attack_hi4") && frame == 0.0 )
-                    || (motion_kind == smash::hash40("attack_lw4") && frame == 0.0 )
-                    || (motion_kind == smash::hash40("attack_air_n") && frame > 16.0 )
-                    || (motion_kind == smash::hash40("attack_air_f") && frame > 22.0 )
-                    || (motion_kind == smash::hash40("attack_air_b") && frame > 19.0 )
-                    || (motion_kind == smash::hash40("attack_air_hi") && frame >17.0 )
-                    || (motion_kind == smash::hash40("attack_air_lw") && frame > 25.0 )
-                    || (motion_kind == smash::hash40("special_n") && frame > 122.0 )
-                    || (motion_kind == smash::hash40("special_air_n") && frame >122.0 )
-                    || (motion_kind == smash::hash40("special_s") && frame > 21.0 )
-                    || (motion_kind == smash::hash40("special_air_s") && frame >21.0 )
-                    ||(motion_kind == smash::hash40("special_hi") && frame == 0.0 )
-                    ||(motion_kind == smash::hash40("special_air_hi") && frame >33.0 )
-                    || (motion_kind == smash::hash40("special_lw") && frame == 0.0 )
-                    || (motion_kind == smash::hash40("special_air_lw") && frame == 0.0 )
-                    ||(motion_kind == smash::hash40("throw_f") && frame >=27.0 )
-                    ||(motion_kind == smash::hash40("throw_b") && frame >=27.0 )
-                    ||(motion_kind == smash::hash40("throw_hi") && frame >=36.0 )
-                    ||(motion_kind == smash::hash40("throw_lw") && frame >=29.0 )
-                    || (motion_kind == smash::hash40("catch") && frame >7.0)
-                    || (motion_kind == smash::hash40("catch_dash") && frame >10.0)
-                    || (motion_kind == smash::hash40("catch_turn") && frame >11.0)
-                ) {
-                   CANCEL_IN_NEUTRAL[entry_id] = true;
-                    if LIGHTNING[entry_id] {
-                        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                        }
-                   }
-                } 
-            if fighter_kind == *FIGHTER_KIND_CAPTAIN
-                && (
-                    ((motion_kind == smash::hash40("attack_s3_s") || motion_kind == smash::hash40("attack_s3_hi") || motion_kind == smash::hash40("attack_s3_lw")) && frame > 12.0 )
-                    || (motion_kind == smash::hash40("attack_hi3") && frame > 17.0 )
-                    || (motion_kind == smash::hash40("attack_lw3") && frame > 12.0 )
-                    || (motion_kind == smash::hash40("attack_dash") && frame > 16.0 )
-                    || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4  && frame > 30.0 )
-                    || (motion_kind == smash::hash40("attack_hi4") && frame > 29.0 )
-                    || (motion_kind == smash::hash40("attack_lw4") && frame > 30.0 )
-                    || (motion_kind == smash::hash40("attack_air_n") && frame > 15.0 )
-                    || (motion_kind == smash::hash40("attack_air_f") && frame > 30.0 )
-                    || (motion_kind == smash::hash40("attack_air_b") && frame > 15.0 )
-                    || (motion_kind == smash::hash40("attack_air_hi") && frame > 11.0 )
-                    || (motion_kind == smash::hash40("attack_air_lw") && frame > 18.0 )
-                    || (motion_kind == smash::hash40("special_n") && frame > 66.0 )
-                    || (motion_kind == smash::hash40("special_air_n") && frame >66.0 )
-                    || (motion_kind == smash::hash40("special_s") && frame == 0.0 )
-                    || (motion_kind == smash::hash40("special_air_s_start") && frame >44.0 )
-                    ||(motion_kind == smash::hash40("special_hi") && frame >30.0 )
-                    ||(motion_kind == smash::hash40("special_air_hi") && frame >30.0 )
-                    || (motion_kind == smash::hash40("special_lw_end") && frame > 1.0 )
-                    || (motion_kind == smash::hash40("special_air_lw_end") && frame >1.0 )
-                    ||(motion_kind == smash::hash40("throw_f") && frame >=13.0 )
-                    ||(motion_kind == smash::hash40("throw_b") && frame >=13.0 )
-                    ||(motion_kind == smash::hash40("throw_hi") && frame >=14.0 )
-                    ||(motion_kind == smash::hash40("throw_lw") && frame >=21.0 )
-                    || (motion_kind == smash::hash40("catch") && frame >7.0)
-                    || (motion_kind == smash::hash40("catch_dash") && frame >10.0)
-                    || (motion_kind == smash::hash40("catch_turn") && frame >11.0)
-                ) {
-                   CANCEL_IN_NEUTRAL[entry_id] = true;
-                    if LIGHTNING[entry_id] {
-                        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                        }
-                   }
-                }
-            //
-            if fighter_kind == *FIGHTER_KIND_PURIN//JIGGLYPUFF//
-                && (
-                    ((motion_kind == smash::hash40("attack_s3_s") || motion_kind == smash::hash40("attack_s3_hi") || motion_kind == smash::hash40("attack_s3_lw")) && frame > 10.0 )
-                    ||(motion_kind == smash::hash40("attack_hi3") && frame >13.0 )
-                    ||(motion_kind == smash::hash40("attack_lw3") && frame >12.0 )
-                    ||(motion_kind == smash::hash40("attack_dash") && frame >20.0 )
-                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >24.0 )
-                    ||(motion_kind == smash::hash40("attack_hi4") && frame >19.0 )
-                    ||(motion_kind == smash::hash40("attack_lw4") && frame >16.0 )
-                    ||(motion_kind == smash::hash40("attack_air_n") && frame >30.0 )
-                    ||(motion_kind == smash::hash40("attack_air_f") && frame >20.0 )
-                    ||(motion_kind == smash::hash40("attack_air_b") && frame >11.0 )
-                    ||(motion_kind == smash::hash40("attack_air_hi") && frame >21.0 )
-                    ||(motion_kind == smash::hash40("attack_air_lw") && frame >32.0 )
-                    ||(motion_kind == smash::hash40("special_n") && frame == 0.0 )
-                    ||(motion_kind == smash::hash40("special_air_n") && frame == 0.0 )
-                    ||(motion_kind == smash::hash40("special_s") && frame >28.0 )
-                    ||(motion_kind == smash::hash40("special_air_s") && frame >28.0 )
-                    ||(motion_kind == smash::hash40("special_hi") && frame >36.0 )
-                    ||(motion_kind == smash::hash40("special_air_hi") && frame >36.0 )
-                    ||(motion_kind == smash::hash40("special_lw") && frame >4.0 )
-                    ||(motion_kind == smash::hash40("special_air_lw") && frame >4.0 )
-                    ||(motion_kind == smash::hash40("throw_f") && frame >=12.0 )
-                    ||(motion_kind == smash::hash40("throw_b") && frame >=26.0 )
-                    ||(motion_kind == smash::hash40("throw_hi") && frame >=9.0 )
-                    ||(motion_kind == smash::hash40("throw_lw") && frame >=62.0 )
-                    || (motion_kind == smash::hash40("catch") && frame >7.0)
-                    || (motion_kind == smash::hash40("catch_dash") && frame >10.0)
-                    || (motion_kind == smash::hash40("catch_turn") && frame >11.0)
-                ) {
-                   CANCEL_IN_NEUTRAL[entry_id] = true;
-                    if LIGHTNING[entry_id] {
-                        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
-                            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
-                        }
-                   }
-                } 
+/*
             if (fighter_kind == *FIGHTER_KIND_PEACH || fighter_kind == *FIGHTER_KIND_DAISY)
                 && (
-                    (motion_kind == smash::hash40("attack_s3_s") && frame > 15.0 )
-                    ||(motion_kind == smash::hash40("attack_hi3") && frame >13.0 )
-                    ||(motion_kind == smash::hash40("attack_lw3") && frame >9.0 )
-                    ||(motion_kind == smash::hash40("attack_dash") && frame >19.0 )
-                    ||(status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 && frame >17.0 )
-                    ||(motion_kind == smash::hash40("attack_hi4") && frame >20.0 )
-                    ||(motion_kind == smash::hash40("attack_lw4") && frame >31.0 )
-                    ||(motion_kind == smash::hash40("attack_air_n") && frame >19.0 )
-                    ||(motion_kind == smash::hash40("attack_air_f") && frame >20.0 )
-                    ||(motion_kind == smash::hash40("attack_air_b") && frame >7.0 )
-                    ||(motion_kind == smash::hash40("attack_air_hi") && frame >19.0 )
-                    ||(motion_kind == smash::hash40("attack_air_lw") && frame >31.0 )
-                    ||(motion_kind == smash::hash40("special_n") && frame >34.0 )
-                    ||(motion_kind == smash::hash40("special_air_n") && frame >34.0 )
-                    ||(motion_kind == smash::hash40("special_s") && frame == 0.0 )
-                    ||(motion_kind == smash::hash40("special_air_s") && frame == 0.0 )
-                    ||(motion_kind == smash::hash40("special_hi_start") && frame >32.0 )
-                    ||(motion_kind == smash::hash40("special_air_hi_start") && frame >32.0 )
-                    ||(motion_kind == smash::hash40("special_lw") && frame == 0.0 )
-                    ||(motion_kind == smash::hash40("special_air_lw") && frame == 0.0 )
-                    ||(motion_kind == smash::hash40("throw_f") && frame >=16.0 )
-                    ||(motion_kind == smash::hash40("throw_b") && frame >=21.0 )
-                    ||(motion_kind == smash::hash40("throw_hi") && frame >=26.0 )
                     ||(motion_kind == smash::hash40("throw_lw") && frame >=43.0 )
                     || (motion_kind == smash::hash40("catch") && frame >7.0)
                     || (motion_kind == smash::hash40("catch_dash") && frame >10.0)
@@ -701,6 +240,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                         }
                    }
                 } 
+
             if fighter_kind == *FIGHTER_KIND_KOOPA
                 && (
                     ((motion_kind == smash::hash40("attack_s3_s") || motion_kind == smash::hash40("attack_s3_hi") || motion_kind == smash::hash40("attack_s3_lw")) && frame > 14.0 )
@@ -739,6 +279,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                         }
                    }
                 } 
+*/
             if fighter_kind == *FIGHTER_KIND_NANA //ICECLIMBERS//
                 && (
                     ((motion_kind == smash::hash40("attack_s3_s") || motion_kind == smash::hash40("attack_s3_hi") || motion_kind == smash::hash40("attack_s3_lw")) && frame > 10.0 )

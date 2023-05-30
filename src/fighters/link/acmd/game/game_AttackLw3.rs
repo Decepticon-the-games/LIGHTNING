@@ -12,9 +12,7 @@ unsafe fn game_attacklw3(fighter: &mut L2CAgentBase) {
         AttackModule::set_attack_height_all(fighter.module_accessor, AttackHeight(*ATTACK_HEIGHT_LOW), false);
         ENABLE_ATTACK_CANCEL[entry_id] = true; 
     }
-    else {
-       ENABLE_ATTACK_CANCEL[entry_id] = false;  
-    }
+
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);

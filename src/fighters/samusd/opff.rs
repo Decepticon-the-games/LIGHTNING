@@ -55,7 +55,9 @@ pub fn samus_opff(fighter : &mut L2CFighterCommon) {
                 //if MOVEMENT_CANCEL[entry_id] {
                 //    if CANCEL_COUNTER[entry_id] == 6 {
                 //        CANCEL_COUNTER[entry_id] = 0;
-                //        ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
+                //        if ENABLE_MULTIHIT_CANCEL[entry_id] {
+    ENABLE_ATTACK_CANCEL[entry_id] = true;
+}
                 //    }  
                 //    MOVEMENT_CANCEL[entry_id] = false;  
                 //}

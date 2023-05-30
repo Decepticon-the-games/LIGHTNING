@@ -10,7 +10,7 @@ use {
     smashline::*
 };
 use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
-
+pub static mut UPTAUNT_CANCELL : [bool; 8] = [false; 8]; 
 
 #[fighter_frame( agent = FIGHTER_KIND_CAPTAIN )]
 
@@ -25,37 +25,20 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-//Enable cancel  
-
-
-            //Up smash 
-            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
-                if frame >27.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                }
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                }
-            }
-            else if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
-            }
-            else {//This stays at the bottom
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
-            }
-
 
 
 //Side special cancel taunt
-            if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
-                if frame >= 20.0 {
-                    if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI)
-                    || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW)
-                    || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_L)
-                    || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_R) {
-                        CancelModule::enable_cancel(fighter.module_accessor);
-                    }
+            
+            if UPTAUNT_CANCELL[entry_id] {
+                
+                if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI)
+                || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW)
+                || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_L)
+                || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_R) {
+                    CancelModule::enable_cancel(fighter.module_accessor);
                 }
+                UPTAUNT_CANCELL[entry_id] = false;
+                
             }   
         }
     }

@@ -17,7 +17,9 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         AttackModule::set_no_finish_camera(fighter.module_accessor, 0, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 1, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 2, true, false);
-        ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
+        if ENABLE_MULTIHIT_CANCEL[entry_id] {
+    ENABLE_ATTACK_CANCEL[entry_id] = true;
+}
     }
     else {
        ENABLE_MULTIHIT_CANCEL[entry_id] = false;  
@@ -35,7 +37,9 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         AttackModule::set_no_finish_camera(fighter.module_accessor, 0, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 1, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 2, true, false);
-        ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
+        if ENABLE_MULTIHIT_CANCEL[entry_id] {
+    ENABLE_ATTACK_CANCEL[entry_id] = true;
+}
     }
     else {
        ENABLE_MULTIHIT_CANCEL[entry_id] = false;  
@@ -53,7 +57,9 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         AttackModule::set_no_finish_camera(fighter.module_accessor, 0, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 1, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 2, true, false);
-        ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
+        if ENABLE_MULTIHIT_CANCEL[entry_id] {
+    ENABLE_ATTACK_CANCEL[entry_id] = true;
+}
     }
     else {
        ENABLE_MULTIHIT_CANCEL[entry_id] = false;  
@@ -71,7 +77,9 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         AttackModule::set_no_finish_camera(fighter.module_accessor, 0, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 1, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 2, true, false);
-        ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
+        if ENABLE_MULTIHIT_CANCEL[entry_id] {
+    ENABLE_ATTACK_CANCEL[entry_id] = true;
+}
     }
     else {
        ENABLE_MULTIHIT_CANCEL[entry_id] = false;  
@@ -86,9 +94,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         macros::ATTACK(fighter, 1, 0, Hash40::new("armr"), 6.0, 80, 162, 0, 50, 6.5, 7.8, -0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
         ENABLE_ATTACK_CANCEL[entry_id] = true; 
     }
-    else {
-       ENABLE_ATTACK_CANCEL[entry_id] = false;  
-    }
+
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);

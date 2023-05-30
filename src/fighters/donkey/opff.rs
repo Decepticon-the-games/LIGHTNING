@@ -9,8 +9,8 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
-
+use crate::fighters::common::mechanics::attack_cancels::{ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL};
+use crate::fighters::common::mechanics::lightning_mode::LIGHTNING;
 
 
 
@@ -31,37 +31,33 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
         //Cancel up special only after 3 hits
 
-        static mut UP_SPECIAL_HIT : [bool; 8] = [false; 8];
-        static mut UP_SPECIAL_HIT_COUNT : [i32; 8] = [0; 8];
+        static mut MULTIHIT : [bool; 8] = [false; 8];
+        static mut MULTIHIT_COUNT : [i32; 8] = [0; 8];
 
 
 
-        if motion_kind == hash40("special_hi") || motion_kind == hash40("special_air_hi") {
-            ENABLE_ATTACK_CANCEL[entry_id] = false;
+        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
+        && LIGHTNING[entry_id] {
             if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL) {
-                if UP_SPECIAL_HIT[entry_id] == false {
-                    UP_SPECIAL_HIT_COUNT[entry_id] +=1;
-                    UP_SPECIAL_HIT[entry_id] = true; 
+                if MULTIHIT[entry_id] == false {
+                    MULTIHIT_COUNT[entry_id] +=1;
+                    MULTIHIT[entry_id] = true; 
                 }         
             }
             else {
-                UP_SPECIAL_HIT[entry_id] = false;
+                MULTIHIT[entry_id] = false;
             }  
-
-            if UP_SPECIAL_HIT_COUNT[entry_id] >= 3 {
-                UP_SPECIAL_HIT_COUNT[entry_id] = 3;
-                ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        
+            if MULTIHIT_COUNT[entry_id] >= 3 { //how many hits
+                MULTIHIT_COUNT[entry_id] = 3;  //how many hits
+                ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
             }
             else {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
+                ENABLE_MULTIHIT_CANCEL[entry_id] = false;
             } 
-            if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 {
-                UP_SPECIAL_HIT_COUNT[entry_id] = 0;
-            }
         }
         else {
-            //ENABLE_ATTACK_CANCEL[entry_id] = true; 
-            UP_SPECIAL_HIT_COUNT[entry_id] = 0;
+            MULTIHIT_COUNT[entry_id] = 0;
         }
     }
 }

@@ -112,7 +112,9 @@ use crate::fighters::common::mechanics::attack_cancels::{ENABLE_ATTACK_CANCEL, E
                 }
                 /*else {
                     if frame <40.0 {
-                        ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
+                        if ENABLE_MULTIHIT_CANCEL[entry_id] {
+    ENABLE_ATTACK_CANCEL[entry_id] = true;
+}
                     }
                     else {
                         ENABLE_MULTIHIT_CANCEL[entry_id] = false;
@@ -122,7 +124,9 @@ use crate::fighters::common::mechanics::attack_cancels::{ENABLE_ATTACK_CANCEL, E
                 if MOVEMENT_CANCEL[entry_id] {
                     if UPSMASH_CANCEL_COUNTER[entry_id] == 3 {
                         UPSMASH_CANCEL_COUNTER[entry_id] = 0;
-                        ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
+                        if ENABLE_MULTIHIT_CANCEL[entry_id] {
+    ENABLE_ATTACK_CANCEL[entry_id] = true;
+}
                     }    
                     MOVEMENT_CANCEL[entry_id] = false; 
                 }

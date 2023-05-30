@@ -3,12 +3,12 @@ use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smashline::*;
 
-
+pub static mut COUNTER_CANCEL : [bool; 8] = [false; 8];
 
 #[fighter_frame_callback]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
-        //let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let fighter_kind = smash::app::utility::get_kind(&mut *fighter.module_accessor);
         //let status_kind = smash::app::lua_bind::StatusModule::status_kind(fighter.module_accessor);
         //let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(fighter.module_accessor);
@@ -110,16 +110,14 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             }   
         }
         //PEACH, DAISY
-        if fighter_kind == *FIGHTER_KIND_PEACH
+        /*if fighter_kind == *FIGHTER_KIND_PEACH
         || fighter_kind == *FIGHTER_KIND_DAISY {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_n_hit") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_n_hit") {
                 if MotionModule::frame(fighter.module_accessor) >1.0 {
-                    if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
-                        CancelModule::enable_cancel(fighter.module_accessor);
-                    }
+                    COUNTER_CANCEL[entry_id] = true;
                 }
             }   
-        } 
+        }*/
         //LITTLE MAC
         if fighter_kind == *FIGHTER_KIND_LITTLEMAC {
             if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_lw_hit") || MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("special_air_lw_hit") {
@@ -141,7 +139,13 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                     }
                 }
             }   
-        }    
+        }  
+        
+        if COUNTER_CANCEL[entry_id] {
+            if ! (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0) {
+                CancelModule::enable_cancel(fighter.module_accessor);
+            }
+        }
     }                                      
 }
 

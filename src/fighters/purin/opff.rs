@@ -9,8 +9,8 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
-
+use crate::fighters::common::mechanics::attack_cancels::{ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL};
+pub static mut DAIR_REST_NOKILL : [bool; 8] = [false; 8];
 
 #[fighter_frame( agent = FIGHTER_KIND_PURIN )]
 
@@ -25,56 +25,55 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-            println!("count: {}", DAIR_REST_COUNT[entry_id]);
-//Enable cancel  
-            static mut UP_SPECIAL_HIT : [bool; 8] = [false; 8];
-            static mut UP_SPECIAL_HIT_COUNT : [i32; 8] = [0; 8];
-            static mut DAIR_REST_HIT : [bool; 8] = [false; 8];
-            static mut DAIR_REST_COUNT : [i32; 8] = [0; 8];
+            
+            static mut MULTIHIT : [bool; 8] = [false; 8];
+            static mut MULTIHIT_COUNT : [i32; 8] = [0; 8];
+
 
             //Dair
             if motion_kind == hash40("attack_air_lw") {
-                //Limit dair to cancel after 3 successful hits
                 if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL) {
-                    if UP_SPECIAL_HIT[entry_id] == false {
-                        UP_SPECIAL_HIT_COUNT[entry_id] +=1;
-                        UP_SPECIAL_HIT[entry_id] = true; 
-                    }  
-                    if UP_SPECIAL_HIT_COUNT[entry_id] >= 3 {
-                        UP_SPECIAL_HIT_COUNT[entry_id] = 3;
-                        ENABLE_ATTACK_CANCEL[entry_id] = true; 
-                    }
-                    else {
-                        ENABLE_ATTACK_CANCEL[entry_id] = false;
-                    }
-                    
-                    
+                    if MULTIHIT[entry_id] == false {
+                        MULTIHIT_COUNT[entry_id] +=1;
+                        MULTIHIT[entry_id] = true; 
+                    }         
                 }
                 else {
-                    UP_SPECIAL_HIT[entry_id] = false;
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                }
-                //Dair > rest combo, once before not being able to cancel dair into rest until the next stock 
-                if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0 {
-                    if DAIR_REST_HIT[entry_id] == false {
-                        DAIR_REST_COUNT[entry_id] +=1; 
-                        DAIR_REST_HIT[entry_id] = true;
-                    }
-                    if DAIR_REST_COUNT[entry_id] >= 1 {
-                        DAIR_REST_COUNT[entry_id] = 1;
-                        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW)
-                    }
+                    MULTIHIT[entry_id] = false;
                 }  
+            
+                if MULTIHIT_COUNT[entry_id] >= 3 { //how many hits
+                    MULTIHIT_COUNT[entry_id] = 3;  //how many hits
+                    ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
+                }
+                else {
+                    ENABLE_MULTIHIT_CANCEL[entry_id] = false;
+                } 
+                
             }
             else {
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
+                //ENABLE_ATTACK_CANCEL[entry_id] = true; 
+                MULTIHIT_COUNT[entry_id] = 0;
             }
+
+            //Dair > rest combo nerf
+            if motion_kind == smash::hash40("attack_air_lw") 
+            && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0 {
+                //if DAIR_REST_HIT[entry_id] == false {
+                //    DAIR_REST_COUNT[entry_id] +=1; 
+                //    DAIR_REST_HIT[entry_id] = true;
+                //}
+                //if DAIR_REST_COUNT[entry_id] >= 1 {
+                //    DAIR_REST_COUNT[entry_id] = 1;
+                    DAIR_REST_NOKILL[entry_id] = true;
+                //}
+            }  
+            
 
             //RESETS
             if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false {
-                DAIR_REST_COUNT[entry_id] = 0;
-                WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW)
-                
+                //DAIR_REST_COUNT[entry_id] = 0;
+                DAIR_REST_NOKILL[entry_id] = false;
             } 
             
         

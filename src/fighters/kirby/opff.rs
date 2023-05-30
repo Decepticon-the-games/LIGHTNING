@@ -28,7 +28,7 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
 //Enable cancel  
 
 
-            ENABLE_ATTACK_CANCEL[entry_id] = true;
+
         
 
 

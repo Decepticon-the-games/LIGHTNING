@@ -1,6 +1,4 @@
-#![deny(deprecated)]
-#![allow(unused)]
-#![allow(non_snake_case)]
+
 // use ::common::prelude::*;
 use super::*;
 

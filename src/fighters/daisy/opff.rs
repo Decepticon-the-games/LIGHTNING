@@ -14,7 +14,7 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 #[fighter_frame( agent = FIGHTER_KIND_DAISY )]
 
-    pub fn daisy_opff(fighter : &mut L2CFighterCommon) {
+    pub fn peach_opff(fighter : &mut L2CFighterCommon) {
         unsafe {
             let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
@@ -25,26 +25,7 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-//Enable cancel  
-
-
-            //Down smash 
-            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW4 {
-                
-                if frame >= 29.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                }
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                }  
-            }
-            else {//This stays at the bottom
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
-            }
-        }
-    }
-
 pub fn install() {
-    smashline::install_agent_frames!(daisy_opff);
+    smashline::install_agent_frames!(peach_opff);
 
 }

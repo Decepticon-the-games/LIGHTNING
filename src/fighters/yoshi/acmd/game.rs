@@ -39,9 +39,9 @@ use crate::fighters::{
  mod game_AttackS4Lw;
  mod game_AttackHi4;
  mod game_AttackLw4;
- //mod game_SpecialN;
+ mod game_SpecialN;
  mod game_SpecialN2;
- //mod game_SpecialAirN;
+ mod game_SpecialAirN;
  mod game_SpecialAirN2;
  mod game_SpecialHi;
  mod game_SpecialAirHi;
@@ -72,9 +72,9 @@ use crate::fighters::{
     game_AttackS4Lw::install();
     game_AttackHi4::install();
     game_AttackLw4::install();
-    //game_SpecialN::install();
+    game_SpecialN::install();
     game_SpecialN2::install();
-    //game_SpecialAirN::install();
+    game_SpecialAirN::install();
     game_SpecialAirN2::install();
     game_SpecialHi::install();
     game_SpecialAirHi::install();

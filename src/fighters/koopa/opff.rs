@@ -25,32 +25,8 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-//Enable cancel  
-
-
-            //Fix up special  
-            if status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G { 
-                if frame >= 38.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true; 
-                }
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false; 
-                }
-            }
-            else if status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A {
-                if frame >=45.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true; 
-                }
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false; 
-                }
-            }
-            else {//This stays at the bottom
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
-            }
         }
     }
-
 pub fn install() {
     smashline::install_agent_frames!(koopa_opff);
 

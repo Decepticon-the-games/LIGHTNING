@@ -1,9 +1,10 @@
 use {
     smash::{
         lua2cpp::L2CAgentBase,
-        phx::{Hash40,Vector3f},
+        phx::{Hash40,Vector3f,Vector2f},
         app::{lua_bind::*, sv_animcmd::*,*},
         lib::lua_const::*,
+        hash40
     },
     smash_script::*,
     smashline::*
@@ -20,10 +21,11 @@ use crate::fighters::{
         }
     }
 };
-
+ mod game_AirCatch;
  mod game_Attack11;
  mod game_Attack12;
  mod game_Attack13;
+ mod game_Attack100End; 
  mod game_AttackAirN;
  mod game_AttackAirF;
  mod game_AttackAirB;
@@ -31,10 +33,13 @@ use crate::fighters::{
  mod game_AttackAirLw;
  mod game_AttackDash;
  mod game_AttackS3;
+ mod game_AttackS3Hi; 
+ mod game_AttackS3Lw;  
  mod game_AttackHi3;
  mod game_AttackLw3;
  mod game_AttackS4;
- mod game_AttackS4S2;
+ mod game_AttackS4Hi;
+ mod game_AttackS4Lw; 
  mod game_AttackHi4;
  mod game_AttackLw4;
  mod game_SpecialN;
@@ -56,6 +61,7 @@ use crate::fighters::{
      game_Attack11::install();
      game_Attack12::install();
      game_Attack13::install();
+     game_Attack100End::install(); 
      game_AttackAirN::install();
      game_AttackAirF::install();
      game_AttackAirB::install();
@@ -63,17 +69,19 @@ use crate::fighters::{
      game_AttackAirLw::install();
      game_AttackDash::install();
      game_AttackS3::install();
+     game_AttackS3Hi::install();
+     game_AttackS3Lw::install();
      game_AttackHi3::install();
      game_AttackLw3::install();
      game_AttackS4::install();
+     game_AttackS4Hi::install();
+     game_AttackS4Lw::install();     
      game_AttackHi4::install();
      game_AttackLw4::install();
      game_SpecialN::install();
      game_SpecialAirN::install();
-     game_SpecialS1::install();
-     game_SpecialS2::install();
-     game_SpecialAirS1::install();
-     game_SpecialAirS2::install();
+     game_SpecialS::install();
+     game_SpecialAirS::install();
      game_SpecialHi::install();
      game_SpecialAirHi::install();
      game_SpecialLw::install();
@@ -85,33 +93,5 @@ use crate::fighters::{
  
  }
 
-let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;    
-
-
-use super::*;
-
-let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-
-
-    ENABLE_ATTACK_CANCEL[entry_id] = true; 
-}
-else {
-   ENABLE_ATTACK_CANCEL[entry_id] = false;  
-}
-
-    ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
-}
-else {
-   ENABLE_MULTIHIT_CANCEL[entry_id] = false;  
-}
-
-    CANCEL_IN_NEUTRAL[entry_id] = true;
-}
-
-}    
-pub fn install() {
-    smashline::install_acmd_scripts!(
-     game_);
- }
 
 

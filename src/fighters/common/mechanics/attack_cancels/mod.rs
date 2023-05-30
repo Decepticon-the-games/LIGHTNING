@@ -40,12 +40,13 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
         || status_kind == *FIGHTER_STATUS_KIND_JUMP
         || status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL);
 
-        /*if entry_id == 0 {
-            println!("occur: {}", AttackModule::is_attack_occur(fighter.module_accessor));
-            println!("is: {}", AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL));
-            println!("has: {}", AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_ALL));
-            println!("multi: {}", ENABLE_MULTIHIT_CANCEL[entry_id]);
-        }*/
+        //if entry_id == 0 {
+            //println!("occur: {}", AttackModule::is_attack_occur(fighter.module_accessor));
+            //println!("is: {}", AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL));
+            //println!("has: {}", AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_ALL));
+            //println!("en-multi: {}", ENABLE_MULTIHIT_CANCEL[entry_id]);
+            //println!("en-attack: {}", ENABLE_ATTACK_CANCEL[entry_id]);
+        //}
         
 
         if idles || walks_runs_jumps_falls{
@@ -89,13 +90,17 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
                 ENABLE_MULTIHIT_CANCEL[entry_id] = false; 
             }
             else {
-                ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
+                if ENABLE_MULTIHIT_CANCEL[entry_id] {
+    ENABLE_ATTACK_CANCEL[entry_id] = true;
+}
             }
             //Reset
             if movement_cancel {
                 if JAB_CANCEL_COUNTER[entry_id] == 2 {
                     JAB_CANCEL_COUNTER[entry_id] = 0;
-                    ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
+                    if ENABLE_MULTIHIT_CANCEL[entry_id] {
+    ENABLE_ATTACK_CANCEL[entry_id] = true;
+}
                 }    
             }
         }*/
@@ -126,6 +131,7 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
             if movement_cancel {
                 ATTACK_CANCEL_COUNT[entry_id] = 0; 
             }  
+            //ENABLE_ATTACK_CANCEL[entry_id] = false;
         }  
         /*else if ENABLE_MULTIHIT_CANCEL[entry_id] {
             //WRITE SYSTEM HERE
@@ -147,6 +153,8 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
             
             if AttackModule::is_attack_occur(fighter.module_accessor) && ! SlowModule::is_slow(fighter.module_accessor) { 
                 CancelModule::enable_cancel(fighter.module_accessor);
+                ENABLE_ATTACK_CANCEL[entry_id] = false;
+                ATTACK_CANCEL[entry_id] = false; 
             }
         
             
@@ -160,7 +168,7 @@ pub fn attack_cancels(fighter : &mut L2CFighterCommon) {
             //else {
             //    CANCEL_INTO_VANISH[entry_id] = false;
             //}
-            ATTACK_CANCEL[entry_id] = false;         
+                    
         }
         else  {
             ATTACK_CANCEL[entry_id] = false;

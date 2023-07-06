@@ -9,7 +9,7 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::{ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL};
+use crate::fighters::common::mechanics::cancels::attack_cancels::{ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL};
 pub static mut DAIR_REST_NOKILL : [bool; 8] = [false; 8];
 
 #[fighter_frame( agent = FIGHTER_KIND_PURIN )]

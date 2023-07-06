@@ -1,6 +1,6 @@
 use super::*;
 use crate::fighters::purin::opff::DAIR_REST_NOKILL;
-use crate::fighters::common::mechanics::lightning_mode::LIGHTNING;
+use crate::fighters::common::mechanics::lightning_mechanics::lightning_mode::LIGHTNING;
 #[acmd_script( agent = "purin", script = "game_specialairlwr", category = ACMD_GAME, low_priority )]
 unsafe fn game_specialairlwr(fighter: &mut L2CAgentBase) {
 let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;

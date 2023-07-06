@@ -9,8 +9,8 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
-use crate::fighters::common::mechanics::motioncancels::{CANCEL_IN_NEUTRAL, DISABLE_CANCEL_IN_NEUTRAL, SIDE_SPECIAL_COUNT, SIDE_SPECIAL_COUNTER};
+use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
+use crate::fighters::common::mechanics::cancels::motioncancels::{CANCEL_IN_NEUTRAL, DISABLE_CANCEL_IN_NEUTRAL, SIDE_SPECIAL_COUNT, SIDE_SPECIAL_COUNTER};
 
 
 #[fighter_frame( agent = FIGHTER_KIND_LUCAS )]

@@ -9,8 +9,8 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
-
+use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
+pub static mut UPTILT : [bool; 8] = [false; 8];
 
 #[fighter_frame( agent = FIGHTER_KIND_GANON )]
 
@@ -25,35 +25,13 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-//Enable cancel  
-
-
-            //Up special
-            if status_kind == *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_CLING {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
-            }
-            //up tilt 
-            else if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
-            }
-            else {//This stays at the bottom
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
-            }
-
-
 //Cancel up tilt to the attack once a hitbox connects
-            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 && (frame > 23.0 && frame < 53.0) {
-                if AttackModule::is_attack_occur(module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 0 {
-            
+            if UPTILT[entry_id] {
+                if AttackModule::is_attack_occur(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 0 {
                     MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, 53.0, false, false, false);
-                    
-                }
-                if frame > 64.0 {
-                    if ! (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 0 {
-                        ENABLE_ATTACK_CANCEL[entry_id] = true; 
-                    }  
                 }
             }
+                
 //Taunt/Attack cancel side special
             if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
                 if frame>= 18.0 {

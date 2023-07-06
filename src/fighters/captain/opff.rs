@@ -9,7 +9,7 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
+use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
 pub static mut UPTAUNT_CANCELL : [bool; 8] = [false; 8]; 
 
 #[fighter_frame( agent = FIGHTER_KIND_CAPTAIN )]

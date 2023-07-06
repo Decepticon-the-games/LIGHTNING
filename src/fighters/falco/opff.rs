@@ -1,6 +1,6 @@
 use {
     smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
+        lua2cpp::{L2CAgentBase,L2CFighterCommon,L2CFighterBase},
         phx::Hash40,
         hash40,
         app::{lua_bind::*, sv_animcmd::*,*},
@@ -9,13 +9,14 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
+use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_MULTIHIT_CANCEL;
 
 
 static mut UP_SPECIAL_HIT : [bool; 8] = [false; 8];
 static mut UP_SPECIAL_HIT_COUNT : [i32; 8] = [0; 8];
 
-
+pub static mut ILLUSION_CANCEL : [bool; 8] = [false; 8];
+pub static mut FASTFALL_LASER : [bool; 8] = [false; 8];
 
 
 #[fighter_frame( agent = FIGHTER_KIND_FALCO )]
@@ -30,30 +31,13 @@ static mut UP_SPECIAL_HIT_COUNT : [i32; 8] = [0; 8];
             ////let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
             let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
+            let oboma = sv_battle_object::module_accessor((WorkModule::get_int(fighter.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID)) as u32); // links weapon to whatever may ownn it  
+            let o_entry_id = WorkModule::get_int(&mut *oboma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize; //links weapon to whatever may own it
 
-            
+            //println!("falco-ill: {}", ILLUSION_CANCEL[entry_id]);
 
-//Enable cancel subtitle here.   
-        
-
-            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 {
-                if frame > 12.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                }
-                else{
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                }
-            }
-            else if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
-                if frame > 12.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                }
-                else{
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                }
-            } 
             //Cancel fair after 3 successful hits
-            else if motion_kind == hash40("attack_air_f") {
+            if motion_kind == hash40("attack_air_f") {
                 if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL) {
                     if UP_SPECIAL_HIT[entry_id] == false {
                         UP_SPECIAL_HIT_COUNT[entry_id] +=1;
@@ -61,53 +45,42 @@ static mut UP_SPECIAL_HIT_COUNT : [i32; 8] = [0; 8];
                     }  
                     if UP_SPECIAL_HIT_COUNT[entry_id] >= 3 {
                         UP_SPECIAL_HIT_COUNT[entry_id] = 3;
-                        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+                        ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
                     }
                     else {
-                        ENABLE_ATTACK_CANCEL[entry_id] = false;
+                        ENABLE_MULTIHIT_CANCEL[entry_id] = false;
                     }       
                 }
                 else {
                     UP_SPECIAL_HIT[entry_id] = false;
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
+                    ENABLE_MULTIHIT_CANCEL[entry_id] = false;
                 }  
             }
             else {
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
                 UP_SPECIAL_HIT_COUNT[entry_id] = 0;
             }
-        
-
-
-//Fast Fall Laser
-
-            if (motion_kind == smash::hash40("special_n_loop")
-            || motion_kind == smash::hash40("special_air_n_loop"))
+//illusion
+        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
+            if AttackModule::is_attack_occur(fighter.module_accessor) {
+                //if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK)
+                //|| (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0
+                //|| (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH) != 0 {
+                    CancelModule::enable_cancel(fighter.module_accessor);
+                //}
+            }   
+        }
+    //Fast fall laser
+            if FASTFALL_LASER[entry_id]
             && (ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_FALL_JUMP) != 0 {
                 WorkModule::set_flag(module_accessor, true, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
-            }
-//Shin cancel Jump
-            if motion_kind == smash::hash40("special_lw")
-            || motion_kind == smash::hash40("special_lw_r") 
-            || motion_kind == smash::hash40("special_air_lw")
-            || motion_kind == smash::hash40("special_air_lw_r") {
-                if frame >= 7.0 {
-                    if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0  {
-                        CancelModule::enable_cancel(fighter.module_accessor);
-                    }
-                }
-            }
-//jump cancel shine (multishine)
-            if status_kind == *FIGHTER_STATUS_KIND_JUMP_SQUAT 
-            && frame > 1.0 {
-                if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0 {
-                    CancelModule::enable_cancel(fighter.module_accessor);
-                }
+                FASTFALL_LASER[entry_id] = false;
             }
         }
     }
 
 pub fn install() {
-    smashline::install_agent_frames!(falco_opff);
+    smashline::install_agent_frames!(
+        falco_opff,
+    );
 
 }

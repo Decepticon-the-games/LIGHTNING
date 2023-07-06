@@ -3,7 +3,7 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smashline::*;
-use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
+use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 
 

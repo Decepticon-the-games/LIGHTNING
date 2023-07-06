@@ -12,15 +12,18 @@ use smash::app::sv_animcmd::IS_EXIST_ARTICLE;
 use crate::fighters::{
     common::{
         mechanics::{
-            attack_cancels::{
-                ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL
-            },
-            motioncancels::{
-                CANCEL_IN_NEUTRAL
+            cancels::{
+                attack_cancels::{
+                    ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL
+                },
+                motioncancels::{
+                    CANCEL_IN_NEUTRAL
+                }                
             }
         }
     }
 };
+
 
 mod game_Attack11;
 mod game_Attack12;
@@ -45,7 +48,9 @@ mod game_SpecialNLoop;
 mod game_SpecialNEnd;
 mod game_SpecialAirNLoop;
 mod game_SpecialAirNEnd;
+mod game_SpecialS;
 mod game_SpecialSEnd;
+mod game_SpecialAirS;
 mod game_SpecialAirSEnd;
 mod game_SpecialHiFall;
 //mod game_SpecialAirHi;
@@ -57,6 +62,8 @@ mod game_ThrowF;
 mod game_ThrowB;
 mod game_ThrowHi;
 mod game_ThrowLw;
+//mod game_MoveAir;
+//mod game_MoveGround;
 
 
  pub fn install() {
@@ -84,7 +91,9 @@ game_SpecialNLoop::install();
 game_SpecialNEnd::install();
 game_SpecialAirNLoop::install();
 game_SpecialAirNEnd::install();
+game_SpecialS::install();
 game_SpecialSEnd::install();
+game_SpecialAirS::install();
 game_SpecialAirSEnd::install();
 game_SpecialHiFall::install();
 //game_SpecialAirHi::install();
@@ -96,6 +105,8 @@ game_ThrowF::install();
 game_ThrowB::install();
 game_ThrowHi::install();
 game_ThrowLw::install();
+//game_MoveAir::install();
+//game_MoveGround::install();
 
 }
 

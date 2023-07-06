@@ -9,7 +9,7 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
+use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 
 #[fighter_frame( agent = FIGHTER_KIND_GAMEWATCH )]
@@ -24,12 +24,6 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             ////let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
-
-//Enable cancel  
-
-
-            ENABLE_ATTACK_CANCEL[entry_id] = true;
-        
 
         }
     }

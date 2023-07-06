@@ -1,11 +1,17 @@
-use super::*;
-use crate::fighters::common::mechanics::ultrainstinct::{SECRET_SENSATION, CROSS_CANCEL_BUTTON};
-use crate::fighters::common::mechanics::vanish::{VANISH, VANISH_BUTTON};
-use crate::fighters::common::mechanics::upbtransitions::DISABLE_UP_SPECIAL;
-use crate::fighters::common::mechanics::lightning_fsmeter::{DISABLE_FINAL, FINAL_SMASH_BUTTON};
-use crate::fighters::common::mechanics::crimson_cancel::{CRIMSON_CANCEL_BUTTON, CRIMSON_CANCEL_TIMER};
-use crate::fighters::common::mechanics::lightning_mode::{LIGHTNING_BUTTON};
-use crate::fighters::common::mechanics::misc::{TRANSITION_TERM_NONE};
+use smash::lib::lua_const::*;
+use smash::app::lua_bind::*;
+use smash::app::*;
+use smash::hash40; 
+use skyline::hooks::{getRegionAddress, Region};
+use smash::app::FighterManager;
+
+use crate::fighters::common::mechanics::lightning_mechanics::ultrainstinct::{SECRET_SENSATION, CROSS_CANCEL_BUTTON};
+use crate::fighters::common::mechanics::lightning_mechanics::vanish::{VANISH, VANISH_BUTTON, DISABLE_CATCH};
+use crate::fighters::common::mechanics::misc::upbtransitions::DISABLE_UP_SPECIAL;
+use crate::fighters::common::mechanics::lightning_mechanics::lightning_fsmeter::{DISABLE_FINAL, FINAL_SMASH_BUTTON};
+use crate::fighters::common::mechanics::lightning_mechanics::crimson_cancel::{CRIMSON_CANCEL_BUTTON, CRIMSON_CANCEL_TIMER};
+use crate::fighters::common::mechanics::lightning_mechanics::lightning_mode::{LIGHTNING_BUTTON};
+use crate::fighters::common::mechanics::misc::misc::{TRANSITION_TERM_NONE};
 
 #[skyline::hook(replace = smash::app::lua_bind::WorkModule::is_enable_transition_term )]
 pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObjectModuleAccessor, term: i32) -> bool {
@@ -20,19 +26,13 @@ pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObje
     if SECRET_SENSATION[entry_id] {
         return false;
     }
-    if VANISH[entry_id] {
+    else if VANISH[entry_id] {
         return false;
     }
-    if TRANSITION_TERM_NONE[entry_id] {
+    else if TRANSITION_TERM_NONE[entry_id] {
         return false;
     }
-    //if special_mechanics_button 
-    //{
-    //    return false;
-    //}
-
-
-    if DISABLE_UP_SPECIAL[entry_id] {
+    else if DISABLE_UP_SPECIAL[entry_id] {
         if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI {
             return false;
         }
@@ -40,7 +40,7 @@ pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObje
             return ret;
         }
     }
-    if DISABLE_FINAL[entry_id] {
+    else if DISABLE_FINAL[entry_id] {
         if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_FINAL {
             return false;
         }
@@ -51,8 +51,6 @@ pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObje
     else {
         return ret;
     }
-
-
 }
 
 pub fn install() {

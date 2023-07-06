@@ -11,15 +11,18 @@ use {
 use crate::fighters::{
     common::{
         mechanics::{
-            attack_cancels::{
-                ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL
-            },
-            motioncancels::{
-                CANCEL_IN_NEUTRAL
+            cancels::{
+                attack_cancels::{
+                    ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL
+                },
+                motioncancels::{
+                    CANCEL_IN_NEUTRAL
+                }                
             }
         }
     }
 };
+
  mod game_AirCatch;
  mod game_AirCatchLanding;
  mod game_AppealLwL;

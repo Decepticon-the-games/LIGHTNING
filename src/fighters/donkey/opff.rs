@@ -9,8 +9,8 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::{ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL};
-use crate::fighters::common::mechanics::lightning_mode::LIGHTNING;
+use crate::fighters::common::mechanics::cancels::attack_cancels::{ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL};
+use crate::fighters::common::mechanics::lightning_mechanics::lightning_mode::LIGHTNING;
 
 
 

@@ -12,15 +12,18 @@ use {
 use crate::fighters::{
     common::{
         mechanics::{
-            attack_cancels::{
-                ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL
-            },
-            motioncancels::{
-                CANCEL_IN_NEUTRAL
+            cancels::{
+                attack_cancels::{
+                    ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL
+                },
+                motioncancels::{
+                    CANCEL_IN_NEUTRAL
+                }                
             }
         }
     }
 };
+
 
  mod game_Attack11;
  mod game_Attack12;
@@ -51,6 +54,9 @@ use crate::fighters::{
  mod game_ThrowB;
  mod game_ThrowHi;
  mod game_ThrowLw;
+ mod game_Pillar;
+ mod game_PillarAir;
+
  
  
   pub fn install() {
@@ -77,13 +83,14 @@ use crate::fighters::{
      game_SpecialAirS::install();
      game_SpecialAirHi::install();     
      game_SpecialAirHiEnd::install();
-     //game_SpecialLwEnd::install();
+     game_SpecialLwEnd::install();
      game_SpecialAirLwEnd::install();
      game_ThrowF::install();
      game_ThrowB::install();
      game_ThrowHi::install();
      game_ThrowLw::install();
- 
+     game_Pillar::install();
+     game_PillarAir::install();    
  }
 
 

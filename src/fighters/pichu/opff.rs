@@ -9,7 +9,7 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
+use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 
 
@@ -29,29 +29,6 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-//Enable cancel subtitle here.   
-
-            //else if for every new move.  
-            if motion_kind == smash::hash40("attack_air_f") {//Fair
-                if frame >= 17.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                }
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                }
-            }
-            else if motion_kind == smash::hash40("attack_air_b") {//Bair
-                if frame >= 25.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                }
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                }
-            }
-            else {//This stays at the bottom
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
-            }
-        }
     }
 
 pub fn install() {

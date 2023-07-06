@@ -1,16 +1,13 @@
-//#![deny(deprecated)]
-//#![allow(unused)]
-//#![allow(non_snake_case)]
-//#![feature(repr_simd)]
-
 
 pub mod mechanics;
-mod function_hooks;
-//pub mod utility;
+pub mod function_hooks;
+pub mod general;
+//pub mod params;
 
 pub fn install() {
 
-    //general_statuses::install();
+    general::install();
+    //params::install();
     mechanics::install();
     function_hooks::install();
 }

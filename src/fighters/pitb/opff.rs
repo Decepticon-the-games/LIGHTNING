@@ -9,12 +9,12 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
+use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 
-#[fighter_frame( agent = FIGHTER_KIND_PITB )]
+#[fighter_frame( agent = FIGHTER_KIND_pitbB )]
 
-    pub fn pitb_opff(fighter : &mut L2CFighterCommon) {
+    pub fn pitbb_opff(fighter : &mut L2CFighterCommon) {
         unsafe {
             let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
@@ -87,6 +87,6 @@ use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
     }
 
 pub fn install() {
-    smashline::install_agent_frames!(pitb_opff);
+    smashline::install_agent_frames!(pitbb_opff);
 
 }

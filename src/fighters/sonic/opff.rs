@@ -9,7 +9,7 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::attack_cancels::ENABLE_ATTACK_CANCEL;
+use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
 
 static mut UP_SPECIAL_HIT : [bool; 8] = [false; 8];
 static mut UP_SPECIAL_HIT_COUNT : [i32; 8] = [0; 8];

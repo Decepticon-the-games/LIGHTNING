@@ -29,7 +29,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
 
    ENABLE_ATTACK_CANCEL[entry_id] = true; 
 } 
-else {
+if ! (cat1 & FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0 {
    ENABLE_ATTACK_CANCEL[entry_id] = false;  
 }
 
@@ -43,7 +43,7 @@ if ENABLE_MULTIHIT_CANCEL[entry_id] {
 }    
 pub fn install() {
     smashline::install_acmd_scripts!(
-     game_);
+    game_ );
 }
 
 //multihit cancels

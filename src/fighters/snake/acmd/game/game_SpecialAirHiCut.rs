@@ -1,5 +1,8 @@
+use super::*;
 #[acmd_script( agent = "snake", script = "game_specialairhicut", category = ACMD_GAME, low_priority )]
 unsafe fn game_specialairhicut(fighter: &mut L2CAgentBase) {
+let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+
     if macros::is_excute(fighter) {
         notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
     }
@@ -9,5 +12,10 @@ unsafe fn game_specialairhicut(fighter: &mut L2CAgentBase) {
     frame(0, 0, 12);
     if macros::is_excute(fighter) {
         ArticleModule::shoot(fighter.module_accessor, *FIGHTER_SNAKE_GENERATE_ARTICLE_CYPHER, *ARTICLE_OPE_TARGET_ALL, false);
-    }
+        
+    }  
+}  
+pub fn install() {
+    smashline::install_acmd_scripts!(
+    game_ );
 }

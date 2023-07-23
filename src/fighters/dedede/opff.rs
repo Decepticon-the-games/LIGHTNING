@@ -27,51 +27,6 @@ static mut UP_SPECIAL_HIT_COUNT : [i32; 8] = [0; 8];
             let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-//Enable cancel  
-
-
-            //else if for every new move.  
-            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S3 {
-                
-                if frame >= 22.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                } 
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                } 
-            }
-            //Cancel fair after 3 successful hits
-            else if motion_kind == smash::hash40("attack_air_hi") {
-
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
-                if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL) {
-                    if UP_SPECIAL_HIT[entry_id] == false {
-                        UP_SPECIAL_HIT_COUNT[entry_id] +=1;
-                        UP_SPECIAL_HIT[entry_id] = true; 
-                    }         
-                }
-                else {
-                    UP_SPECIAL_HIT[entry_id] = false;
-                }  
-    
-                if UP_SPECIAL_HIT_COUNT[entry_id] >= 3 {
-                    UP_SPECIAL_HIT_COUNT[entry_id] = 3;
-                    ENABLE_ATTACK_CANCEL[entry_id] = true; 
-                }
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                } 
-                if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 {
-                    UP_SPECIAL_HIT_COUNT[entry_id] = 0;
-                }
-            }
-            else {//This stays at the bottom
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
-                UP_SPECIAL_HIT_COUNT[entry_id] = 0;
-            }
-        
-
-
 //New subtititle for any other code, if not applicable just delete the lines
 
         }

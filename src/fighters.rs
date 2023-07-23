@@ -2,7 +2,7 @@
 #![allow(unused)]
 #![allow(non_snake_case)]
 
-/*
+
 pub mod common;
 pub mod mario;
 pub mod donkey;
@@ -200,53 +200,59 @@ miiswordsman::install();
 miigunner::install();
 
 }
-*/
+
 
 //TESTING//
-
+/*
 pub mod common;
 
- pub mod metaknight;
-pub mod pit;
-pub mod pitb;
-pub mod szerosuit;
-pub mod wario;
-/*pub mod snake;
-pub mod ike;
-pub mod pzenigame;
-pub mod pfushigisou;
-pub mod plizardon;
-pub mod diddy;
-pub mod lucas;
-pub mod sonic;
-pub mod dedede;
-pub mod pikmin;
-pub mod lucario;
-pub mod robot;
-pub mod toonlink;
-pub mod wolf;
+pub mod murabito;
+pub mod rockman;
+pub mod wiifit;
+pub mod rosetta;
+pub mod littlemac;
+pub mod gekkouga;
+pub mod palutena;
+pub mod pacman;
+pub mod reflet;
+pub mod shulk;
+pub mod koopajr;
+pub mod duckhunt;
+pub mod ryu;
+pub mod ken;
+pub mod cloud;
+pub mod kamui;
+pub mod bayonetta;
+pub mod miifighter;
+pub mod miiswordsman;
+pub mod miigunner;
 */
+
+
+/*
 pub fn install() {
     common::install();
 
-    metaknight::install();
-    pit::install();
-    pitb::install();
-    szerosuit::install();
-    wario::install();
-    /*snake::install();
-    ike::install();
-    pzenigame::install();
-    pfushigisou::install();
-    plizardon::install();
-    diddy::install();
-    lucas::install();
-    sonic::install();
-    dedede::install();
-    pikmin::install();
-    lucario::install();
-    robot::install();
-    toonlink::install();
-    wolf::install();
-    */
-}
+    murabito::install(); 
+    rockman::install();
+    wiifit::install();
+    rosetta::install();
+    littlemac::install();
+    gekkouga::install();
+    palutena::install();
+    pacman::install();
+    reflet::install();
+    shulk::install();
+    koopajr::install();
+    duckhunt::install();
+    ryu::install();
+    ken::install();
+    cloud::install();
+    kamui::install();
+    bayonetta::install();
+    miifighter::install();
+    miiswordsman::install();
+    miigunner::install();
+
+    }
+*/

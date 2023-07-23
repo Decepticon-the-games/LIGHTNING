@@ -23,8 +23,16 @@ use crate::fighters::{
 
 use super::*;
 use crate::upbtransitions::DISABLE_UP_SPECIAL;
+use crate::fighters::common::mechanics::cancels::counter_cancels::COUNTER_CANCEL;
 
 let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+
+if AttackModule::is_attack_occur(fighter.module_accessor) {
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
+}
+if AttackModule::is_attack_occur(fighter.module_accessor) {
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100);
+}
 
 
    ENABLE_ATTACK_CANCEL[entry_id] = true; 
@@ -40,12 +48,14 @@ if ENABLE_MULTIHIT_CANCEL[entry_id] {
     CANCEL_IN_NEUTRAL[entry_id] = true;
 }
 
+    COUNTER_CANCEL[entry_id] = true; 
+
 }    
 pub fn install() {
     smashline::install_acmd_scripts!(
-    game_ );
+    game_);
 }
-
+ 
 //multihit cancels
 
 if ENABLE_MULTIHIT_CANCEL[entry_id] && LIGHTNING {

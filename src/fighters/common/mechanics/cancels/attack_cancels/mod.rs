@@ -1,8 +1,8 @@
 use {
     smash::{
-        lua2cpp::L2CFighterCommon,
+        lua2cpp::{L2CFighterCommon,L2CFighterBase,L2CAgentBase},
         phx::Hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
+        app::{lua_bind::*, sv_animcmd::*,BattleObjectModuleAccessor,*},
         lib::lua_const::*
     },
     smash_script::*,
@@ -10,7 +10,10 @@ use {
 };
 
 use crate::fighters::common::{
-    mechanics::lightning_mechanics::vanish::{VANISH_READY, CANCEL_INTO_VANISH},
+    mechanics::{
+        lightning_mechanics::vanish::{VANISH_READY, CANCEL_INTO_VANISH},
+        cancels::motioncancels::CANCEL_IN_NEUTRAL
+    },
     function_hooks::cross_cancel_vanish::PROJECTILE_HIT
 };
 
@@ -27,6 +30,6 @@ pub mod resets_falses;
 
 pub fn install() {
     attack_cancel::install();
-    spam_system::install();
+    //spam_system::install();
     resets_falses::install();
 }

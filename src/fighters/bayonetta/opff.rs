@@ -9,7 +9,7 @@ use {
     smash_script::*,
     smashline::*
 };
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
+use crate::fighters::common::mechanics::cancels::attack_cancels::attack_cancel::attack_cancel;
 
 
 #[fighter_frame( agent = FIGHTER_KIND_BAYONETTA )]
@@ -24,14 +24,15 @@ use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_C
             ////let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
-
-//Enable cancel  
-
-
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
-            
-
-
+            let fair_combo_flag =  WorkModule::is_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_STATUS_ATTACK_AIR_F_FLAG_ENABLE_COMBO);
+            if SearchModule::is_inflict(fighter.module_accessor) && SlowModule::frame(fighter.module_accessor, *FIGHTER_SLOW_KIND_NORMAL) == 0 {
+                CancelModule::enable_cancel(fighter.module_accessor);
+            }
+            /*if ENABLE_ATTACK_CANCEL[entry_id] {
+                if (fair_combo_flag && ! ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0) && ControlModule::get_attack_air_kind(fighter.module_accessor) == *FIGHTER_COMMAND_ATTACK_AIR_KIND_F)) {
+                    attack_cancel(fighter);
+                }
+            }*/
 //New subtititle for any other code, if not applicable just delete the lines
 
         }

@@ -1,5 +1,8 @@
+use super::*;
 #[acmd_script( agent = "snake", script = "game_attackhi4", category = ACMD_GAME, low_priority )]
 unsafe fn game_attackhi4(fighter: &mut L2CAgentBase) {
+let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+
     if macros::is_excute(fighter) {
         ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_SNAKE_GENERATE_ARTICLE_TRENCHMORTAR, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
@@ -16,6 +19,7 @@ unsafe fn game_attackhi4(fighter: &mut L2CAgentBase) {
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
+CANCEL_IN_NEUTRAL[entry_id] = true;
     }
     frame(fighter.lua_state_agent, 25.0);
     if macros::is_excute(fighter) {
@@ -28,5 +32,9 @@ unsafe fn game_attackhi4(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 57.0);
     if macros::is_excute(fighter) {
         ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_SNAKE_GENERATE_ARTICLE_TRENCHMORTAR, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-    }
+    }  
+}  
+pub fn install() {
+    smashline::install_acmd_scripts!(
+    game_attackhi4 );
 }

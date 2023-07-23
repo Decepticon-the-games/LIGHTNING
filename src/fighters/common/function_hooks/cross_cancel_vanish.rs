@@ -6,7 +6,7 @@ use skyline::hooks::{getRegionAddress, Region};
 use smash::app::FighterManager;
 
 use crate::fighters::common::mechanics::lightning_mechanics::ultrainstinct::{SEC_SEN_STATE, SECRET_SENSATION, OPPONENT_X, OPPONENT_Y, OPPONENT_BOMA, CROSS_CANCEL_BUTTON};
-use crate::fighters::common::mechanics::lightning_mechanics::vanish::{VANISH, VANISH_READY, WHO_GOT_HIT_BOMA, WHO_HIT_YOU_BOMA, VANISH_BUTTON, DEFENDER_VANISH, VA_OPPONENT_X, VA_OPPONENT_Y, VA_OPPONENT_BOMA};
+use crate::fighters::common::mechanics::lightning_mechanics::vanish::{VANISH, VANISH_READY, WHO_GOT_HIT_BOMA, WHO_HIT_YOU_BOMA, PROJECTILE_BOMA, VANISH_BUTTON, DEFENDER_VANISH, VA_OPPONENT_X, VA_OPPONENT_Y, VA_OPPONENT_BOMA};
 use crate::fighters::common::mechanics::lightning_mechanics::lightning_mode::{LIGHTNING_BUTTON};
 
 pub static mut PROJECTILE_HIT : [bool; 8] = [false; 8];
@@ -171,16 +171,15 @@ move_type_again: bool) -> u64 {
 
                     if utility::get_category(&mut *oboma) == *BATTLE_OBJECT_CATEGORY_FIGHTER { // If the object that was hit is owned by a fighter, stores that fighter's position
                     
-                        PROJECTILE_HIT[o_entry_id] = true; 
+                        PROJECTILE_BOMA[o_entry_id] = attacker_object_id; //Store the id of the person the attacking projectile belongs to until vanish is pressed
                         WHO_GOT_HIT_BOMA[o_entry_id] = defender_object_id; //Store the id of the person who got hit up until vanish is pressed
                     }    
-                
 
                     //If a weapon...
                 
                     else if utility::get_category(&mut *oboma) == *BATTLE_OBJECT_CATEGORY_WEAPON { // If the object that was hit is a fighter, stores the opponent's position
 
-                        PROJECTILE_HIT[o_entry_id] = true; 
+                        PROJECTILE_BOMA[o_entry_id] = attacker_object_id; //Store the id of the person the attacking projectile belongs to until vanish is pressed
                         WHO_GOT_HIT_BOMA[o_entry_id] = defender_object_id; //Store the id of the person who got hit up until vanish is pressed
                     }
                 }                 

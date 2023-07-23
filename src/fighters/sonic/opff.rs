@@ -26,69 +26,6 @@ static mut UP_SPECIAL_HIT_COUNT : [i32; 8] = [0; 8];
             ////let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
             let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
-
-//Enable cancel  
-
-
-            //else if for every new move.  
-            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 {
-
-
-                
-                if frame >= 12.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                } 
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                } 
-            }
-            else if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
-                
-                if frame >= 28.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                } 
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                } 
-            }
-            //Cancel fair after 5 successful hits
-            else if motion_kind == smash::hash40("attack_air_f") {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
-                if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL) {
-                    if UP_SPECIAL_HIT[entry_id] == false {
-                        UP_SPECIAL_HIT_COUNT[entry_id] +=1;
-                        UP_SPECIAL_HIT[entry_id] = true; 
-                    }         
-                }
-                else {
-                    UP_SPECIAL_HIT[entry_id] = false;
-                }  
-    
-                if UP_SPECIAL_HIT_COUNT[entry_id] >= 5 {
-                    UP_SPECIAL_HIT_COUNT[entry_id] = 5;
-                    ENABLE_ATTACK_CANCEL[entry_id] = true; 
-                }
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                } 
-                if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 {
-                    UP_SPECIAL_HIT_COUNT[entry_id] = 0;
-                }
-            }
-            
-            else if motion_kind == smash::hash40("attack_air_lw") {
-                
-                if frame >= 13.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                } 
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                } 
-            }
-            else {//This stays at the bottom
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
-                UP_SPECIAL_HIT_COUNT[entry_id] = 0;
-            }
         }
     
     }

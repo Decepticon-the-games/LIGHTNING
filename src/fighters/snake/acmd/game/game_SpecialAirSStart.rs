@@ -1,5 +1,8 @@
+use super::*;
 #[acmd_script( agent = "snake", script = "game_specialairsstart", category = ACMD_GAME, low_priority )]
 unsafe fn game_specialairsstart(fighter: &mut L2CAgentBase) {
+let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+
     if macros::is_excute(fighter) {
         macros::CORRECT(fighter, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP);
     }
@@ -23,5 +26,9 @@ unsafe fn game_specialairsstart(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         ArticleModule::set_flag(fighter.module_accessor, *FIGHTER_SNAKE_GENERATE_ARTICLE_NIKITA, true, *WEAPON_SNAKE_NIKITA_INSTANCE_WORK_ID_FLAG_SHOOT);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SNAKE_STATUS_SPECIAL_S_FLAG_ENABLE_CANCEL);
-    }
+    }  
+}  
+pub fn install() {
+    smashline::install_acmd_scripts!(
+    game_ );
 }

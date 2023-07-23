@@ -16,7 +16,7 @@ use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_C
 
     pub fn ken_opff(fighter : &mut L2CFighterCommon) {
         unsafe {
-            let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+            let entry_id = WorkModule::get_int(fighter.module_accessor,  *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
             let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
             //let status_kind = StatusModule::status_kind(module_accessor);
             //let motion_kind = MotionModule::motion_kind(fighter.module_accessor);       
@@ -25,11 +25,6 @@ use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_C
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-//Enable cancel  
-
-
-
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
 
                 
 //New subtititle for any other code, if not applicable just delete the lines

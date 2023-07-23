@@ -1,5 +1,8 @@
+use super::*;
 #[acmd_script( agent = "snake", script = "game_specialairhihang", category = ACMD_GAME, low_priority )]
 unsafe fn game_specialairhihang(fighter: &mut L2CAgentBase) {
+let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+
     if macros::is_excute(fighter) {
         damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 7);
     }
@@ -16,5 +19,9 @@ unsafe fn game_specialairhihang(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 89.0);
     if macros::is_excute(fighter) {
         WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_SNAKE_STATUS_CYPHER_HANG_TRANS_ID_CUT_TIME_OUT);
-    }
+    }  
+}  
+pub fn install() {
+    smashline::install_acmd_scripts!(
+    game_ );
 }

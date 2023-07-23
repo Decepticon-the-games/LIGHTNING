@@ -22,11 +22,15 @@ pub fn resets_falses(fighter : &mut L2CFighterCommon) {
             ENABLE_ATTACK_CANCEL[entry_id] = false;
 
         } 
-        if idles || walks_runs_jumps_falls{
+        if CancelModule::is_enable_cancel(fighter.module_accessor) 
+        || ! AttackModule::is_attack_occur(fighter.module_accessor) {
+        //The moment These are run, turn off attack cancel variables.
             ENABLE_ATTACK_CANCEL[entry_id] = false;
-            ENABLE_MULTIHIT_CANCEL[entry_id] = false;
+            ATTACK_CANCEL[entry_id] = false;
+        }   
+        if entry_id <1 {
+            println!("en_attack_cancel: {}", ENABLE_ATTACK_CANCEL[entry_id]);
         }
-
     }
 }
 pub fn install() {

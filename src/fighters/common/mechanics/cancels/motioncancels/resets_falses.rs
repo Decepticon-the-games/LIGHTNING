@@ -10,13 +10,17 @@ pub fn resets_falses(fighter : &mut L2CFighterCommon) {
         || status_kind == *FIGHTER_STATUS_KIND_FALL 
         || status_kind == *FIGHTER_STATUS_KIND_FALL_AERIAL);
 
-        let walks_runs_jumps_falls = (status_kind == *FIGHTER_STATUS_KIND_WALK
+        /*let walks_runs_jumps_falls = (status_kind == *FIGHTER_STATUS_KIND_WALK
         || status_kind == *FIGHTER_STATUS_KIND_DASH
         || status_kind == *FIGHTER_STATUS_KIND_TURN_DASH
         || status_kind == *FIGHTER_STATUS_KIND_JUMP
-        || status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL);
+        || status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL);*/
 
-        if idles || walks_runs_jumps_falls{
+        //CANCEL_IN_NEUTRAL will actually run as long as it's true. This line ensures it runs false when enable_cacel is run IN ANY CASE, so that it doesn't overlap on the startup of another move.
+
+        if (AttackModule::is_attack_occur(fighter.module_accessor) && ! status_kind == *FIGHTER_STATUS_KIND_THROW)//Only on whiff, not on hit (DON'T COUNT THROWS CUZ U CANT EVEN WHIFF THOSE, plus some throws have hitboxes)
+        || CancelModule::is_enable_cancel(fighter.module_accessor) 
+        {//The moment these run, turn off CANCEL_IN_NEUTRAL.
             CANCEL_IN_NEUTRAL[entry_id] = false;
         }
 
@@ -24,7 +28,12 @@ pub fn resets_falses(fighter : &mut L2CFighterCommon) {
             AIRDODGE_COUNT[entry_id] = 0;
             VANISH_COUNT[entry_id] = 0;
             CANCEL_IN_NEUTRAL[entry_id] = false;
-        }    
+        }
+
+        if entry_id <1 {    
+            println!("is_enable_cancel: {}", CancelModule::is_enable_cancel(fighter.module_accessor) );
+            println!("cancein_neutral: {}", CANCEL_IN_NEUTRAL[entry_id]);
+        }
     }    
 }
 

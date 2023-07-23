@@ -25,33 +25,6 @@ use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_C
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-//Enable cancel  
-
-
-            if (status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_S1_END) {
-                if frame > 25.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true; 
-                }
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false; 
-                }
-            }
-
-            else if  status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_MISS
-            || status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_HIT
-            || status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_S1_END {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;  
-            }
-            else {
-                ENABLE_ATTACK_CANCEL[entry_id] = true; 
-            }        
-
-            if status_kind == *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_S3_FALL {
-                if frame >= 40.0 {
-                   CancelModule::enable_cancel(fighter.module_accessor); 
-                }
-                
-            }
 
 
 //New subtititle for any other code, if not applicable just delete the lines

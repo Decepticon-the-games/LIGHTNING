@@ -1,5 +1,8 @@
+use super::*;
 #[acmd_script( agent = "snake", script = "game_attack12", category = ACMD_GAME, low_priority )]
 unsafe fn game_attack12(fighter: &mut L2CAgentBase) {
+let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+
     frame(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
         KineticModule::add_speed(fighter.module_accessor, &Vector3f{x: 1.5, y: 0.0, z: 0.0});
@@ -17,6 +20,11 @@ unsafe fn game_attack12(fighter: &mut L2CAgentBase) {
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
+CANCEL_IN_NEUTRAL[entry_id] = true;
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
-    }
+    }  
+}  
+pub fn install() {
+    smashline::install_acmd_scripts!(
+    game_attack12 );
 }

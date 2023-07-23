@@ -20,14 +20,14 @@ pub fn spam_system(fighter : &mut L2CFighterCommon) {
         
         if ENABLE_ATTACK_CANCEL[entry_id]
         {
-
+            //CANCEL_IN_NEUTRAL[entry_id] = false;
 //Prevent Jabs from cancelling into themselves
-            if status_kind == *FIGHTER_STATUS_KIND_ATTACK {
+            /*if status_kind == *FIGHTER_STATUS_KIND_ATTACK {
                 if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0 {
                     ATTACK_CANCEL[entry_id] = false; 
                     ENABLE_ATTACK_CANCEL[entry_id] =false;
                 }
-            }
+            }*/
 
 // this instance prevents cancelling more than a certain amount without first moving
             if AttackModule::is_attack_occur(fighter.module_accessor) {
@@ -47,12 +47,13 @@ pub fn spam_system(fighter : &mut L2CFighterCommon) {
             }
             else {
                 ATTACK_CANCEL_COUNTER[entry_id] = false; 
+                ATTACK_CANCEL[entry_id] = false;
             }
             //moovement options, always reset attack cancel count
             if movement_cancel {
                 ATTACK_CANCEL_COUNT[entry_id] = 0; 
             }  
-            //ENABLE_ATTACK_CANCEL[entry_id] = false;
+            ENABLE_ATTACK_CANCEL[entry_id] = false;
         } 
     }
 }

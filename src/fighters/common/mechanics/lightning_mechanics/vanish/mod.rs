@@ -1,7 +1,7 @@
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::app::*;
-use smash::lua2cpp::L2CFighterCommon;
+use smash::lua2cpp::{L2CFighterCommon,L2CFighterBase};
 use smash::phx::Vector2f;
 use smashline::*;
 use smash_script::*;
@@ -37,6 +37,7 @@ pub static mut FLOAT_TIMER : [i32; 8] = [0; 8];
 pub static mut WINDOW : [i32; 8] = [0; 8];
 pub static mut WHO_GOT_HIT_BOMA : [u32; 8] = [0; 8];
 pub static mut WHO_HIT_YOU_BOMA : [u32; 8] = [0; 8];
+pub static mut PROJECTILE_BOMA : [u32; 8] = [0; 8];
 //pub static mut attack_vanish_get_current_position : [bool; 8] = [false; 8];
 pub static mut STICK_MANIPULATION : [bool; 8] = [false; 8];
 pub static mut FLOAT : [bool; 8] = [false; 8];
@@ -58,7 +59,8 @@ pub fn vanish_button(fighter : &mut L2CFighterCommon) {
         
         if CAN_VANISH[entry_id] {
             if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) {// down taunt
-                vanish_defense(fighter);   
+                vanish_defense(fighter);  
+                //vanish_attack_weapon(fighter); 
             }
             if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH) != 0 {// grab
                 vanish_attack(fighter);   
@@ -112,25 +114,41 @@ pub fn vanish_defense(fighter : &mut L2CFighterCommon) {
 pub fn vanish_attack(fighter : &mut L2CFighterCommon) {
     unsafe {
         let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let opponent_boma = sv_battle_object::module_accessor(WHO_GOT_HIT_BOMA[entry_id]);
+        //let projectile_oboma = sv_battle_object::module_accessor(PROJECTILE_BOMA[entry_id]);
+        //let oboma = sv_battle_object::module_accessor((WorkModule::get_int(fighter.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID)) as u32); // links weapon to whatever may ownn it  
+
+        
 
         //If an attack occurs(after hitlag), enable cancelling into vanish
-        if (AttackModule::is_attack_occur(fighter.module_accessor) 
-        && SlowModule::frame(fighter.module_accessor, *FIGHTER_SLOW_KIND_HIT) == 0)
+        if (AttackModule::is_attack_occur(fighter.module_accessor) && SlowModule::frame(fighter.module_accessor, *FIGHTER_SLOW_KIND_HIT) == 0)
         && CancelModule::is_enable_cancel(fighter.module_accessor) 
-        && ! StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_THROW { 
+        { 
 
             CANCEL_INTO_VANISH[entry_id] = true;
-        }  
+        }
+        else if PROJECTILE_HIT[entry_id] {
+            CANCEL_INTO_VANISH[entry_id] = true;
+        }
         else {
             CANCEL_INTO_VANISH[entry_id] = false;
         }  
 
         if CANCEL_INTO_VANISH[entry_id] 
-        && ENABLE_ATTACK_CANCEL[entry_id] == false
-        && ATTACK_CANCEL[entry_id] == false {
+        /*&& ENABLE_ATTACK_CANCEL[entry_id] == false
+        && ATTACK_CANCEL[entry_id] == false*/ {
 
             attack_vanish_get_current_position(fighter);
+        }
+    }
+}
+#[weapon_frame_callback]
+pub fn vanish_attack_weapon(weapon : &mut L2CFighterBase) {
+    unsafe {
+        let entry_id = WorkModule::get_int(weapon.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        //println!("phit: {}", PROJECTILE_HIT[entry_id] );
+
+        if AttackModule::is_attack_occur(weapon.module_accessor){
+            PROJECTILE_HIT[entry_id] = true;
         }
     }
 }
@@ -278,7 +296,7 @@ pub unsafe fn disable_vanish_effects(fighter : &mut L2CFighterCommon) {
     else if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_GROUND {
         StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
     }
-
+    CancelModule::enable_cancel(fighter.module_accessor);
     VisibilityModule::set_whole(fighter.module_accessor, true); 
     EffectModule::req_on_joint(fighter.module_accessor, smash::phx::Hash40::new("sys_attack_speedline"), smash::phx::Hash40::new("waist"), &zero, &rotation, 1.0, &zero, &zero, false, 0, 0, 0);
     JostleModule::set_status(fighter.module_accessor, true);   
@@ -349,5 +367,12 @@ pub fn vanish_counter(fighter : &mut L2CFighterCommon) {
 } 
 pub fn install() {
 
-    smashline::install_agent_frame_callbacks!(vanish, vanish_button, resets, float, vanish_counter);
+    smashline::install_agent_frame_callbacks!(
+        vanish, 
+        vanish_button, 
+        resets, 
+        float,
+        vanish_counter, 
+        //vanish_attack_weapon
+    );
 }

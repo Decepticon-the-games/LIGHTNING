@@ -35,11 +35,16 @@ pub static mut FASTFALL_LASER : [bool; 8] = [false; 8];
             //println!("fox-ill: {}", ILLUSION_CANCEL[entry_id]);
 
 //Fast fall laser
-            if FASTFALL_LASER[entry_id]
-            && (ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_FALL_JUMP) != 0 {
-                WorkModule::set_flag(module_accessor, true, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
+            if motion_kind == smash::hash40("special_air_n_loop") && FASTFALL_LASER[entry_id] {
+                if (ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_FALL_JUMP) != 0 {
+                    WorkModule::set_flag(module_accessor, true, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
+                    FASTFALL_LASER[entry_id] = false;
+                }                
+            }
+            else {
                 FASTFALL_LASER[entry_id] = false;
             }
+
 //illusion
             if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
                 if AttackModule::is_attack_occur(fighter.module_accessor) {

@@ -26,40 +26,6 @@ use crate::fighters::common::mechanics::cancels::motioncancels::{CANCEL_IN_NEUTR
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-//Enable cancel  
-
-
-            //else if for every new move.  
-            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 {
-                
-                if frame >= 6.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                } 
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                } 
-            }
-            else if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
-                
-                if frame >= 29.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                } 
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                } 
-            }
-            else if motion_kind == smash::hash40("attack_air_n") {
-                
-                if frame >= 25.0 {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                } 
-                else {
-                    ENABLE_ATTACK_CANCEL[entry_id] = false;
-                } 
-            }
-            else {//This stays at the bottom
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
-            }
 
 
 //Limit side special cancel to 2 times before having to 30 frames to reset it

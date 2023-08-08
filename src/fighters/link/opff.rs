@@ -1,14 +1,4 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
+use super::*;
 use crate::fighters::common::mechanics::cancels::attack_cancels::{ENABLE_ATTACK_CANCEL, ENABLE_MULTIHIT_CANCEL, MOVEMENT_CANCEL};
 
 
@@ -29,48 +19,50 @@ use crate::fighters::common::mechanics::cancels::attack_cancels::{ENABLE_ATTACK_
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
         
-    
+    static mut UPSMASH_CANCEL_COUNT : [bool; 8] = [false; 8];
+                static mut UPSMASH_CANCEL_COUNTER : [i32; 8] = [0; 8];
 
-//Cancel Up smash up to 2 times         
+            //Cancel Up smash up to 2 times         
+            if LIGHTNING[entry_id]  {
+                
 
-            static mut UPSMASH_CANCEL_COUNT : [bool; 8] = [false; 8];
-            static mut UPSMASH_CANCEL_COUNTER : [i32; 8] = [0; 8];
+                if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
+                    if AttackModule::is_attack_occur(fighter.module_accessor) {
+                        //Counter 
+                        if UPSMASH_CANCEL_COUNT[entry_id] == false {
+                            UPSMASH_CANCEL_COUNTER[entry_id] +=1;
+                            UPSMASH_CANCEL_COUNT[entry_id] = true; 
+                        }
+                    }
+                    else {
+                        UPSMASH_CANCEL_COUNT[entry_id] = false;
+                    }
+                    //Disable cancel
+                    if UPSMASH_CANCEL_COUNTER[entry_id] >2 {//How many times you can cancel
+                        UPSMASH_CANCEL_COUNTER[entry_id] = 3;//How  many hits before disabling cancel
+                        ENABLE_MULTIHIT_CANCEL[entry_id] = false; 
+                    }
+                    else {
+                        ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
+                    }
 
-            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
-                if AttackModule::is_attack_occur(fighter.module_accessor) {
-                    //Counter 
-                    if UPSMASH_CANCEL_COUNT[entry_id] == false {
-                        UPSMASH_CANCEL_COUNTER[entry_id] +=1;
-                        UPSMASH_CANCEL_COUNT[entry_id] = true; 
+                    //Reset
+                    if MOVEMENT_CANCEL[entry_id] {
+                        if UPSMASH_CANCEL_COUNTER[entry_id] == 3 {
+                            UPSMASH_CANCEL_COUNTER[entry_id] = 0;
+                            ENABLE_MULTIHIT_CANCEL[entry_id] = false;
+                        }    
+                        MOVEMENT_CANCEL[entry_id] = false; 
                     }
                 }
-                else {
-                    UPSMASH_CANCEL_COUNT[entry_id] = false;
-                }
-                //Disable cancel
-                if UPSMASH_CANCEL_COUNTER[entry_id] >2 {//How many times you can cancel
-                    UPSMASH_CANCEL_COUNTER[entry_id] = 3;//How  many hits before disabling cancel
-                    ENABLE_MULTIHIT_CANCEL[entry_id] = false; 
-                }
-                else {
-                    ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
-                }
 
-                //Reset
-                if MOVEMENT_CANCEL[entry_id] {
-                    if UPSMASH_CANCEL_COUNTER[entry_id] == 3 {
-                        UPSMASH_CANCEL_COUNTER[entry_id] = 0;
-                        ENABLE_MULTIHIT_CANCEL[entry_id] = false;
-                    }    
-                    MOVEMENT_CANCEL[entry_id] = false; 
-                }
+  
             }
-
             //Resets
             if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false {
                 UPSMASH_CANCEL_COUNTER[entry_id] = 0;
                 ENABLE_MULTIHIT_CANCEL[entry_id] = false; 
-            }
+            }              
         }
     }
 

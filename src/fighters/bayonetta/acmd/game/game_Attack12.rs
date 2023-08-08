@@ -19,10 +19,6 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.4, 361, 8, 0, 42, 2.8, 0.0, 
         AttackModule::set_add_reaction_frame(fighter.module_accessor, 1, 10.0, false);
         AttackModule::set_add_reaction_frame(fighter.module_accessor, 2, 10.0, false);
         AttackModule::set_add_reaction_frame(fighter.module_accessor, 3, 10.0, false);
-        if AttackModule::is_attack_occur(fighter.module_accessor) {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
-             
-        }
     }
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {

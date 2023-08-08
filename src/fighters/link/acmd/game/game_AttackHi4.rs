@@ -19,13 +19,9 @@ unsafe fn game_attackhi4(fighter: &mut L2CAgentBase) {
         AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 2, 3.0, false);
         AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 3, 3.0, false);
         AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 4, 3.0, false);
-        if ENABLE_MULTIHIT_CANCEL[entry_id] {
-    ENABLE_ATTACK_CANCEL[entry_id] = true;
-}
+        ENABLE_MULTIHIT_CANCEL[entry_id] = true;
     }
-    else {
-       ENABLE_MULTIHIT_CANCEL[entry_id] = false;  
-    }
+
     wait(fighter.lua_state_agent, 4.0);
     if macros::is_excute(fighter) {
         macros::ATTACK(fighter, 3, 0, Hash40::new("sword2"), 4.0, 135, 100, 45, 0, 3.0, 8.5, 0.0, -2.2, None, None, None, 1.0, 0.5, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -46,13 +42,9 @@ unsafe fn game_attackhi4(fighter: &mut L2CAgentBase) {
         AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 2, 3.0, false);
         AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 3, 3.0, false);
         AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 4, 3.0, false);
-        if ENABLE_MULTIHIT_CANCEL[entry_id] {
-    ENABLE_ATTACK_CANCEL[entry_id] = true;
-}
+        ENABLE_MULTIHIT_CANCEL[entry_id] = true;
     }
-    else {
-       ENABLE_MULTIHIT_CANCEL[entry_id] = false;  
-    }
+
     wait(fighter.lua_state_agent, 4.0);
     if macros::is_excute(fighter) {
         macros::ATTACK(fighter, 3, 0, Hash40::new("sword2"), 3.0, 135, 100, 40, 0, 3.0, 8.5, 0.0, -2.2, None, None, None, 1.0, 0.5, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);

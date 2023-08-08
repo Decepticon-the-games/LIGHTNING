@@ -1,16 +1,4 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
-
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_CLOUD )]
 
@@ -25,8 +13,12 @@ use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_C
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-
-//New subtititle for any other code, if not applicable just delete the lines
+            //In Lightning...
+            if LIGHTNING[entry_id] {
+                //Up B cancel is free if attack occurs  
+                let next_input = ! 
+                multihit_cancel(fighter, *FIGHTER_STATUS_KIND_SPECIAL_HI, 0, 0, next_input, *FIGHTER_STATUS_KIND_SPECIAL_HI, 0, 0);
+            }
 
         }
     }

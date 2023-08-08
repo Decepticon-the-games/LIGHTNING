@@ -1,14 +1,4 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
+use super::*;
 use crate::fighters::common::mechanics::cancels::attack_cancels::{ENABLE_ATTACK_CANCEL, ENABLE_MULTIHIT_CANCEL, MOVEMENT_CANCEL};
 
 

@@ -1,14 +1,4 @@
-use {
-    smash::{
-        lua2cpp::L2CAgentBase,
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
+use super::*;
 
 use crate::fighters::common::function_hooks::float_int_hook::{PARAM_INT_OFFSET, PARAM_FLOAT_OFFSET};
 
@@ -25,6 +15,9 @@ pub unsafe fn common_precede_int_param_accessor_hook(module_accessor: u64, param
         if AttackModule::is_attack_occur(boma) {
             
             return 10;
+        }
+        else if status_kind == *FIGHTER_STATUS_KIND_DASH || status_kind == *FIGHTER_STATUS_KIND_TURN_DASH {
+            return 7;
         }
         else{
             return 1;

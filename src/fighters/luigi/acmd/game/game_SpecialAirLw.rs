@@ -20,13 +20,9 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         AttackModule::set_vec_target_pos(fighter.module_accessor, 0, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 8, false);
         AttackModule::set_vec_target_pos(fighter.module_accessor, 1, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 8, false);
         AttackModule::set_vec_target_pos(fighter.module_accessor, 2, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 8, false);
-        if ENABLE_MULTIHIT_CANCEL[entry_id] {
-    ENABLE_ATTACK_CANCEL[entry_id] = true;
-}
+        ENABLE_MULTIHIT_CANCEL[entry_id] = true;
     }
-    else {
-       ENABLE_MULTIHIT_CANCEL[entry_id] = false;  
-    }
+
     frame(fighter.lua_state_agent, 34.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);

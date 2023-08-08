@@ -1,16 +1,5 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
-use crate::fighters::common::mechanics::cancels::motioncancels::{CANCEL_IN_NEUTRAL, DISABLE_CANCEL_IN_NEUTRAL, SIDE_SPECIAL_COUNT, SIDE_SPECIAL_COUNTER};
+use super::*;
+use crate::fighters::common::mechanics::cancels::motioncancels::{CANCEL_IN_NEUTRAL, DISABLE_CANCEL_IN_NEUTRAL, PROJECTILE_COUNT, PROJECTILE_COUNTER};
 
 
 #[fighter_frame( agent = FIGHTER_KIND_LUCAS )]
@@ -33,29 +22,29 @@ use crate::fighters::common::mechanics::cancels::motioncancels::{CANCEL_IN_NEUTR
             //Counter
             if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
                 if CANCEL_IN_NEUTRAL[entry_id] {
-                    if SIDE_SPECIAL_COUNTER[entry_id] == false {
-                        SIDE_SPECIAL_COUNT[entry_id] +=1;
-                        SIDE_SPECIAL_COUNTER[entry_id] = true;
+                    if PROJECTILE_COUNTER[entry_id] == false {
+                        PROJECTILE_COUNT[entry_id] +=1;
+                        PROJECTILE_COUNTER[entry_id] = true;
                     }
                 }
                 else {
-                    SIDE_SPECIAL_COUNTER[entry_id] = false;
+                    PROJECTILE_COUNTER[entry_id] = false;
                 } 
             }
             else {
-                SIDE_SPECIAL_COUNTER[entry_id] = false;
+                PROJECTILE_COUNTER[entry_id] = false;
             }
 
             //Condition
-            if SIDE_SPECIAL_COUNT[entry_id] >= 2 {  
+            if PROJECTILE_COUNT[entry_id] >= 2 {  
                 if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {// So that  CANCEL_IN_NEUTRAL remains disabled until the status is finished                
-                    SIDE_SPECIAL_COUNT[entry_id] = 2;
+                    PROJECTILE_COUNT[entry_id] = 2;
                     DISABLE_CANCEL_IN_NEUTRAL[entry_id] = true; 
                 } 
                 //Reset
                 else {
                     DISABLE_CANCEL_IN_NEUTRAL[entry_id] = false; 
-                    SIDE_SPECIAL_COUNT[entry_id] = 0;  
+                    PROJECTILE_COUNT[entry_id] = 0;  
                 }
             }
 
@@ -64,7 +53,7 @@ use crate::fighters::common::mechanics::cancels::motioncancels::{CANCEL_IN_NEUTR
 
             //RESETS
             if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false {
-                SIDE_SPECIAL_COUNT[entry_id] = 0;
+                PROJECTILE_COUNT[entry_id] = 0;
                 DISABLE_CANCEL_IN_NEUTRAL[entry_id] = false;
             } 
 

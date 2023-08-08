@@ -32,9 +32,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     }
     frame(fighter.lua_state_agent, 44.0);
     if macros::is_excute(fighter) {
-        if ENABLE_MULTIHIT_CANCEL[entry_id] {
-            ENABLE_ATTACK_CANCEL[entry_id] = true;
-        }
+ENABLE_MULTIHIT_CANCEL[entry_id] = true;
     }
     frame(fighter.lua_state_agent, 51.0);
     if macros::is_excute(fighter) {

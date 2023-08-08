@@ -1,15 +1,5 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon,L2CFighterBase},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_MULTIHIT_CANCEL;
+use super::*;
+use crate::fighters::common::mechanics::cancels::attack_cancels::{ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MULTIHIT,MULTIHIT_COUNT};
 
 
 static mut UP_SPECIAL_HIT : [bool; 8] = [false; 8];
@@ -36,7 +26,14 @@ pub static mut FASTFALL_LASER : [bool; 8] = [false; 8];
 
             //println!("falco-ill: {}", ILLUSION_CANCEL[entry_id]);
 
-            //Cancel fair after 3 successful hits
+            
+            //In Lightning...
+            if LIGHTNING[entry_id] {
+                //Cancel fair after 3 successful hits    
+                let next_input = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0 && ! ControlModule::get_attack_air_kind(fighter.module_accessor) == *FIGHTER_COMMAND_ATTACK_AIR_KIND_F;
+                multihit_counter(fighter, 0, 0, smash::hash40("attack_air_f") , 3, next_input, 0, 0, smash::hash40("attack_air_f"));
+            }
+            /*
             if motion_kind == hash40("attack_air_f") {
                 if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL) {
                     if UP_SPECIAL_HIT[entry_id] == false {
@@ -58,7 +55,7 @@ pub static mut FASTFALL_LASER : [bool; 8] = [false; 8];
             }
             else {
                 UP_SPECIAL_HIT_COUNT[entry_id] = 0;
-            }
+            }*/
 //Fast fall laser
             if motion_kind == smash::hash40("special_air_n_loop") && FASTFALL_LASER[entry_id] {
                 if (ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_FALL_JUMP) != 0 {

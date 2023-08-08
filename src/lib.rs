@@ -11,4 +11,5 @@ pub fn main() {
     fighters::install();
     //utils::install();
     //dynamic::install();
+
 }

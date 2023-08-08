@@ -1,16 +1,4 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
-
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_ZELDA )]
 

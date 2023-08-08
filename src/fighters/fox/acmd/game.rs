@@ -1,29 +1,8 @@
-use {
-    smash::{
-        lua2cpp::L2CAgentBase,
-        phx::{Hash40,Vector3f},
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*,
-    },
-    smash_script::*,
-    smashline::*
-};
-use smash::app::sv_animcmd::IS_EXIST_ARTICLE;
-use crate::fighters::{
-    common::{
-        mechanics::{
-            cancels::{
-                attack_cancels::{
-                    ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL
-                },
-                motioncancels::{
-                    CANCEL_IN_NEUTRAL
-                }                
-            }
-        }
-    }
-};
+use super::*;
 
+
+pub static mut ILLUSION_CANCEL : [bool; 8] = [false; 8];
+pub static mut FASTFALL_LASER : [bool; 8] = [false; 8];
 
 mod game_Attack11;
 mod game_Attack12;

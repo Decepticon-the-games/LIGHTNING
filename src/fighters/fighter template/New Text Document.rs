@@ -35,22 +35,21 @@ if AttackModule::is_attack_occur(fighter.module_accessor) {
 }
 
 
-   ENABLE_ATTACK_CANCEL[entry_id] = true; 
-} 
-if ! (cat1 & FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0 {
-   ENABLE_ATTACK_CANCEL[entry_id] = false;  
-}
+    //ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_CATEGORY_MASK_ALL) {
+            ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        }
 
-if ENABLE_MULTIHIT_CANCEL[entry_id] {
-    ENABLE_ATTACK_CANCEL[entry_id] = true;
-}
+
+    ENABLE_MULTIHIT_CANCEL[entry_id] = true;
 
     CANCEL_IN_NEUTRAL[entry_id] = true;
-}
+
 
     COUNTER_CANCEL[entry_id] = true; 
 
-}    
+    ENABLE_MULTIHIT_COUNT[entry_id];
+
 pub fn install() {
     smashline::install_acmd_scripts!(
     game_);
@@ -58,34 +57,12 @@ pub fn install() {
  
 //multihit cancels
 
-if ENABLE_MULTIHIT_CANCEL[entry_id] && LIGHTNING {
-    
-}
-
-static mut MULTIHIT : [bool; 8] = [false; 8];
-static mut MULTIHIT_COUNT : [i32; 8] = [0; 8];
+        //Cancel up special only after 3 hits
 
 
-
-if motion_kind == hash40(/*motion here*/)  {
-    if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL) {
-        if MULTIHIT[entry_id] == false {
-            MULTIHIT_COUNT[entry_id] +=1;
-            MULTIHIT[entry_id] = true; 
-        }         
-    }
-    else {
-        MULTIHIT[entry_id] = false;
-    }  
-
-    if MULTIHIT_COUNT[entry_id] >= 3 { //how many hits
-        MULTIHIT_COUNT[entry_id] = 3;  //how many hits
-        ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
-    }
-    else {
-        ENABLE_MULTIHIT_CANCEL[entry_id] = false;
-    } 
-}
-else {
-    MULTIHIT_COUNT[entry_id] = 0;
-}
+        //In Lightning...
+        if LIGHTNING[entry_id] {
+            //Up B cancels after 3 successful hits, cancel into jabs, tilts, smashes, neutral/side b     
+            let next_input = //cat1 flag input
+            multihit_cancel(fighter, /*i32*/, /*hash40*/, /*hitcount*/, next_input, /*reset_i32*/, /*reset_hash40*/);
+        }

@@ -1,16 +1,4 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
-
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_KROOL )]
 
@@ -24,16 +12,6 @@ use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_C
             ////let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
-
-//Enable cancel  
-
-
-            
-            ENABLE_ATTACK_CANCEL[entry_id] = true;
-            
-
-
-//New subtititle for any other code, if not applicable just delete the lines
 
         }
     }

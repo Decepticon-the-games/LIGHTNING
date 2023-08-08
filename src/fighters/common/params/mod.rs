@@ -6,8 +6,8 @@
 //pub mod aesthetic;
 
 pub fn install() {
-    buffer::install();
+    //buffer::install();
     //misc::install();
-    sdi::install(); 
-    aesthetic::install(); 
+    //sdi::install(); 
+    //aesthetic::install(); 
 }

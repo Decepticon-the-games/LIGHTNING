@@ -1,5 +1,5 @@
 use super::*;
-use crate::fighters::fox::opff::FASTFALL_LASER;
+
 #[acmd_script( agent = "fox", script = "game_specialairnloop", category = ACMD_GAME, low_priority )]
 unsafe fn game_specialairnloop(fighter: &mut L2CAgentBase) {
 let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;

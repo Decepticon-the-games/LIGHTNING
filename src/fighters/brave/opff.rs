@@ -1,17 +1,5 @@
 
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
-
+use super::*;
 
 
 
@@ -28,21 +16,7 @@ fn brave_opff(fighter : &mut L2CFighterCommon) {
         //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
         //let jump_guard_dash_upspecial_pressed = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (situation_kind == *SITUATION_KIND_AIR && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0);
-        //let frame = MotionModule::frame(module_accessor);
-        
-        //FIXES
-        //-------------------------------------------------------------------------------
-        //add exceptions
-
-        
-        //else 
-        ENABLE_ATTACK_CANCEL[entry_id] = true;
-
-
-        //ENHANCES
-        //--------------------------------------------------------------------------------
-
-
+        //let frame = MotionModule::frame(module_accessor);  
 
     }                                      
 }

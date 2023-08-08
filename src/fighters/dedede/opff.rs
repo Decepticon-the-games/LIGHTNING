@@ -1,16 +1,4 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
-
+use super::*;
 static mut UP_SPECIAL_HIT : [bool; 8] = [false; 8];
 static mut UP_SPECIAL_HIT_COUNT : [i32; 8] = [0; 8];
 

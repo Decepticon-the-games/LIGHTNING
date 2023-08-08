@@ -1,16 +1,4 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
-
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_SZEROSUIT )]
 
@@ -26,14 +14,13 @@ use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_C
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
 
-//Cancel up special into down special before the last hit if sucesfully hit
 
-            if MotionModule::frame(module_accessor) > 23.0 && MotionModule::frame(module_accessor) < 26.0 {
-                if AttackModule::is_attack_occur(module_accessor) && ! SlowModule::is_slow(module_accessor) {
-                    if cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0 {
-                        StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
-                    }
-                }
+
+            //In Lightning...
+            if LIGHTNING[entry_id] {
+                //Cancel up special into down special before the last hit if sucesfully hit  
+                let next_input = (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0)
+                multihit_cancel(fighter, *FIGHTER_STATUS_KIND_SPECIAL_HI, 0, 0, next_input, *FIGHTER_STATUS_KIND_SPECIAL_HI, 0, 0);
             }
         }
     }

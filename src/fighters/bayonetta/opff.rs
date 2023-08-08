@@ -1,15 +1,4 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::attack_cancel::attack_cancel;
+use super::*;
 
 
 #[fighter_frame( agent = FIGHTER_KIND_BAYONETTA )]
@@ -28,12 +17,6 @@ use crate::fighters::common::mechanics::cancels::attack_cancels::attack_cancel::
             if SearchModule::is_inflict(fighter.module_accessor) && SlowModule::frame(fighter.module_accessor, *FIGHTER_SLOW_KIND_NORMAL) == 0 {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
-            /*if ENABLE_ATTACK_CANCEL[entry_id] {
-                if (fair_combo_flag && ! ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0) && ControlModule::get_attack_air_kind(fighter.module_accessor) == *FIGHTER_COMMAND_ATTACK_AIR_KIND_F)) {
-                    attack_cancel(fighter);
-                }
-            }*/
-//New subtititle for any other code, if not applicable just delete the lines
 
         }
     }

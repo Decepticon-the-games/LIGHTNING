@@ -1,15 +1,4 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon,L2CFighterBase},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
+use super::*;
 pub static mut DH_CANCEL : [bool; 8] = [false; 8];
 pub static mut KAMUI_DH_CANCEL : [bool; 8] = [false; 8];
 

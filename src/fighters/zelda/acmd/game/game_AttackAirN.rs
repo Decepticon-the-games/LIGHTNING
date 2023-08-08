@@ -9,9 +9,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 6.0);
     for _ in 0..4 {
     if macros::is_excute(fighter) {
-        if ENABLE_MULTIHIT_CANCEL[entry_id] {
-            ENABLE_ATTACK_CANCEL[entry_id] = true;
-        }
+ENABLE_MULTIHIT_CANCEL[entry_id] = true;
         macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 2.5, 70, 80, 0, 50, 5.0, 0.0, 10.0, 7.6, None, None, None, 0.6, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
         macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 2.5, 132, 10, 0, 30, 1.5, 0.0, 6.5, 5.0, Some(0.0), Some(6.5), Some(10.0), 0.6, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
         macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 2.5, 230, 10, 0, 15, 1.5, 0.0, 13.0, 5.0, Some(0.0), Some(13.0), Some(10.0), 0.6, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
@@ -39,9 +37,7 @@ if macros::is_excute(fighter) {
 }
 frame(fighter.lua_state_agent, 18.0);
 if macros::is_excute(fighter) {
-    if ENABLE_MULTIHIT_CANCEL[entry_id] {
-        ENABLE_ATTACK_CANCEL[entry_id] = true;
-    }
+    ENABLE_MULTIHIT_CANCEL[entry_id] = true;
 }
 frame(fighter.lua_state_agent, 38.0);
 if macros::is_excute(fighter) {

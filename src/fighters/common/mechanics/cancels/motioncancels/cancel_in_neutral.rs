@@ -36,10 +36,12 @@ pub fn cancel_in_neutral(fighter : &mut L2CFighterCommon) {
         }
  
         
-        if CANCEL_IN_NEUTRAL [entry_id] {
+        if CANCEL_IN_NEUTRAL [entry_id] 
+        && ! AttackModule::is_attack_occur(fighter.module_accessor) 
+        {
 
             //AIRDODGES
-            if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0 {
+            if ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0) {
                 if (max_jumps == 2 && AIRDODGE_COUNT[entry_id] <2)
                 || (max_jumps == 3 && AIRDODGE_COUNT[entry_id] <3) 
                 || (max_jumps == 4 && AIRDODGE_COUNT[entry_id] <4) 
@@ -54,7 +56,8 @@ pub fn cancel_in_neutral(fighter : &mut L2CFighterCommon) {
                 }
             }
             //JUMPS
-            if (ControlModule::is_enable_flick_jump(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0 {
+            else if ((ControlModule::is_enable_flick_jump(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) 
+            || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0) {
                 if (max_jumps == 2 && jumps_used <2)
                 || (max_jumps == 3 && jumps_used <3) 
                 || (max_jumps == 4 && jumps_used <4) 
@@ -65,20 +68,29 @@ pub fn cancel_in_neutral(fighter : &mut L2CFighterCommon) {
                 
                     CancelModule::enable_cancel(fighter.module_accessor);
                     CANCEL_IN_NEUTRAL [entry_id] = false;
+                    DISABLE_MOVESET_TRANSITIONS[entry_id] = true;
                 }
             }
             //EVERYTHING ELSE  
-            if (((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD) != 0) && situation_kind == *SITUATION_KIND_GROUND && ! grab) 
-            || ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 && situation_kind == *SITUATION_KIND_AIR) 
+            else if ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0) 
+            || ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0) {
+                CancelModule::enable_cancel(fighter.module_accessor);
+                CANCEL_IN_NEUTRAL [entry_id] = false;
+                DISABLE_MOVESET_TRANSITIONS[entry_id] = true;
+            }
+            //|| (((cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD) != 0) /*&& situation_kind == *SITUATION_KIND_GROUND*/ && ! grab)
+            //|| ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 && situation_kind == *SITUATION_KIND_AIR) 
+            else if ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE) != 0)
+            || ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE_F) != 0)
+            || ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE_B) != 0)
             {
                 CancelModule::enable_cancel(fighter.module_accessor);
                 CANCEL_IN_NEUTRAL [entry_id] = false;
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
             }
-            else {
-                CANCEL_IN_NEUTRAL [entry_id] = false;
-            }
-        }      
+        } 
+        else {
+            CANCEL_IN_NEUTRAL [entry_id] = false;  
+        }     
 
 //EASIER WAVEDASH CHAINS// 
         if status_kind == *FIGHTER_STATUS_KIND_LANDING && frame >10.0 {
@@ -92,6 +104,8 @@ pub fn cancel_in_neutral(fighter : &mut L2CFighterCommon) {
 //___________________________________  
     }
 }
+
+
 
 
 pub fn install() {

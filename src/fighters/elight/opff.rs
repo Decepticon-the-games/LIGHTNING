@@ -1,15 +1,7 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
+use super::*;
+//use crate::fighters::elight::effect::effect_speciallw;
+use crate::fighters::element::status::special_lw::{SWAP, swap_aegis};
+
 
 
 #[fighter_frame( agent = FIGHTER_KIND_ELIGHT )]
@@ -19,45 +11,22 @@ pub fn elight_opff(fighter : &mut L2CFighterCommon) {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let status_kind = StatusModule::status_kind(module_accessor);
         ////let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
-        ////let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
+        let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         
-        //Fix Neutral B/Side B
-        if MotionModule::motion_kind(module_accessor) == smash::hash40("special_n2") 
-        || MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_n2"){
-            if MotionModule::frame(module_accessor) >44.0 {
-                ENABLE_ATTACK_CANCEL[entry_id] = true; 
-            }
-            else {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
+        //sWAP ON ATTACK CANCEL
+        if ENABLE_ATTACK_CANCEL[entry_id]
+        && (AttackModule::is_attack_occur(fighter.module_accessor) 
+        && SlowModule::frame(fighter.module_accessor, *FIGHTER_SLOW_KIND_HIT) == 0) {
+            if (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0) 
+            && SWAP[entry_id] == false {
+                SWAP[entry_id] = true;
+                //effect_speciallw(fighter);
+                //ENABLE_ATTACK_CANCEL[entry_id] = false;
             }
         }
 
-        if MotionModule::motion_kind(module_accessor) == smash::hash40("special_n")
-        || MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_n") {
-            if MotionModule::frame(module_accessor) >35.0 {
-                ENABLE_ATTACK_CANCEL[entry_id] = true; 
-            }
-            else {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
-            }
-        }
-        
-         
-        if MotionModule::motion_kind(module_accessor) == smash::hash40("special_s") 
-        || MotionModule::motion_kind(module_accessor) == smash::hash40("special_air_s") {
-            if MotionModule::frame(module_accessor) >14.0 {
-                ENABLE_ATTACK_CANCEL[entry_id] = true; 
-            }
-            else {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
-            }
-        }
-        else if status_kind == *FIGHTER_ELIGHT_STATUS_KIND_SPECIAL_N_END
-        || status_kind == *FIGHTER_ELIGHT_STATUS_KIND_SPECIAL_S_FORWARD {
-            ENABLE_ATTACK_CANCEL[entry_id] = false;
-        }
-        else {
-            ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        if SWAP[entry_id] {
+            swap_aegis(fighter);
         }
     }                                      
 }

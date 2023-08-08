@@ -9,18 +9,14 @@ unsafe fn game_attackhi3_nana(fighter: &mut L2CAgentBase) {
                 macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 0.6, 115, 10, 0, 65, 4.5, 2.0, 7.5, 0.0, Some(2.0), Some(7.5), Some(0.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HAMMER);
                 macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 0.6, 125, 10, 0, 60, 6.0, 2.0, 16.0, 0.0, Some(2.0), Some(16.0), Some(0.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HAMMER);
                 macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 0.6, 160, 10, 0, 20, 6.0, 2.0, 16.0, 0.0, Some(2.0), Some(16.0), Some(0.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HAMMER);
-                if ENABLE_MULTIHIT_CANCEL[entry_id] {
-                    ENABLE_ATTACK_CANCEL[entry_id] = true;
-                }
+                ENABLE_MULTIHIT_CANCEL[entry_id] = true;
             }
             else{
                 if macros::is_excute(fighter) {
                     macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 0.6, 115, 10, 0, 65, 4.5, -2.0, 7.5, 0.0, Some(-2.0), Some(7.5), Some(0.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HAMMER);
                     macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 0.6, 125, 10, 0, 60, 6.0, -2.0, 16.0, 0.0, Some(-2.0), Some(16.0), Some(0.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HAMMER);
                     macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 0.6, 160, 10, 0, 20, 6.0, -2.0, 16.0, 0.0, Some(-2.0), Some(16.0), Some(0.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HAMMER);
-                    if ENABLE_MULTIHIT_CANCEL[entry_id] {
-                        ENABLE_ATTACK_CANCEL[entry_id] = true;
-                    }
+                    ENABLE_MULTIHIT_CANCEL[entry_id] = true;
                 }
             }
         }

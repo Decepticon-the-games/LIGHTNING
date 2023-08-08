@@ -20,17 +20,18 @@ pub fn resets_falses(fighter : &mut L2CFighterCommon) {
         if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_REBIRTH || smash::app::sv_information::is_ready_go() == false {
             ATTACK_CANCEL_COUNT[entry_id] = 0;
             ENABLE_ATTACK_CANCEL[entry_id] = false;
-
+            ATTACK_CANCEL[entry_id] = false;  
+            MULTIHIT_COUNT[entry_id] = 0;
+            ENABLE_MULTIHIT_CANCEL[entry_id] = false;
         } 
-        if CancelModule::is_enable_cancel(fighter.module_accessor) 
-        || ! AttackModule::is_attack_occur(fighter.module_accessor) {
-        //The moment These are run, turn off attack cancel variables.
-            ENABLE_ATTACK_CANCEL[entry_id] = false;
-            ATTACK_CANCEL[entry_id] = false;
-        }   
-        if entry_id <1 {
-            println!("en_attack_cancel: {}", ENABLE_ATTACK_CANCEL[entry_id]);
-        }
+        if ENABLE_ATTACK_CANCEL[entry_id] {
+            ENABLE_MULTIHIT_CANCEL[entry_id] = false;
+            if is_after_hitlag(fighter) {
+                if CancelModule::is_enable_cancel(fighter.module_accessor) {
+                    ENABLE_ATTACK_CANCEL[entry_id] = false;           
+                }             
+            }
+        } 
     }
 }
 pub fn install() {

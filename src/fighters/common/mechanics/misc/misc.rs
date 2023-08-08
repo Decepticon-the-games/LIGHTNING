@@ -41,11 +41,12 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
         
 //SHORTHOP SPECIAL
-        /*if status_kind == *FIGHTER_STATUS_KIND_JUMP_SQUAT {
-            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+        if status_kind == *FIGHTER_STATUS_KIND_JUMP_SQUAT && ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
 
+            if MotionModule::is_end(fighter.module_accessor) {
+                CancelModule::enable_cancel(fighter.module_accessor);
             }
-        }*/
+        }
 
 
 
@@ -76,7 +77,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         //}
 
 //GRAB COMBOS
-        if status_kind == *FIGHTER_STATUS_KIND_THROW {
+        //if status_kind == *FIGHTER_STATUS_KIND_THROW {
             /*if AttackModule::is_attack_occur(fighter.module_accessor) {
             
                 if ! (fighter_kind == *FIGHTER_KIND_SHULK && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0) { //so shulk's monado arts don't break
@@ -84,19 +85,21 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
                 }
             }*/
             
-               if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH) {
+       //        if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH) {
                     //AttackModule::set_power_mul(fighter.module_accessor, 1.0);
-                    AttackModule::set_damage_reaction_mul(fighter.module_accessor, 0.4);
-                } 
+        //            AttackModule::set_damage_reaction_mul(fighter.module_accessor, 0.4);
+        //        } 
             
             
-        }
-        else {
-            AttackModule::set_reaction_mul(fighter.module_accessor, 1.0);
-        }
+        //}
+        //else {
+        //    AttackModule::set_reaction_mul(fighter.module_accessor, 1.0);
+        //}
 //
     }
 }
+
+
 
 pub fn install() {
     smashline::install_agent_frame_callbacks!(once_per_fighter_frame);

@@ -56,6 +56,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_STATUS_SPECIAL_HI_FLAG_IS_ENABLE_CONTROL);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_STATUS_SPECIAL_HI_FLAG_FALL);
+        ENABLE_ATTACK_CANCEL[entry_id];
         CANCEL_IN_NEUTRAL[entry_id] = true;
     }
     frame(fighter.lua_state_agent, 27.0);

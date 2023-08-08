@@ -1,14 +1,4 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
+use super::*;
 use crate::fighters::common::mechanics::cancels::attack_cancels::{ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL};
 pub static mut DAIR_REST_NOKILL : [bool; 8] = [false; 8];
 
@@ -31,7 +21,16 @@ pub static mut DAIR_REST_NOKILL : [bool; 8] = [false; 8];
 
 
             //Dair
-            if motion_kind == hash40("attack_air_lw") {
+
+            //In Lightning...
+            if LIGHTNING[entry_id] {
+                //Dair cancels after 3 successful hits into fair, upair, specials 
+                let next_input = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0;
+                multihit_counter(fighter, 0, 0, smash::hash40("attack_air_lw"), 3, next_input, 0, 0, smash::hash40("attack_air_lw"));
+            }
+
+        
+            /*if motion_kind == hash40("attack_air_lw") {
                 if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL) {
                     if MULTIHIT[entry_id] == false {
                         MULTIHIT_COUNT[entry_id] +=1;
@@ -52,9 +51,13 @@ pub static mut DAIR_REST_NOKILL : [bool; 8] = [false; 8];
                 
             }
             else {
-                //ENABLE_ATTACK_CANCEL[entry_id] = true; 
+                ////ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_CATEGORY_MASK_ALL) {
+            ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        }
                 MULTIHIT_COUNT[entry_id] = 0;
-            }
+            }*/
+
 
             //Dair > rest combo nerf
             if motion_kind == smash::hash40("attack_air_lw") 

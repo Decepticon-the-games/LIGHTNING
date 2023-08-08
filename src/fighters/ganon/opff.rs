@@ -1,15 +1,4 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
+use super::*;
 pub static mut UPTILT : [bool; 8] = [false; 8];
 
 #[fighter_frame( agent = FIGHTER_KIND_GANON )]
@@ -24,7 +13,6 @@ pub static mut UPTILT : [bool; 8] = [false; 8];
             ////let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
             let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
-
 //Cancel up tilt to the attack once a hitbox connects
             if UPTILT[entry_id] {
                 if AttackModule::is_attack_occur(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 0 {

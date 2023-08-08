@@ -1,5 +1,4 @@
 use super::*;
-use super::*;
 #[acmd_script( agent = "murabito", script = "game_specialairnuse2", category = ACMD_GAME, low_priority )]
 unsafe fn game_specialairnuse2(fighter: &mut L2CAgentBase) {
 let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
@@ -12,5 +11,5 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
 }    
 pub fn install() {
     smashline::install_acmd_scripts!(
-    game_specialnuse2);
+    game_specialairnuse2);
 }

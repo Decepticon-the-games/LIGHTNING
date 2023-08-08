@@ -17,13 +17,9 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         AttackModule::set_no_finish_camera(fighter.module_accessor, 0, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 1, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 2, true, false);
-        if ENABLE_MULTIHIT_CANCEL[entry_id] {
-    ENABLE_ATTACK_CANCEL[entry_id] = true;
-}
+        ENABLE_MULTIHIT_CANCEL[entry_id] = true;
     }
-    else {
-       ENABLE_MULTIHIT_CANCEL[entry_id] = false;  
-    }
+
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
@@ -37,13 +33,9 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         AttackModule::set_no_finish_camera(fighter.module_accessor, 0, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 1, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 2, true, false);
-        if ENABLE_MULTIHIT_CANCEL[entry_id] {
-    ENABLE_ATTACK_CANCEL[entry_id] = true;
-}
+        ENABLE_MULTIHIT_CANCEL[entry_id] = true;
     }
-    else {
-       ENABLE_MULTIHIT_CANCEL[entry_id] = false;  
-    }
+
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
@@ -57,13 +49,9 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         AttackModule::set_no_finish_camera(fighter.module_accessor, 0, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 1, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 2, true, false);
-        if ENABLE_MULTIHIT_CANCEL[entry_id] {
-    ENABLE_ATTACK_CANCEL[entry_id] = true;
-}
+        ENABLE_MULTIHIT_CANCEL[entry_id] = true;
     }
-    else {
-       ENABLE_MULTIHIT_CANCEL[entry_id] = false;  
-    }
+
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
@@ -77,13 +65,9 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         AttackModule::set_no_finish_camera(fighter.module_accessor, 0, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 1, true, false);
         AttackModule::set_no_finish_camera(fighter.module_accessor, 2, true, false);
-        if ENABLE_MULTIHIT_CANCEL[entry_id] {
-    ENABLE_ATTACK_CANCEL[entry_id] = true;
-}
+        ENABLE_MULTIHIT_CANCEL[entry_id] = true;
     }
-    else {
-       ENABLE_MULTIHIT_CANCEL[entry_id] = false;  
-    }
+
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);

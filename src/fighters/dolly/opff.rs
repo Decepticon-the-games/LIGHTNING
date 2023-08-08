@@ -1,17 +1,5 @@
 
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
-
+use super::*;
 
 
 
@@ -35,15 +23,12 @@ pub fn dolly_opff(fighter : &mut L2CFighterCommon) {
             
     
 
-        ENABLE_ATTACK_CANCEL[entry_id] = true;  
+        //ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_CATEGORY_MASK_ALL) {
+            ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        } 
 
 
-        //ENHANCES
-        //--------------------------------------------------------------------------------
-
-
-        //MOTION CANCELS
-        //--------------------------------------------------------------------------------
 
     }                                   
 }

@@ -1,16 +1,5 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon,L2CFighterBase},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
-use crate::fighters::common::mechanics::cancels::motioncancels::{CANCEL_IN_NEUTRAL, DISABLE_CANCEL_IN_NEUTRAL, SIDE_SPECIAL_COUNT, SIDE_SPECIAL_COUNTER};
+use super::*;
+use crate::fighters::common::mechanics::cancels::motioncancels::{CANCEL_IN_NEUTRAL, PROJECTILE_COUNT, PROJECTILE_COUNTER};
 pub static mut NO_PKFIRE : [bool; 8] = [false; 8];
 #[weapon_frame( agent = WEAPON_KIND_NESS_PK_FIRE )]
 

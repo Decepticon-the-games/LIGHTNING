@@ -1,20 +1,4 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::{ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL};
-use crate::fighters::common::mechanics::lightning_mechanics::lightning_mode::LIGHTNING;
-
-
-
-
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_MARIO )]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
@@ -27,37 +11,13 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         ////let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
         let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         
-
-        //Cancel Dair only right before last hit
             
-            static mut MULTIHIT : [bool; 8] = [false; 8];
-            static mut MULTIHIT_COUNT : [i32; 8] = [0; 8];
-
-            if motion_kind == hash40("attack_air_lw") 
-            && LIGHTNING[entry_id] {
-                if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL) {
-                    if MULTIHIT[entry_id] == false {
-                        MULTIHIT_COUNT[entry_id] +=1;
-                        MULTIHIT[entry_id] = true; 
-                    }         
-                }
-                else {
-                    MULTIHIT[entry_id] = false;
-                }  
-            
-                if MULTIHIT_COUNT[entry_id] >= 4 { //how many hits
-                    MULTIHIT_COUNT[entry_id] = 4;  //how many hits
-                    ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
-                }
-                else {
-                    ENABLE_MULTIHIT_CANCEL[entry_id] = false;
-                } 
-            }
-            else {
-                //ENABLE_ATTACK_CANCEL[entry_id] = true; 
-                MULTIHIT_COUNT[entry_id] = 0;
-            }
-        
+        //In Lightning...
+        if LIGHTNING[entry_id] {
+            //Cancel Dair only right before last hit
+            let next_input = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0;
+            multihit_cancel(fighter, 0, 0, smash::hash40("attack_air_lw"), next_input, 0, 0, smash::hash40("attack_air_lw")); 
+        }
     }
 }
 

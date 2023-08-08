@@ -1,16 +1,4 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::ENABLE_ATTACK_CANCEL;
-
+use super::*;
 
 
 
@@ -29,50 +17,6 @@ fn master_opff(fighter : &mut L2CFighterCommon) {
         //let cat2 = ControlModule::get_command_flag_cat(fighter.module_accessor, 1);
         //let jump_guard_dash_upspecial_pressed = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_WALK) != 0 || (situation_kind == *SITUATION_KIND_GROUND && (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD) != 0) || (situation_kind == *SITUATION_KIND_AIR && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) != 0 || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH) != 0 || (situation_kind == *SITUATION_KIND_AIR && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0);
         //let jump_button_pressed = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0;
-
-        //FIXES
-        //-------------------------------------------------------------------------------
-        if motion_kind == smash::hash40("attack_air_n") {
-            if frame >27.0 {
-                ENABLE_ATTACK_CANCEL[entry_id] = true; 
-            } 
-            else {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
-            }
-        } 
-        else if motion_kind == smash::hash40("attack_air_hi") {
-            if frame >16.0 {
-                ENABLE_ATTACK_CANCEL[entry_id] = true; 
-            } 
-            else {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
-            }
-        }
-        else if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
-            if frame >27.0 {
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
-            }
-            else {
-                ENABLE_ATTACK_CANCEL[entry_id] = false;
-            }
-            
-        } 
-
-        //add exceptions
-        else {
-            ENABLE_ATTACK_CANCEL[entry_id] = true; 
-        }
-        //ENHANCES
-        //--------------------------------------------------------------------------------
-
-
-        //MOTION CANCELS
-        //--------------------------------------------------------------------------------
-
-
-
-        //UP SPECIAL CANCELS
-        //--------------------------------------------------------------------------------
 
 
     }                                      

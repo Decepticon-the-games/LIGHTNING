@@ -81,8 +81,7 @@ pub fn lightning(fighter : &mut L2CFighterCommon) {
             //Vanish Mechanic enabled
                 //ACTIVATE_VANISH[entry_id] = true;  
                 
-            //Mulihit Cancels enabled
-            ENABLE_MULTIHIT_CANCEL[entry_id] = true;
+            //Mulihit Cancels enabled(in character opff)
     }
 }
 
@@ -160,8 +159,7 @@ pub unsafe fn lightning_disable(fighter : &mut L2CFighterCommon) {
     macros::BURN_COLOR_NORMAL(fighter);
     macros::COL_NORMAL(fighter);
     macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), true, true);   
-    ModelModule::disable_gold_eye(fighter.module_accessor);	
-    ENABLE_MULTIHIT_CANCEL[entry_id] = false;        
+    ModelModule::disable_gold_eye(fighter.module_accessor);	       
 }
 
 //RESETS

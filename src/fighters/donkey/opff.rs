@@ -1,20 +1,4 @@
-use {
-    smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon},
-        phx::Hash40,
-        hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::common::mechanics::cancels::attack_cancels::{ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL};
-use crate::fighters::common::mechanics::lightning_mechanics::lightning_mode::LIGHTNING;
-
-
-
-
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_DONKEY )]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
@@ -27,37 +11,18 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
         ////let situation_kind = smash::app::lua_bind::StatusModule::situation_kind(module_accessor);
         let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
         
-        
 
         //Cancel up special only after 3 hits
 
-        static mut MULTIHIT : [bool; 8] = [false; 8];
-        static mut MULTIHIT_COUNT : [i32; 8] = [0; 8];
 
-
-
-        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
-        && LIGHTNING[entry_id] {
-            if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL) {
-                if MULTIHIT[entry_id] == false {
-                    MULTIHIT_COUNT[entry_id] +=1;
-                    MULTIHIT[entry_id] = true; 
-                }         
-            }
-            else {
-                MULTIHIT[entry_id] = false;
-            }  
-        
-            if MULTIHIT_COUNT[entry_id] >= 3 { //how many hits
-                MULTIHIT_COUNT[entry_id] = 3;  //how many hits
-                ENABLE_MULTIHIT_CANCEL[entry_id] = true; 
-            }
-            else {
-                ENABLE_MULTIHIT_CANCEL[entry_id] = false;
-            } 
-        }
-        else {
-            MULTIHIT_COUNT[entry_id] = 0;
+        //In Lightning...
+        if LIGHTNING[entry_id] {
+            //Up B cancels after 3 successful hits, cancel into jabs, tilts, smashes, neutral/side b     
+            let next_input = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0 
+            || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0
+            || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0 
+            || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0;
+            multihit_counter(fighter, *FIGHTER_STATUS_KIND_SPECIAL_HI, 0, 0, 3, next_input, *FIGHTER_STATUS_KIND_SPECIAL_HI, 0, 0);
         }
     }
 }

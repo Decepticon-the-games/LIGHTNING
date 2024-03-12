@@ -5,7 +5,7 @@ unsafe fn game_specialsattacklanding(fighter: &mut L2CAgentBase) {
 
     if macros::is_excute(fighter) {
         macros::CORRECT(fighter, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }
 pub fn install() {

@@ -6,7 +6,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     if macros::IS_EXIST_ARTICLE(fighter, *FIGHTER_MASTER_GENERATE_ARTICLE_ARROW1) {
         if macros::is_excute(fighter) {
             ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_ARROW1, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-            CANCEL_IN_NEUTRAL[entry_id] = true;
+            whiff_cancel(fighter);
         }
     }
     if macros::is_excute(fighter) {

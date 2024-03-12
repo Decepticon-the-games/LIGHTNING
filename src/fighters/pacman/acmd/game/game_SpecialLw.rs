@@ -6,7 +6,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_PACMAN_GENERATE_ARTICLE_FIREHYDRANT, false, -1);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }    
 pub fn install() {

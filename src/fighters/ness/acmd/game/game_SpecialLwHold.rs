@@ -8,5 +8,5 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     }
     wait(fighter.lua_state_agent, 6.0);
     AttackModule::clear_all(fighter.module_accessor);
-    CANCEL_IN_NEUTRAL[entry_id] = true;
+    whiff_cancel(fighter);
 }

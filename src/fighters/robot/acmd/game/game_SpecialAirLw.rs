@@ -7,7 +7,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROBOT_STATUS_GYRO_FLAG_SHOOT);
         ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_ROBOT_GENERATE_ARTICLE_GYRO, false, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }    
 pub fn install() {

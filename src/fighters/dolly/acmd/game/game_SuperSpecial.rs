@@ -14,7 +14,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 20.0);
     if macros::is_excute(fighter) {
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_DOLLY_GENERATE_ARTICLE_BURST, false, -1);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 25.0);
     if macros::is_excute(fighter) {

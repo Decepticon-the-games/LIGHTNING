@@ -11,16 +11,15 @@ let inputs = ((cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH) != 0 )
 
     if macros::is_excute(fighter) {
         JostleModule::set_status(fighter.module_accessor, false);
-        
     }
     frame(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_FOX_GENERATE_ARTICLE_ILLUSION, false, -1);
-        macros::ATTACK(fighter, 1, 0, Hash40::new("body"), 0.0, 361, 0, 0, 0, 3.0, 0.0, 5.0, 0.0, None, None, None, 1.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_search"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
     }
     frame(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
         if inputs {
+            JostleModule::set_status(fighter.module_accessor, true);
             AttackModule::clear_all(fighter.module_accessor);
             macros::ATTACK(fighter, 1, 0, Hash40::new("body"), 0.0, 361, 0, 0, 0, 3.0, 0.0, 5.0, 10.0, None, None, None, 1.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_search"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
         }

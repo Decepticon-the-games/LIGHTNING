@@ -13,7 +13,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 37.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_STATUS_SPECIAL_S_FLAG_THROW_ROPE);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 60.0);
     macros::FT_MOTION_RATE(fighter, 1.0);

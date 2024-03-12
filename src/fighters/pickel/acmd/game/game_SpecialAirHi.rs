@@ -20,9 +20,14 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 31.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
+        whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 60.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PICKEL_STATUS_SPECIAL_HI_FLAG_ENABLE_CANCEL);
     }
+}
+pub fn install() {
+    smashline::install_acmd_scripts!(
+    game_specialairhi);
 }

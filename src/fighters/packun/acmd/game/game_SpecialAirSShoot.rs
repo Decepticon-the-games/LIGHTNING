@@ -18,7 +18,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_PACKUN_STATUS_SPECIAL_S_FLAG_FAILURE) {
         if macros::is_excute(fighter) {
             ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_PACKUN_GENERATE_ARTICLE_POISONBREATH, false, -1);
-            CANCEL_IN_NEUTRAL[entry_id] = true;
+            whiff_cancel(fighter);
         }
     }
     frame(fighter.lua_state_agent, 21.0);

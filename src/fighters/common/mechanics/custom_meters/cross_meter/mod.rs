@@ -3,7 +3,7 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::{L2CFighterCommon, L2CFighterBase};
 use smash::lib::lua_const::*;
 use smashline::*;
-use crate::lightning_01_ultrainstinct::CROSS_CANCEL_BUTTON;
+use crate::lightning_01_ultrainstinct::FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CROSS_CANCEL;
 
 
 pub static mut SPECIAL_MECHANICS_METER_ENABLE_COUNT : [bool; 8] = [true; 8]; //one frame
@@ -57,7 +57,7 @@ fn cross_meter(fighter : &mut L2CFighterCommon) {
 
             //WHEN buttons are pressed, subtract meter
 
-            if CROSS_CANCEL_BUTTON[entry_id] {
+            if FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CROSS_CANCEL[entry_id] {
                 SPECIAL_MECHANICS_METER_COUNT[entry_id] -= 10.0; //TAKE 10 POINTS AWAY
             }
         }

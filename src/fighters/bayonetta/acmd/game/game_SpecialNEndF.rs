@@ -5,7 +5,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
 
     frame(fighter.lua_state_agent, 1.0);
     macros::FT_MOTION_RATE(fighter, 0.48);
-    CANCEL_IN_NEUTRAL[entry_id] = true;
+    whiff_cancel(fighter);
 }    
 pub fn install() {
     smashline::install_acmd_scripts!(

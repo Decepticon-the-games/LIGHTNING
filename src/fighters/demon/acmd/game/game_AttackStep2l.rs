@@ -20,7 +20,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         macros::HIT_NODE(fighter, Hash40::new("shoulderl"), *HIT_STATUS_XLU);
         macros::HIT_NODE(fighter, Hash40::new("arml"), *HIT_STATUS_XLU);
         AttackModule::set_damage_shake_scale(fighter.module_accessor, 1.5);
-        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        enable_attack_cancel(fighter); 
 macros::ATTACK(fighter, 0, 0, Hash40::new("handl"), 22.0, 60, 65, 0, 80, 3.0, 0.0, 0.0, 0.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_PUNCH02, *ATTACK_REGION_PUNCH);
         macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 22.0, 60, 65, 0, 80, 5.25, 0.0, 10.5, 4.75, Some(0.0), Some(16.0), Some(7.0), 0.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_PUNCH02, *ATTACK_REGION_PUNCH);
         macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 22.0, 60, 65, 0, 80, 5.25, 0.0, 5.0, 2.5, Some(0.0), Some(10.5), Some(4.75), 0.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_PUNCH02, *ATTACK_REGION_PUNCH);
@@ -75,7 +75,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("handl"), 22.0, 60, 65, 0, 80, 3.0, 0.
     macros::FT_MOTION_RATE(fighter, 0.9);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
     }
 }  
 pub fn install() {

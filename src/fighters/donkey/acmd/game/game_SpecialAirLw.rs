@@ -17,7 +17,7 @@ unsafe fn game_specialairlw(fighter: &mut L2CAgentBase) {
     wait(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }    
 pub fn install() {

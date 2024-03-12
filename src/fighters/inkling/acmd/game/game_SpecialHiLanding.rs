@@ -6,7 +6,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     if macros::is_excute(fighter) {
         VisibilityModule::set_whole(fighter.module_accessor, true);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SPLASH, false, -1);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 20.0);
     if macros::is_excute(fighter) {

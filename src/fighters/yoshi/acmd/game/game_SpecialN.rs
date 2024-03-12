@@ -38,7 +38,7 @@ if macros::is_excute(fighter) {
     grab!(fighter, *MA_MSC_CMD_GRAB_CLEAR_ALL);
     AttackModule::clear_all(fighter.module_accessor);
     GrabModule::set_rebound(fighter.module_accessor, false);
-    CANCEL_IN_NEUTRAL[entry_id] = true;
+    whiff_cancel(fighter);
 }
 }    
 pub fn install() {

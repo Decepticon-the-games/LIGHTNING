@@ -63,7 +63,7 @@ if macros::is_excute(fighter) {
         let target_no = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
     AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
 }
 frame(fighter.lua_state_agent, 30.0);
 if macros::is_excute(fighter) {

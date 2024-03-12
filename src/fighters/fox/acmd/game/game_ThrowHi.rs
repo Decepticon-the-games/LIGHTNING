@@ -37,7 +37,7 @@ unsafe fn game_throwhi(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 24.0);
     if macros::is_excute(fighter) {
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_FOX_GENERATE_ARTICLE_BLASTER_BULLET, false, -1);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 27.0);
     if macros::IS_EXIST_ARTICLE(fighter, *FIGHTER_FOX_GENERATE_ARTICLE_BLASTER) {

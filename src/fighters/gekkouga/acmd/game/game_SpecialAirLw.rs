@@ -14,7 +14,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         macros::HIT_NODE(fighter, Hash40::new("head"), *HIT_STATUS_NORMAL);
         macros::HIT_NODE(fighter, Hash40::new("kneel"), *HIT_STATUS_NORMAL);
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_LW_FLAG_SHIELD);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }    
 pub fn install() {

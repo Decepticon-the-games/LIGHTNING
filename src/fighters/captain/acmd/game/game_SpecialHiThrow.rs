@@ -16,12 +16,13 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         let target_group = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
         let target_no = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+                
     }
     macros::FT_MOTION_RATE(fighter, 0.75);
     frame(fighter.lua_state_agent, 32.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_STATUS_SPECIAL_HI_THROW_FLAG_FALL);
+        //whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 45.0);
     macros::FT_MOTION_RATE(fighter, 0.7);

@@ -23,9 +23,9 @@ pub fn dolly_opff(fighter : &mut L2CFighterCommon) {
             
     
 
-        //ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        //enable_attack_cancel(fighter); 
         if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_CATEGORY_MASK_ALL) {
-            ENABLE_ATTACK_CANCEL[entry_id] = true; 
+            enable_attack_cancel(fighter); 
         } 
 
 

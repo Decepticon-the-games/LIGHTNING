@@ -31,7 +31,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     if macros::is_excute(fighter) {
         damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
         WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_DEMON_STATUS_ATTACK_S4_WORK_INT_CRITICAL_HIT_NO);
-        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        enable_attack_cancel(fighter); 
 macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 23.0, 361, 63, 0, 50, 3.0, 0.0, 8.5, 4.0, Some(0.0), Some(13.5), Some(4.0), 0.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_PUNCH02, *ATTACK_REGION_PUNCH);
         macros::ATTACK(fighter, 1, 0, Hash40::new("handl"), 26.0, 361, 73, 0, 50, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_PUNCH02, *ATTACK_REGION_PUNCH);
         AttackModule::set_attack_camera_quake_forced(fighter.module_accessor, 0, *CAMERA_QUAKE_KIND_L, false);
@@ -43,7 +43,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 23.0, 361, 63, 0, 50, 3.0, 0.0
     macros::FT_MOTION_RATE(fighter, 1.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
     }
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_STATUS_ATTACK_S4_FLAG_HIT) {
         if macros::is_excute(fighter) {

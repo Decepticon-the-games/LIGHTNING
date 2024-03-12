@@ -18,7 +18,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     if macros::is_excute(fighter) {
         ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_NESS_GENERATE_ARTICLE_YOYO, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_NESS_GENERATE_ARTICLE_YOYO_HEAD, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }
 pub fn install() {

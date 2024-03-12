@@ -4,7 +4,7 @@ unsafe fn game_specialairlwend(fighter: &mut L2CAgentBase) {
 let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 
     if macros::is_excute(fighter) {
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_METAKNIGHT_GENERATE_ARTICLE_MANTLE, Hash40::new("special_lw_end"), false, -1.0);
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_METAKNIGHT_SPECIAL_LW_END);
     }

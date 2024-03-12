@@ -13,7 +13,12 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 5.0);
     if macros::is_excute(fighter) {
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_PICKEL_GENERATE_ARTICLE_FIRE, false, -1);
+        whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 30.0);
     macros::FT_MOTION_RATE(fighter, 2.0);
+}
+pub fn install() {
+    smashline::install_acmd_scripts!(
+    game_attacklw3);
 }

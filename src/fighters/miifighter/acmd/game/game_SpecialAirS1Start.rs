@@ -29,7 +29,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_FLAG_100KICK_GRAVITY_ONOFF);
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_FLAG_100KICK_HIT_CHECK_ONOFF);
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 35.0);
     if macros::is_excute(fighter) {

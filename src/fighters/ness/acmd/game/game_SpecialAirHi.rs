@@ -29,7 +29,7 @@ unsafe fn game_specialairhi(fighter: &mut L2CAgentBase) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_NESS_STATUS_SPECIAL_HI_FLAG_LANDING_ENABLE);
         JostleModule::set_status(fighter.module_accessor, true);
         GroundModule::select_cliff_hangdata(fighter.module_accessor, *FIGHTER_NESS_CLIFF_HANG_DATA_DEFAULT as u32);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 } 
 pub fn install() {

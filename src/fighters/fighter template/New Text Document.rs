@@ -35,15 +35,15 @@ if AttackModule::is_attack_occur(fighter.module_accessor) {
 }
 
 
-    //ENABLE_ATTACK_CANCEL[entry_id] = true; 
+    //enable_attack_cancel(fighter); 
         if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_CATEGORY_MASK_ALL) {
-            ENABLE_ATTACK_CANCEL[entry_id] = true; 
+            enable_attack_cancel(fighter); 
         }
 
 
     ENABLE_MULTIHIT_CANCEL[entry_id] = true;
 
-    CANCEL_IN_NEUTRAL[entry_id] = true;
+    whiff_cancel(fighter);
 
 
     COUNTER_CANCEL[entry_id] = true; 
@@ -61,7 +61,7 @@ pub fn install() {
 
 
         //In Lightning...
-        if LIGHTNING[entry_id] {
+        if IS_FLAG_FIGHTER_INSTANCE_WORK_ID_FLAG_LIGHTNING[entry_id] {
             //Up B cancels after 3 successful hits, cancel into jabs, tilts, smashes, neutral/side b     
             let next_input = //cat1 flag input
             multihit_cancel(fighter, /*i32*/, /*hash40*/, /*hitcount*/, next_input, /*reset_i32*/, /*reset_hash40*/);

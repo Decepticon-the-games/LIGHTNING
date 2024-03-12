@@ -20,7 +20,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_DEMON_STATUS_SPECIAL_LW_FLAG_HIT);
         macros::CAM_ZOOM_OUT(fighter);
     }

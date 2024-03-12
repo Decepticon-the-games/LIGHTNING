@@ -21,7 +21,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 11.0);
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_INK_SUCCESS) {
         if macros::is_excute(fighter) {
-            ENABLE_ATTACK_CANCEL[entry_id] = true; 
+            enable_attack_cancel(fighter); 
 macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 12.5, 32, 82, 0, 40, 3.8, 0.0, 3.5, 12.0, Some(0.0), Some(3.5), Some(18.0), 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_ink_hit"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_WATER, *ATTACK_REGION_WATER);
             AttackModule::set_ink_value(fighter.module_accessor, 0, 150.0);
         }
@@ -74,7 +74,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 4.0, 30, 75, 0, 35, 4.5, 0.0, 
 wait(fighter.lua_state_agent, 3.0);
 if macros::is_excute(fighter) {
 AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
 }
 macros::FT_MOTION_RATE(fighter, 0.806);
 }   

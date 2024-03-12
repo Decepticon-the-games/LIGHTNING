@@ -27,7 +27,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         macros::HIT_NODE(fighter, Hash40::new("bust"), *HIT_STATUS_XLU);
         macros::HIT_NODE(fighter, Hash40::new("shoulderr"), *HIT_STATUS_XLU);
         macros::HIT_NODE(fighter, Hash40::new("armr"), *HIT_STATUS_XLU);
-        ENABLE_ATTACK_CANCEL[entry_id] = true;
+        enable_attack_cancel(fighter);
 macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 14.0, 90, 80, 0, 74, 3.5, 0.0, 46.5, -1.1, Some(0.0), Some(48.0), Some(-1.4), 1.6, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 12.5, 91, 75, 0, 69, 3.5, 0.0, 40.0, 0.0, Some(0.0), Some(43.7), Some(-0.7), 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         macros::ATTACK(fighter, 3, 0, Hash40::new("top"), 12.5, 91, 75, 0, 69, 3.5, 0.0, 29.0, 0.3, Some(0.0), Some(38.0), Some(0.1), 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -49,7 +49,7 @@ macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 14.0, 90, 80, 0, 74, 3.5, 0.0,
     frame(fighter.lua_state_agent, 33.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
     }
 }    
 pub fn install() {

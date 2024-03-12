@@ -11,7 +11,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     if macros::is_excute(fighter) {
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_FALCO_GENERATE_ARTICLE_BLASTER_BULLET, false, -1);
         FASTFALL_LASER[entry_id] = true;
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
     if macros::IS_EXIST_ARTICLE(fighter, *FIGHTER_FALCO_GENERATE_ARTICLE_BLASTER) {
         if macros::is_excute(fighter) {

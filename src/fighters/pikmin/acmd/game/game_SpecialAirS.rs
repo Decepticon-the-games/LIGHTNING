@@ -8,7 +8,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         frame(fighter.lua_state_agent, 9.0);
         if macros::is_excute(fighter) {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PIKMIN_STATUS_SPECIAL_S_FLAG_THROW);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
         }
         else{
         frame(fighter.lua_state_agent, 378992935.0);

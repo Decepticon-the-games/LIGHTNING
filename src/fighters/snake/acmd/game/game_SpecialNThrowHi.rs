@@ -12,7 +12,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     if(false){*/
         if macros::is_excute(fighter) {
             ArticleModule::shoot(fighter.module_accessor, *FIGHTER_SNAKE_GENERATE_ARTICLE_GRENADE, smash::app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_LAST), false);
-            CANCEL_IN_NEUTRAL[entry_id] = true;
+            whiff_cancel(fighter);
         }
     //}  
 }  

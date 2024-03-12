@@ -8,7 +8,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 11.0);
     macros::FT_MOTION_RATE(fighter, 1.0);
     if macros::is_excute(fighter) {
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         //battle_object();
         //methodlib::L2CValue::L2CValue(void*)();
     }

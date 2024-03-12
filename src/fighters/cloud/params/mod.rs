@@ -24,7 +24,7 @@ pub unsafe fn cloud_float_param_accessor_hook(module_accessor: u64, param_type: 
     let fighter_kind = utility::get_kind(boma);
 
     if fighter_kind == FIGHTER_KIND_CLOUD {
-        if param_type == hash40("limit_gauge_add") {
+        if param_type == hash40("param_special_lw") && param_hash == hash40("limit_gauge_add") {
             
             return 0.6; //faster limit charge
         }          

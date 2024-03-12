@@ -23,7 +23,7 @@ pub static mut DAIR_REST_NOKILL : [bool; 8] = [false; 8];
             //Dair
 
             //In Lightning...
-            if LIGHTNING[entry_id] {
+            if IS_FLAG_FIGHTER_INSTANCE_WORK_ID_FLAG_LIGHTNING[entry_id] {
                 //Dair cancels after 3 successful hits into fair, upair, specials 
                 let next_input = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0;
                 multihit_counter(fighter, 0, 0, smash::hash40("attack_air_lw"), 3, next_input, 0, 0, smash::hash40("attack_air_lw"));
@@ -51,9 +51,9 @@ pub static mut DAIR_REST_NOKILL : [bool; 8] = [false; 8];
                 
             }
             else {
-                ////ENABLE_ATTACK_CANCEL[entry_id] = true; 
+                ////enable_attack_cancel(fighter); 
         if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_CATEGORY_MASK_ALL) {
-            ENABLE_ATTACK_CANCEL[entry_id] = true; 
+            enable_attack_cancel(fighter); 
         }
                 MULTIHIT_COUNT[entry_id] = 0;
             }*/

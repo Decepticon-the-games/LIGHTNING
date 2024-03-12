@@ -10,7 +10,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 13.0);
     if macros::is_excute(fighter) {
         ArticleModule::shoot(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_GENERATE_ARTICLE_LIGHTSHURIKEN, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }    
 pub fn install() {

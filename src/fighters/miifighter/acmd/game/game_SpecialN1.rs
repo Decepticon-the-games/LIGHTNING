@@ -9,7 +9,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 28.0);
     if macros::is_excute(fighter) {
         ArticleModule::shoot_exist(fighter.module_accessor, *FIGHTER_MIIFIGHTER_GENERATE_ARTICLE_IRONBALL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 40.0);
     macros::FT_MOTION_RATE(fighter, 0.7);

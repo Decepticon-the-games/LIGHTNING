@@ -7,7 +7,7 @@ unsafe fn game_specialsjumplanding(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_KAMUI_GENERATE_ARTICLE_SPEARHAND, false, -1);
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_KAMUI_GENERATE_ARTICLE_SPEARHAND, Hash40::new("special_s_jump_landing"), false, -1.0);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
 
     }
     frame(fighter.lua_state_agent, 5.0);

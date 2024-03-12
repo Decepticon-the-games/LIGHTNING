@@ -16,7 +16,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
 
 
         //In Lightning...
-        if LIGHTNING[entry_id] {
+        if IS_FLAG_FIGHTER_INSTANCE_WORK_ID_FLAG_LIGHTNING[entry_id] {
             //Up B cancels after 3 successful hits, cancel into jabs, tilts, smashes, neutral/side b     
             let next_input = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0 
             || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0

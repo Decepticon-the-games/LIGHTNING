@@ -11,12 +11,12 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         AttackModule::set_add_reaction_frame(fighter.module_accessor, 0, 4.0, false);
         AttackModule::set_add_reaction_frame(fighter.module_accessor, 1, 4.0, false);
         AttackModule::set_add_reaction_frame(fighter.module_accessor, 2, 4.0, false);
-        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        enable_attack_cancel(fighter);  
     }
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 14.0);
     if macros::is_excute(fighter) {

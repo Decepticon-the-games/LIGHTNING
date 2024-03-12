@@ -27,7 +27,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
 }
 //methodlib::L2CValue::as_pointer()const(0, 1);
 //set_whip_reflect_attack_off_id();
-ENABLE_ATTACK_CANCEL[entry_id] = true; 
+enable_attack_cancel(fighter); 
 macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 12.0, 90, 75, 0, 60, 2.5, 0.0, 53.0, 2.5, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_whip"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_SIMON_WHIP, *ATTACK_REGION_WHIP);
 macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 10.0, 90, 75, 0, 60, 2.5, 0.0, 17.0, 2.5, Some(0.0), Some(53.0), Some(2.5), 0.8, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_whip"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_SIMON_WHIP, *ATTACK_REGION_WHIP);
 macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 2.0, 90, 75, 0, 60, 5.5, 0.0, 19.0, 2.5, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
@@ -35,7 +35,7 @@ search!(fighter, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
 frame(fighter.lua_state_agent, 21.0);
 if macros::is_excute(fighter) {
     AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
 }
 frame(fighter.lua_state_agent, 32.0);
 if macros::is_excute(fighter) {

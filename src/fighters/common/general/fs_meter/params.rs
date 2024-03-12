@@ -16,6 +16,6 @@ pub unsafe fn fs_meter_float_param_accessor_hook(module_accessor: u64, param_typ
 }
 pub fn install() {
     skyline::install_hooks!(
-        fs_meter_float_param_accessor_hook
+        //fs_meter_float_param_accessor_hook
     );
 }

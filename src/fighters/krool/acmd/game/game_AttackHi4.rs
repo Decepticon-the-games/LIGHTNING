@@ -11,7 +11,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     if macros::is_excute(fighter) {
         macros::HIT_NODE(fighter, Hash40::new("head"), *HIT_STATUS_XLU);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_REQUEST_WAIST_SHIELD_ON);
-        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        enable_attack_cancel(fighter); 
 macros::ATTACK(fighter, 1, 1, Hash40::new("bust"), 17.0, 83, 90, 0, 31, 8.0, 7.5, 1.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
     }
     frame(fighter.lua_state_agent, 10.0);
@@ -49,7 +49,7 @@ macros::ATTACK(fighter, 1, 1, Hash40::new("bust"), 17.0, 83, 90, 0, 31, 8.0, 7.5
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
     }
 }    
 pub fn install() {

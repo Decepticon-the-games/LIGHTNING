@@ -60,7 +60,7 @@ if macros::is_excute(fighter) {
 wait(fighter.lua_state_agent, 3.0);
 if macros::is_excute(fighter) {
     AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
 }
 macros::FT_MOTION_RATE(fighter, 1.0);
 frame(fighter.lua_state_agent, 29.0);

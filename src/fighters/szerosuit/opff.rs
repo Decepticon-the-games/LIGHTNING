@@ -17,7 +17,7 @@ use super::*;
 
 
             //In Lightning...
-            if LIGHTNING[entry_id] {
+            if IS_FLAG_FIGHTER_INSTANCE_WORK_ID_FLAG_LIGHTNING[entry_id] {
                 //Cancel up special into down special before the last hit if sucesfully hit  
                 let next_input = (cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0)
                 multihit_cancel(fighter, *FIGHTER_STATUS_KIND_SPECIAL_HI, 0, 0, next_input, *FIGHTER_STATUS_KIND_SPECIAL_HI, 0, 0);

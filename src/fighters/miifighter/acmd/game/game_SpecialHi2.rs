@@ -79,7 +79,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
         macros::HIT_NODE(fighter, Hash40::new("legr"), *HIT_STATUS_NORMAL);
         macros::HIT_NODE(fighter, Hash40::new("legl"), *HIT_STATUS_NORMAL);
         macros::HIT_NODE(fighter, Hash40::new("kneer"), *HIT_STATUS_NORMAL);

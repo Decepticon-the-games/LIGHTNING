@@ -16,7 +16,7 @@ use super::*;
 //Enable cancel  
 
 
-            ENABLE_ATTACK_CANCEL[entry_id] = true;
+            enable_attack_cancel(fighter);
 
         }
     }

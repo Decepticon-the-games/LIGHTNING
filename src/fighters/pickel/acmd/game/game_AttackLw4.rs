@@ -19,5 +19,10 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     if macros::is_excute(fighter) {
         WorkModule::set_float(fighter.module_accessor, -1.0, *FIGHTER_PICKEL_STATUS_ATTACK_FLOAT_ATTACK_LW4_MELT_LR);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_PICKEL_GENERATE_ARTICLE_MELT, false, -1);
+        whiff_cancel(fighter);
     }
+}
+pub fn install() {
+    smashline::install_acmd_scripts!(
+    game_attacklw4);
 }

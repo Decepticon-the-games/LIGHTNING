@@ -30,7 +30,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 22.0);
     if macros::is_excute(fighter) {
         grab!(fighter, *MA_MSC_CMD_GRAB_CLEAR_ALL);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_SUPLEX_FLAG_REQUEST_GRAVITY);
         GrabModule::set_rebound(fighter.module_accessor, false);
     }

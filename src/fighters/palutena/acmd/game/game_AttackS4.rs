@@ -17,14 +17,14 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     }
     frame(fighter.lua_state_agent, 18.0);
     if macros::is_excute(fighter) {
-        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        enable_attack_cancel(fighter); 
 macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 16.0, 361, 100, 0, 40, 5.1, 0.0, 11.0, 6.0, Some(0.0), Some(9.9), Some(11.9), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
         macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 13.0, 361, 102, 0, 40, 5.1, 0.0, 11.0, 6.0, Some(0.0), Some(8.5), Some(18.5), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
     }
     frame(fighter.lua_state_agent, 21.0);
     if macros::is_excute(fighter) {
         AttackModule::clear(fighter.module_accessor, 1, false);
-        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        enable_attack_cancel(fighter); 
         macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 0.0, 361, 100, 60, 0, 12.0, 0.0, 10.0, 8.0, Some(0.0), Some(10.0), Some(25.0), 0.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, true, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
     }
     frame(fighter.lua_state_agent, 26.0);
@@ -34,7 +34,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 16.0, 361, 100, 0, 40, 5.1, 0.
     frame(fighter.lua_state_agent, 32.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 80.0);
     if macros::is_excute(fighter) {

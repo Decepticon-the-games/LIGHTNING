@@ -1,5 +1,4 @@
 use super::*;
-use super::*;
 #[acmd_script( agent = "murabito_slingshot", script = "game_attackairf", category = ACMD_GAME, low_priority )]
 unsafe fn game_attackairf(fighter: &mut L2CAgentBase) {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
@@ -10,7 +9,9 @@ unsafe fn game_attackairf(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
         ArticleModule::shoot(fighter.module_accessor, *WEAPON_MURABITO_SLINGSHOT_GENERATE_ARTICLE_BULLET, ArticleOperationTarget(*ARTICLE_OPE_TARGET_LAST), false);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        if entry_id < 8 {
+            whiff_cancel(fighter); 
+        }
     }
 }    
 pub fn install() {

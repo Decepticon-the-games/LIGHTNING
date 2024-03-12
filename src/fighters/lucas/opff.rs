@@ -39,7 +39,7 @@ use crate::fighters::common::mechanics::cancels::motioncancels::{CANCEL_IN_NEUTR
             if PROJECTILE_COUNT[entry_id] >= 2 {  
                 if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {// So that  CANCEL_IN_NEUTRAL remains disabled until the status is finished                
                     PROJECTILE_COUNT[entry_id] = 2;
-                    DISABLE_CANCEL_IN_NEUTRAL[entry_id] = true; 
+                    DISABLE_whiff_cancel(fighter); 
                 } 
                 //Reset
                 else {

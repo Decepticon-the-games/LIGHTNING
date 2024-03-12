@@ -14,7 +14,7 @@ use super::*;
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
             //In Lightning...
-            if LIGHTNING[entry_id] {
+            if IS_FLAG_FIGHTER_INSTANCE_WORK_ID_FLAG_LIGHTNING[entry_id] {
                 //Up B cancel is free if attack occurs  
                 let next_input = ! 
                 multihit_cancel(fighter, *FIGHTER_STATUS_KIND_SPECIAL_HI, 0, 0, next_input, *FIGHTER_STATUS_KIND_SPECIAL_HI, 0, 0);

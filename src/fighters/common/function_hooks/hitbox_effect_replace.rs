@@ -43,6 +43,10 @@ unsafe fn attack_replace(lua_state: u64) {
     original!()(lua_state);
 }
 
+#[skyline::hook(offset = 0x46ae64)]
+unsafe fn hit_module_handle_attack_event(pos_x: f32, pos_y: f32, hitbox_id: i32, attacker_id: u32, defender_id: u32)  {
+	
+}
 pub fn install() {
     skyline::install_hooks!(
         attack_replace

@@ -15,7 +15,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         if macros::is_excute(fighter) {
             ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_BRAVE_GENERATE_ARTICLE_FIREBALL, false, -1);
             KineticModule::add_speed(fighter.module_accessor, &Vector3f{x: -0.3, y: 0.0, z: 0.0});
-            CANCEL_IN_NEUTRAL[entry_id] = true;
+            whiff_cancel(fighter);
         }
     }
     frame(fighter.lua_state_agent, 38.0);

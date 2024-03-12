@@ -8,7 +8,7 @@ unsafe fn game_specialairnfire(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 6.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_KAMUI_STATUS_SPECIAL_N_FLAG_SHOOT);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        //whiff_cancel(fighter);
     }
     macros::FT_MOTION_RATE(fighter, 1.0);
 }    

@@ -34,7 +34,7 @@ pub fn wavestep(fighter : &mut L2CFighterCommon) {
         
         if WAVESTEP[entry_id] {
             //less grounded friction, to transfer slide
-            CancelModule::enable_cancel(fighter.module_accessor);
+            //CancelModule::enable_cancel(fighter.module_accessor);
             WAVESTEP[entry_id] = false;
         }        
     }

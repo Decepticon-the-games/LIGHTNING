@@ -18,7 +18,7 @@ unsafe fn game_specialairlw(fighter: &mut L2CAgentBase) {
     macros::FT_MOTION_RATE(fighter, 1.1);
     if macros::is_excute(fighter) {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KAMUI_STATUS_SPECIAL_LW_FLAG_SHIELD);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }
 pub fn install() {

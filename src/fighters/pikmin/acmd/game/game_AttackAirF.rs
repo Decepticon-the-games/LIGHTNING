@@ -13,7 +13,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("head1"), 11.9, 361, 72, 0, 32, 3.0, 1
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }      
@@ -30,7 +30,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("head1"), 8.5, 361, 90, 0, 32, 3.0, 1.
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
@@ -47,7 +47,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("head1"), 13.6, 361, 72, 0, 32, 3.0, 1
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
@@ -64,7 +64,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("head1"), 6.8, 361, 90, 0, 32, 3.0, 1.
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
@@ -81,7 +81,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("head1"), 8.5, 361, 90, 0, 32, 4.5, 1.
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }

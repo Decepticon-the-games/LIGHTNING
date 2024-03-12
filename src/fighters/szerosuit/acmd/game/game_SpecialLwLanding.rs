@@ -5,7 +5,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
 
     if macros::is_excute(fighter) {
         macros::REVERSE_LR(fighter);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SZEROSUIT_STATUS_SPECIAL_LW_FLAG_TREAD_ENABLE);
     }
 }

@@ -6,7 +6,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 1.0);
     if macros::is_excute(fighter) {
         ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_PACKUN_GENERATE_ARTICLE_SPIKEBALL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
     macros::FT_MOTION_RATE(fighter, 1.0);
 }    

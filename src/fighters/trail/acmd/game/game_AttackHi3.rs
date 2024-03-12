@@ -52,7 +52,7 @@ if macros::is_excute(fighter) {
 }
 wait(fighter.lua_state_agent, 3.0);
 if macros::is_excute(fighter) {
-    ENABLE_ATTACK_CANCEL[entry_id] = true; 
+    enable_attack_cancel(fighter); 
 macros::ATTACK(fighter, 0, 0, Hash40::new("haver"), 4.6, 86, 132, 0, 52, 3.8, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_SLASH, *ATTACK_REGION_SWORD);
     macros::ATTACK(fighter, 1, 0, Hash40::new("haver"), 4.6, 86, 132, 0, 52, 3.8, 0.0, 4.2, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_SLASH, *ATTACK_REGION_SWORD);
     macros::ATTACK(fighter, 2, 0, Hash40::new("haver"), 4.6, 86, 132, 0, 52, 3.8, 0.0, 9.2, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_SLASH, *ATTACK_REGION_SWORD);
@@ -63,7 +63,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("haver"), 4.6, 86, 132, 0, 52, 3.8, 0.
 wait(fighter.lua_state_agent, 4.0);
 if macros::is_excute(fighter) {
     AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
 }
 }    
 pub fn install() {

@@ -6,7 +6,7 @@ unsafe fn game_speciallw(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 17.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LINK_STATUS_WORK_ID_FLAG_BOMB_GENERATE_LINKBOMB);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }
 pub fn install() {

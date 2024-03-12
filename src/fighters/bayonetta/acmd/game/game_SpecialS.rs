@@ -9,7 +9,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     }
     frame(fighter.lua_state_agent, 15.0);
     if macros::is_excute(fighter) {
-        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        enable_attack_cancel(fighter); 
         
 macros::ATTACK(fighter, 0, 0, Hash40::new("footr"), 8.0, 45, 8, 0, 100, 4.0, 0.0, 0.0, 0.0, Some(-8.0), Some(0.0), Some(0.0), 0.9, 1.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
@@ -35,7 +35,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("footr"), 8.0, 45, 8, 0, 100, 4.0, 0.0
     frame(fighter.lua_state_agent, 40.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-    CANCEL_IN_NEUTRAL[entry_id] = true;
+    whiff_cancel(fighter);
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_S_FLAG_WALL_CHECK);
     }
     frame(fighter.lua_state_agent, 40.0);

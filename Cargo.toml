@@ -1,5 +1,5 @@
 [package]
-name = "lightning_test"
+name = "lightning_mode_test_3_11_24"
 version = "0.1.0"
 authors = ["DECEPTICON"]
 edition = "2018"
@@ -17,6 +17,9 @@ smash_script = { git = "https://github.com/blu-dev/smash-script.git", branch = "
 smashline = { git = "https://github.com/blu-dev/smashline.git", branch = "development" }
 smash_singletons = { git = "https://github.com/WuBoytH/smash_singletons.git" }
 smash_rs = { package = "smash", git = "https://github.com/blu-dev/smash-rs" }
+
+[patch.crates-io]
+skyline = { git = "https://github.com/ultimate-research/skyline-rs.git" }
 
 [profile.dev]
 panic = "abort"

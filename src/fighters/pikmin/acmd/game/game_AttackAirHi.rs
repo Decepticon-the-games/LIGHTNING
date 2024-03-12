@@ -13,7 +13,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("head1"), 12.6, 95, 73, 0, 50, 3.3, 0.
 wait(fighter.lua_state_agent, 8.0);
 if macros::is_excute(fighter) {
     AttackModule::clear_all(fighter.module_accessor);
-    CANCEL_IN_NEUTRAL[entry_id] = true;
+    whiff_cancel(fighter);
     HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
 }
 } 
@@ -31,7 +31,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("head1"), 9.0, 95, 92, 0, 50, 3.3, 0.0
     wait(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
@@ -49,7 +49,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("head1"), 14.4, 95, 73, 0, 50, 3.3, 0.
     wait(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
@@ -67,7 +67,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("head1"), 7.2, 95, 92, 0, 50, 3.3, 0.0
     wait(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
@@ -85,7 +85,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("head1"), 9.0, 95, 92, 0, 50, 4.95, 0.
     wait(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }

@@ -28,7 +28,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     wait(fighter.lua_state_agent, 4.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
     }
     macros::FT_MOTION_RATE(fighter, 1.0);
     frame(fighter.lua_state_agent, 12.0);

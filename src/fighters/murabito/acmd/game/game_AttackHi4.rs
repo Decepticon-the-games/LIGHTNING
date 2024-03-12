@@ -1,5 +1,4 @@
 use super::*;
-use super::*;
 #[acmd_script( agent = "murabito", script = "game_attackhi4", category = ACMD_GAME, low_priority )]
 unsafe fn game_attackhi4(fighter: &mut L2CAgentBase) {
 
@@ -51,7 +50,9 @@ if macros::is_excute(fighter) {
 wait(fighter.lua_state_agent, 2.0);
 if macros::is_excute(fighter) {
     AttackModule::clear_all(fighter.module_accessor);
-    CANCEL_IN_NEUTRAL[entry_id] = true;
+    if entry_id < 8 {
+       whiff_cancel(fighter); 
+    }
 }
 frame(fighter.lua_state_agent, 30.0);
 if macros::is_excute(fighter) {

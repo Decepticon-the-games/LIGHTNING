@@ -9,7 +9,9 @@ unsafe fn game_attacks4(fighter: &mut L2CAgentBase) {
     macros::FT_MOTION_RATE(fighter, 0.8);
     wait(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
-        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        if entry_id < 8 {
+            enable_attack_cancel(fighter); 
+        }
         macros::ATTACK(fighter, 0, 0, Hash40::new("drag6"), 12.0, 50, 103, 0, 40, 2.0, -8.0, 0.0, 0.0, Some(3.0), Some(0.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
         macros::ATTACK(fighter, 1, 0, Hash40::new("drag7"), 11.0, 50, 103, 0, 40, 1.7, -5.0, 0.0, 0.0, Some(2.5), Some(0.0), Some(0.0), 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
         macros::ATTACK(fighter, 2, 0, Hash40::new("drag8"), 16.7, 50, 107, 0, 45, 1.1, -12.5, -0.4, 0.4, Some(-0.5), Some(-0.4), Some(0.4), 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
@@ -19,7 +21,9 @@ unsafe fn game_attacks4(fighter: &mut L2CAgentBase) {
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        if entry_id < 8 {
+            whiff_cancel(fighter); 
+        }
     }
     frame(fighter.lua_state_agent, 27.0);
     if macros::is_excute(fighter) {

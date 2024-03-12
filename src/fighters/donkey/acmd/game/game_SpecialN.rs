@@ -14,7 +14,7 @@ unsafe fn game_specialn(fighter: &mut L2CAgentBase) {
         AttackModule::add_power(fighter.module_accessor, 0, WorkModule::get_int(fighter.module_accessor, *FIGHTER_DONKEY_STATUS_SPECIAL_N_WORK_INT_POWER_ADD) as f32, false);
 		AttackModule::add_power(fighter.module_accessor, 1, WorkModule::get_int(fighter.module_accessor, *FIGHTER_DONKEY_STATUS_SPECIAL_N_WORK_INT_POWER_ADD) as f32, false);
 		AttackModule::add_power(fighter.module_accessor, 2, WorkModule::get_int(fighter.module_accessor, *FIGHTER_DONKEY_STATUS_SPECIAL_N_WORK_INT_POWER_ADD) as f32, false);
-        ENABLE_ATTACK_CANCEL[entry_id] = true;
+        enable_attack_cancel(fighter);
     }
 
     if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND) == *FIGHTER_KIND_KIRBY {
@@ -25,14 +25,14 @@ unsafe fn game_specialn(fighter: &mut L2CAgentBase) {
             AttackModule::add_power(fighter.module_accessor, 0, WorkModule::get_int(fighter.module_accessor, *FIGHTER_DONKEY_STATUS_SPECIAL_N_WORK_INT_POWER_ADD) as f32, false);
 			AttackModule::add_power(fighter.module_accessor, 1, WorkModule::get_int(fighter.module_accessor, *FIGHTER_DONKEY_STATUS_SPECIAL_N_WORK_INT_POWER_ADD) as f32, false);
 			AttackModule::add_power(fighter.module_accessor, 2, WorkModule::get_int(fighter.module_accessor, *FIGHTER_DONKEY_STATUS_SPECIAL_N_WORK_INT_POWER_ADD) as f32, false);
-            ENABLE_ATTACK_CANCEL[entry_id] = true;
+            enable_attack_cancel(fighter);
         }
     }
     frame(fighter.lua_state_agent, 21.0);
     if macros::is_excute(fighter) {
         macros::HIT_RESET_ALL(fighter);
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }    
 pub fn install() {

@@ -14,9 +14,9 @@ pub fn airdodge(fighter : &mut L2CFighterCommon) {
             if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
 
                 //Airdash
-                if frame >= 8.0 {
+                if MotionModule::motion_kind(fighter.module_accessor) == smash::hash40("escape_air_slide") && frame >= 8.0 {
                     CancelModule::enable_cancel(fighter.module_accessor);
-                }      
+                }  
             }
         }
     }

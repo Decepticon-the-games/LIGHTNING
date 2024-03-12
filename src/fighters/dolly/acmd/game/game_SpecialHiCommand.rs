@@ -211,7 +211,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 10.0, 83, 62, 0, 90, 7.0, 0.0,
 frame(fighter.lua_state_agent, 35.0);
 if macros::is_excute(fighter) {
 AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
 }
 frame(fighter.lua_state_agent, 40.0);
 if macros::is_excute(fighter) {

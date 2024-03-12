@@ -9,7 +9,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     }
     frame(fighter.lua_state_agent, 1.0);
     if macros::is_excute(fighter) {
-        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        enable_attack_cancel(fighter); 
 macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 15.0, 65, 30, 0, 60, 4.0, 0.0, 4.0, 4.2, Some(0.0), Some(4.0), Some(-3.2), 0.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         AttackModule::set_catch_only_all(fighter.module_accessor, true, false);
         macros::CHECK_FINISH_CAMERA(fighter, -6, 7);
@@ -18,7 +18,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 15.0, 65, 30, 0, 60, 4.0, 0.0,
     frame(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 11.0);
     if macros::is_excute(fighter) {
@@ -27,7 +27,7 @@ CANCEL_IN_NEUTRAL[entry_id] = true;
         let target_no = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
         JostleModule::set_status(fighter.module_accessor, false);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
     macros::FT_MOTION_RATE(fighter, 0.8);
     frame(fighter.lua_state_agent, 16.0);

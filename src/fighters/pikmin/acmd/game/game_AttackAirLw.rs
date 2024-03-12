@@ -19,7 +19,7 @@ if macros::is_excute(fighter) {
 wait(fighter.lua_state_agent, 6.0);
 if macros::is_excute(fighter) {
     AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
     HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
 }
 }
@@ -42,7 +42,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("head1"), 9.0, 270, 99, 0, 10, 3.5, 0.
     wait(fighter.lua_state_agent, 6.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
@@ -65,7 +65,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("head1"), 14.4, 270, 79, 0, 10, 3.5, 0
     wait(fighter.lua_state_agent, 6.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
@@ -88,7 +88,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("head1"), 7.2, 270, 99, 0, 10, 3.5, 0.
     wait(fighter.lua_state_agent, 6.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
@@ -111,7 +111,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("head1"), 9.0, 270, 99, 0, 10, 5.25, 0
     wait(fighter.lua_state_agent, 6.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }

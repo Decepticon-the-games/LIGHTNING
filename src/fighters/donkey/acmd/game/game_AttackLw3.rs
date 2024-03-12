@@ -16,14 +16,14 @@ unsafe fn game_attacklw3(fighter: &mut L2CAgentBase) {
         AttackModule::set_add_reaction_frame(fighter.module_accessor, 0, 5.0, false);
         AttackModule::set_add_reaction_frame(fighter.module_accessor, 1, 5.0, false);
         AttackModule::set_add_reaction_frame(fighter.module_accessor, 2, 5.0, false);
-        ENABLE_ATTACK_CANCEL[entry_id] = true;
+        enable_attack_cancel(fighter);
     }
 
     frame(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }    
 pub fn install() {

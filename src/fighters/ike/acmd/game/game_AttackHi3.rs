@@ -7,7 +7,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     macros::FT_MOTION_RATE(fighter, 1.0);
     frame(fighter.lua_state_agent, 11.0);
     if macros::is_excute(fighter) {
-       ENABLE_ATTACK_CANCEL[entry_id] = true;
+       enable_attack_cancel(fighter);
  macros::ATTACK(fighter, 0, 0, Hash40::new("sword"), 12.0, 95, 90, 0, 50, 5.0, 0.5, 13.5, -1.0, Some(0.5), Some(2.8), Some(-1.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_IKE, *ATTACK_REGION_SWORD);
     }
     wait(fighter.lua_state_agent, 6.0);
@@ -17,7 +17,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 22.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
     }  
 }  
 pub fn install() {

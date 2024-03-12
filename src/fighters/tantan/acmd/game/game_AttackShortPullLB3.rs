@@ -43,7 +43,7 @@ pub fn install() {
     game_);
 }
 AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
 }
 }
 }

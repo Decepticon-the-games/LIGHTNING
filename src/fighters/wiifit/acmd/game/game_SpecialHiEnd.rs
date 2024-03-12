@@ -5,7 +5,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
 
     frame(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
 ArticleModule::shoot_exist(fighter.module_accessor, *FIGHTER_WIIFIT_GENERATE_ARTICLE_HULAHOOP, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
     }
 }    

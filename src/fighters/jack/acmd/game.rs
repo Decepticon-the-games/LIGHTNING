@@ -139,7 +139,6 @@ use crate::fighters::common::mechanics::cancels::counter_cancels::COUNTER_CANCEL
      game_ThrowB::install();
      game_ThrowHi::install();
      game_ThrowLw::install();
- 
  }
 
 

@@ -9,7 +9,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 15.0);
     if macros::is_excute(fighter) {
         search!(fighter, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }   
 pub fn install() {

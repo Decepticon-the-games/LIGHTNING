@@ -14,7 +14,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
         MotionModule::set_rate(fighter.module_accessor, 1.0);
-        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        enable_attack_cancel(fighter); 
 macros::ATTACK(fighter, 0, 0, Hash40::new("hip"), 15.0, 45, 61, 0, 80, 7.0, 4.0, 3.5, 3.5, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
         macros::ATK_SET_SHIELD_SETOFF_MUL(fighter, 0, 1.15);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_REQUEST_WAIST_SHIELD_ON);
@@ -28,7 +28,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("hip"), 15.0, 45, 61, 0, 80, 7.0, 4.0,
     frame(fighter.lua_state_agent, 29.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 32.0);
     if macros::is_excute(fighter) {

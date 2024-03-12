@@ -1,9 +1,10 @@
 
+use super::*;
 
-//pub mod buffer;
-//pub mod misc;
-//pub mod sdi;
-//pub mod aesthetic;
+pub mod buffer;
+pub mod misc;
+pub mod sdi;
+pub mod aesthetic;
 
 pub fn install() {
     //buffer::install();

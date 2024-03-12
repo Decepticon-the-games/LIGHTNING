@@ -4,10 +4,8 @@ use smash::app::*;
 use smash::hash40; 
 use skyline::hooks::{getRegionAddress, Region};
 use smash::app::FighterManager;
-use crate::fighters::common::mechanics::cancels::attack_cancels::ATTACK_CANCEL;
-use crate::fighters::common::mechanics::lightning_mechanics::ultrainstinct::{SEC_SEN_STATE, SECRET_SENSATION, OPPONENT_X, OPPONENT_Y, OPPONENT_BOMA, CROSS_CANCEL_BUTTON};
-use crate::fighters::common::mechanics::lightning_mechanics::vanish::{VANISH, VANISH_READY, WHO_GOT_HIT_BOMA, WHO_HIT_YOU_BOMA, PROJECTILE_BOMA, VANISH_BUTTON, DEFENDER_VANISH, VA_OPPONENT_X, VA_OPPONENT_Y, VA_OPPONENT_BOMA};
-use crate::fighters::common::mechanics::lightning_mechanics::lightning_mode::{LIGHTNING_BUTTON};
+use crate::fighters::common::mechanics::lightning_mechanics::ultrainstinct::{CROSS_CANCEL_SETUP, FIGHTER_STATUS_KIND_CROSS_CANCEL, OPPONENT_X, OPPONENT_Y, OPPONENT_BOMA};
+use crate::fighters::common::mechanics::lightning_mechanics::vanish::{FIGHTER_STATUS_KIND_VANISH, WHO_GOT_HIT_BOMA, WHO_HIT_YOU_BOMA, PROJECTILE_BOMA, DEFENDER_VANISH, VA_OPPONENT_X, VA_OPPONENT_Y, VA_OPPONENT_BOMA};
 
 pub static mut PROJECTILE_HIT : [bool; 8] = [false; 8];
 pub static mut DIRECT_HIT : [bool; 8] = [false; 8];
@@ -60,10 +58,13 @@ move_type_again: bool) -> u64 {
 
         if utility::get_category(&mut *defender_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
 
-            if SEC_SEN_STATE[d_entry_id]
-            || DEFENDER_VANISH[d_entry_id] {
+            if (CROSS_CANCEL_SETUP[d_entry_id]
+            || DEFENDER_VANISH[d_entry_id]) 
+            && ! (CaptureModule::is_capture(defender_boma))
+            {
 
-                if SEC_SEN_STATE[d_entry_id] {
+                if CROSS_CANCEL_SETUP[d_entry_id] 
+                && StatusModule::situation_kind(defender_boma) == *SITUATION_KIND_GROUND {
 
                     if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER
                     || utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_ENEMY {
@@ -79,9 +80,9 @@ move_type_again: bool) -> u64 {
                     else if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON {
 
                         if utility::get_category(&mut *oboma) != *BATTLE_OBJECT_CATEGORY_FIGHTER {
-                            OPPONENT_X[d_entry_id] = PostureModule::pos_x(defender_boma);
-                            OPPONENT_Y[d_entry_id] = PostureModule::pos_y(defender_boma);
-                            OPPONENT_BOMA[d_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
+                            OPPONENT_X[d_entry_id] = PostureModule::pos_x(attacker_boma);
+                            OPPONENT_Y[d_entry_id] = PostureModule::pos_y(attacker_boma);
+                            OPPONENT_BOMA[d_entry_id] = (&mut *attacker_boma as *mut BattleObjectModuleAccessor) as u64;
                             HitModule::set_whole(defender_boma, smash::app::HitStatus(*HIT_STATUS_XLU), 0);
                         }
                         else {
@@ -99,10 +100,15 @@ move_type_again: bool) -> u64 {
                         OPPONENT_Y[d_entry_id] = PostureModule::pos_y(defender_boma);
                         OPPONENT_BOMA[d_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
                         HitModule::set_whole(defender_boma, smash::app::HitStatus(*HIT_STATUS_XLU), 0);
-                    }                    
-                    SECRET_SENSATION[d_entry_id] = true;
+                    }      
+                    DamageModule::set_damage_lock(defender_boma, true);
+                    DamageModule::set_no_reaction_no_effect(defender_boma, true); 
+                    HitModule::set_hit_stop_mul(defender_boma, 0.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0);                    
+                    FIGHTER_STATUS_KIND_CROSS_CANCEL[d_entry_id] = true;  
                 }          
-                else if DEFENDER_VANISH[d_entry_id] {
+                else if DEFENDER_VANISH[d_entry_id] 
+                && StatusModule::situation_kind(defender_boma) == *SITUATION_KIND_AIR   
+                {
 
                     if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER
                     || utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_ENEMY {
@@ -118,9 +124,9 @@ move_type_again: bool) -> u64 {
                     else if utility::get_category(&mut *attacker_boma) == *BATTLE_OBJECT_CATEGORY_WEAPON {
 
                         if utility::get_category(&mut *oboma) != *BATTLE_OBJECT_CATEGORY_FIGHTER {
-                            VA_OPPONENT_X[d_entry_id] = PostureModule::pos_x(defender_boma);
-                            VA_OPPONENT_Y[d_entry_id] = PostureModule::pos_y(defender_boma);
-                            VA_OPPONENT_BOMA[d_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
+                            VA_OPPONENT_X[d_entry_id] = PostureModule::pos_x(attacker_boma);
+                            VA_OPPONENT_Y[d_entry_id] = PostureModule::pos_y(attacker_boma);
+                            VA_OPPONENT_BOMA[d_entry_id] = (&mut *attacker_boma as *mut BattleObjectModuleAccessor) as u64;
                             WHO_HIT_YOU_BOMA[d_entry_id] = attacker_object_id;
                             HitModule::set_whole(defender_boma, smash::app::HitStatus(*HIT_STATUS_XLU), 0);
                         }
@@ -140,14 +146,16 @@ move_type_again: bool) -> u64 {
                         VA_OPPONENT_Y[d_entry_id] = PostureModule::pos_y(defender_boma);
                         VA_OPPONENT_BOMA[d_entry_id] = (&mut *defender_boma as *mut BattleObjectModuleAccessor) as u64;
                         WHO_HIT_YOU_BOMA[d_entry_id] = attacker_object_id;
-                        HitModule::set_whole(defender_boma, smash::app::HitStatus(*HIT_STATUS_XLU), 0);
                     }
-                    VANISH[d_entry_id] = true;  
-                }                
-            }
+                    DamageModule::set_damage_lock(defender_boma, true);
+                    DamageModule::set_no_reaction_no_effect(defender_boma, true); 
+                    HitModule::set_hit_stop_mul(defender_boma, 0.0, smash::app::HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_SELF as u8}, 0.0); 
+                    FIGHTER_STATUS_KIND_VANISH[d_entry_id] = true;  
+                }  
+            } 
         }
 
-    //VANISH (ATTACKER)
+    //VANISH(ATTACKER)
 
 
             //IF THE ATTACKER IS A FIGHTER AND THE DEFENDER IS A FIGHTER, GET THE DEFENNDER'S POSITION

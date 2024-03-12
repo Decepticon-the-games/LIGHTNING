@@ -9,20 +9,20 @@ use super::*;
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 8.0, 50, 43, 0, 100, 3.5, 0.0, 1.5, 5.4, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
             macros::ATK_SET_SHIELD_SETOFF_MUL(fighter, 0, 1.875);
             FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 4.0, 6.0);
-            ENABLE_ATTACK_CANCEL[entry_id] = true;
+            enable_attack_cancel(fighter);
     }
 
         wait(fighter.lua_state_agent, 2.0);
         if macros::is_excute(fighter) {
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 6.0, 80, 30, 0, 30, 2.7, 0.0, 1.5, 4.9, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
             macros::ATK_SET_SHIELD_SETOFF_MUL(fighter, 0, 1.875);
-            ENABLE_ATTACK_CANCEL[entry_id] = true;
+            enable_attack_cancel(fighter);
     }
 
         wait(fighter.lua_state_agent, 16.0);
         if macros::is_excute(fighter) {
             AttackModule::clear_all(fighter.module_accessor);
-            CANCEL_IN_NEUTRAL[entry_id] = true; 
+            whiff_cancel(fighter); 
         }
         frame(fighter.lua_state_agent, 32.0);
         if macros::is_excute(fighter) {

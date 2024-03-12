@@ -1,27 +1,5 @@
-use {
-    smash::{
-        lua2cpp::L2CAgentBase,
-        phx::{Hash40,Vector3f,Vector2f},
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*,
-    },
-    smash_script::*,
-    smashline::*
-};
-use crate::fighters::{
-    common::{
-        mechanics::{
-            cancels::{
-                attack_cancels::{
-                    ENABLE_ATTACK_CANCEL,ENABLE_MULTIHIT_CANCEL,MOVEMENT_CANCEL
-                },
-                motioncancels::{
-                    CANCEL_IN_NEUTRAL
-                }                
-            }
-        }
-    }
-};
+
+    use super::*;
 
  mod game_AirCatch;
  mod game_AirCatchLanding;

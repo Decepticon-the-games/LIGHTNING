@@ -13,11 +13,6 @@ use super::*;
             //let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
             //let cat2 = ControlModule::get_command_flag_cat(module_accessor, 1);
 
-//Enable cancel  
-
-                ENABLE_ATTACK_CANCEL[entry_id] = true;
-            
-
 
 //New subtititle for any other code, if not applicable just delete the lines
 

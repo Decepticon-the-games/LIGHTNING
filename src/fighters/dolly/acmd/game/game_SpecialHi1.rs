@@ -123,7 +123,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 9.0, 83, 55, 0, 90, 7.0, 0.0, 
 wait(fighter.lua_state_agent, 1.0);
 if macros::is_excute(fighter) {
 AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
 }
 frame(fighter.lua_state_agent, 30.0);
 if macros::is_excute(fighter) {

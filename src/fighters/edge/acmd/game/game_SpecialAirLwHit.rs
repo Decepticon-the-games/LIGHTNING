@@ -16,7 +16,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         frame(fighter.lua_state_agent, 7.0);
         if macros::is_excute(fighter) {
             ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_EDGE_GENERATE_ARTICLE_FLASH, false, -1);
-            CANCEL_IN_NEUTRAL[entry_id] = true;
+            whiff_cancel(fighter);
         }
         frame(fighter.lua_state_agent, 12.0);
         if macros::is_excute(fighter) {
@@ -39,7 +39,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         frame(fighter.lua_state_agent, 7.0);
         if macros::is_excute(fighter) {
             ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_EDGE_GENERATE_ARTICLE_FLASH, false, -1);
-            CANCEL_IN_NEUTRAL[entry_id] = true;
+            whiff_cancel(fighter);
         }
         frame(fighter.lua_state_agent, 15.0);
         if macros::is_excute(fighter) {

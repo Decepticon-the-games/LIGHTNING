@@ -1,5 +1,4 @@
 use super::*;
-use super::*;
 #[acmd_script( agent = "murabito", script = "game_specialairs", category = ACMD_GAME, low_priority )]
 unsafe fn game_specialairs(fighter: &mut L2CAgentBase) {
 let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
@@ -13,7 +12,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 30.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MURABITO_STATUS_SPECIAL_S_FLAG_FALL);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }    
 pub fn install() {

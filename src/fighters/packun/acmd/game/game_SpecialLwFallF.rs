@@ -5,7 +5,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
 
     if macros::is_excute(fighter) {
         FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 7.0, 3.0);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }    
 pub fn install() {

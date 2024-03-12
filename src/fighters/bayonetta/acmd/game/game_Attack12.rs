@@ -10,8 +10,8 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     macros::FT_MOTION_RATE(fighter, 0.7);
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
-        ENABLE_ATTACK_CANCEL[entry_id] = true;
-macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.4, 361, 8, 0, 42, 2.8, 0.0, 10.8, 3.5, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        
+        macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.4, 361, 8, 0, 42, 2.8, 0.0, 10.8, 3.5, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 1.4, 361, 8, 0, 42, 3.4, 0.0, 10.6, 7.2, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 1.4, 361, 8, 0, 38, 4.0, 0.0, 10.3, 11.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         macros::ATTACK(fighter, 3, 0, Hash40::new("top"), 1.4, 361, 8, 0, 38, 2.2, 0.0, 4.5, 6.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
@@ -19,11 +19,12 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.4, 361, 8, 0, 42, 2.8, 0.0, 
         AttackModule::set_add_reaction_frame(fighter.module_accessor, 1, 10.0, false);
         AttackModule::set_add_reaction_frame(fighter.module_accessor, 2, 10.0, false);
         AttackModule::set_add_reaction_frame(fighter.module_accessor, 3, 10.0, false);
+        
     }
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-    CANCEL_IN_NEUTRAL[entry_id] = true;
+    whiff_cancel(fighter);
     }
     macros::FT_START_ADJUST_MOTION_FRAME_arg1(fighter, 1.0);
     frame(fighter.lua_state_agent, 14.0);

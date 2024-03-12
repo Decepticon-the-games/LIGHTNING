@@ -31,13 +31,13 @@ unsafe fn game_attackhi3_nana(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter) {
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 3.0, 90, 118, 0, 38, 5.5, 2.0, 9.0, 0.0, Some(2.0), Some(9.0), Some(0.0), 2.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HAMMER);
             macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 3.0, 90, 118, 0, 38, 7.0, 2.0, 17.0, 0.0, Some(2.0), Some(17.0), Some(0.0), 2.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HAMMER);
-            ENABLE_ATTACK_CANCEL[entry_id] = true; 
+            enable_attack_cancel(fighter); 
         } 
         else{
             if macros::is_excute(fighter) {
                 macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 3.0, 90, 118, 0, 38, 5.5, -2.0, 9.0, 0.0, Some(-2.0), Some(9.0), Some(0.0), 2.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HAMMER);
                 macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 3.0, 90, 118, 0, 38, 7.0, -2.0, 17.0, 0.0, Some(-2.0), Some(17.0), Some(0.0), 2.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HAMMER);
-                ENABLE_ATTACK_CANCEL[entry_id] = true; 
+                enable_attack_cancel(fighter); 
             } 
         }
     }
@@ -45,7 +45,7 @@ unsafe fn game_attackhi3_nana(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
     AttackModule::clear_all(fighter.module_accessor);
     AttackModule::clear_all(fighter.module_accessor);
-    CANCEL_IN_NEUTRAL[entry_id] = true;
+    whiff_cancel(fighter);
     }
 }
 pub fn install() {

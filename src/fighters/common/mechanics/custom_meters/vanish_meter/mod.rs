@@ -58,7 +58,7 @@ fn vanish_meter(fighter : &mut L2CFighterCommon) {
         }
             //WHEN buttons are pressed, subtract meter
             if VANISH_BUTTON[entry_id] {
-                if LIGHTNING[entry_id] {
+                if IS_FLAG_FIGHTER_INSTANCE_WORK_ID_FLAG_LIGHTNING[entry_id] {
                     SPECIAL_MECHANICS_METER_COUNT[entry_id] -= 50.0; //TAKE 50 POINTS AWAY
                 }
                 else{

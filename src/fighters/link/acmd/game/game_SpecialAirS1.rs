@@ -10,7 +10,7 @@ unsafe fn game_specialairs1(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 27.0);
     if macros::is_excute(fighter) {
         ArticleModule::shoot(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOOMERANG, smash::app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }
 pub fn install() {

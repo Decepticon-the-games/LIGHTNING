@@ -23,7 +23,7 @@ use crate::fighters::common::mechanics::cancels::attack_cancels::{ENABLE_ATTACK_
                 static mut UPSMASH_CANCEL_COUNTER : [i32; 8] = [0; 8];
 
             //Cancel Up smash up to 2 times         
-            if LIGHTNING[entry_id]  {
+            if IS_FLAG_FIGHTER_INSTANCE_WORK_ID_FLAG_LIGHTNING[entry_id]  {
                 
 
                 if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {

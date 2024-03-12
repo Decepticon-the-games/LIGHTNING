@@ -13,12 +13,12 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         if NO_PKFIRE[entry_id] {
             ArticleModule::remove_exist(fighter.module_accessor,*FIGHTER_NESS_GENERATE_ARTICLE_PK_FIRE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
             NO_PKFIRE[entry_id] = false;
-            CANCEL_IN_NEUTRAL[entry_id] = true;
+            whiff_cancel(fighter);
         }
         else {
             ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_NESS_GENERATE_ARTICLE_PK_FIRE, false, -1);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_NESS_STATUS_SPECIAL_S_FLAG_SHOOT);
-            CANCEL_IN_NEUTRAL[entry_id] = true;
+            whiff_cancel(fighter);
         }
     }
     macros::FT_MOTION_RATE(fighter, 1.0);  

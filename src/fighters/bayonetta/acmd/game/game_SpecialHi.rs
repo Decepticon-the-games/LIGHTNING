@@ -64,14 +64,14 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 31.0);
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_HI_FLAG_REUSE) {
         if macros::is_excute(fighter) {
-            ENABLE_ATTACK_CANCEL[entry_id] = true; 
+            enable_attack_cancel(fighter); 
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 3.0, 32, 80, 0, 45, 6.5, 0.0, 26.5, 0.0, Some(0.0), Some(19.0), Some(0.0), 0.8, 1.5, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
             AttackModule::set_add_reaction_frame(fighter.module_accessor, 0, 1.0, false);
         }
     }
     else{
         if macros::is_excute(fighter) {
-            ENABLE_ATTACK_CANCEL[entry_id] = true; 
+            enable_attack_cancel(fighter); 
     macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 3.0, 0, 50, 0, 30, 6.5, 0.0, 26.5, 0.0, Some(0.0), Some(19.0), Some(0.0), 0.8, 1.5, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
             AttackModule::set_add_reaction_frame(fighter.module_accessor, 0, 1.0, false);
         }
@@ -79,7 +79,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     wait(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
     AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2bfb02b69a), true);
     }
     frame(fighter.lua_state_agent, 36.0);

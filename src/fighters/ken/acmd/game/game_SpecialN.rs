@@ -10,7 +10,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor,  *FIGHTER_INSTANCE_W
     frame(fighter.lua_state_agent, 13.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_N_FLAG_SHOOT);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 14.0);
     if macros::is_excute(fighter) {

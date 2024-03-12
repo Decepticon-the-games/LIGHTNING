@@ -1,13 +1,25 @@
 #![deny(deprecated)]
 #![allow(unused)]
 #![allow(non_snake_case)]
+
 use {
     smash::{
-        lua2cpp::{L2CAgentBase,L2CFighterCommon,L2CFighterBase},
-        phx::{Hash40,Vector3f,Vector2f},
+        lua2cpp::{
+            L2CAgentBase,L2CFighterCommon,L2CFighterBase, *
+        },
+        phx::{
+            Hash40,Vector3f,Vector2f
+        },
         hash40,
-        app::{lua_bind::*, sv_animcmd::*,*},
-        lib::lua_const::*
+        app::{
+            lua_bind::{
+                FighterManager,*
+            }, sv_animcmd::*, FighterAvailableFinal, *
+        },
+        lib::{
+            lua_const::{*
+            },L2CValue, LuaConst
+        }
     },
     smash_script::*,
     smashline::*
@@ -17,25 +29,22 @@ use crate::fighters::{
         mechanics::{
             cancels::{
                 attack_cancels::{
-                    ATTACK_CANCEL, ENABLE_ATTACK_CANCEL, ENABLE_MULTIHIT_CANCEL, ENABLE_MULTIHIT_COUNT, MULTIHIT, MULTIHIT_COUNT, IS_SUCCESSFUL_HIT, 
-                    cancel_on_hit::{is_attack_cancel, multihit_cancel, multihit_counter, cancel_on_hit, is_after_hitlag}
+                    ATTACK_CANCEL, ENABLE_MULTIHIT_CANCEL,
+                    cancel_on_hit::{enable_attack_cancel, multihit_cancel, multihit_counter, is_after_hitlag}
                 },
                 motioncancels::{
-                    CANCEL_IN_NEUTRAL, AIRDASH, WAVEDASH, WAVESTEP, AIRSTEP, AIRDODGE_PLUS, PROJECTILE_COUNTER, PROJECTILE_COUNT, DISABLE_MOVESET_TRANSITIONS
+                    CANCEL_IN_NEUTRAL, AIRDASH, WAVEDASH, WAVESTEP, AIRSTEP, AIRDODGE_PLUS,
+                    cancel_in_neutral::{whiff_cancel}
                 },
                 counter_cancels::COUNTER_CANCEL
             },
             lightning_mechanics::{
-                //crimson_cancel::CRIMSON_CANCEL,
-                lightning_mode::LIGHTNING,
+                crimson_cancel::FIGHTER_INSTANCE_WORK_ID_FLAG_CRIMSON_CANCEL,
+                lightning_mode::IS_FLAG_FIGHTER_INSTANCE_WORK_ID_FLAG_LIGHTNING,
                 vanish::{
-                    VANISH, CAN_VANISH, CANCEL_INTO_VANISH, ENABLE_CANCEL_INTO_VANISH,
-                    opff::{float,cancel_into_vanish, enable_vanish_effects, disable_vanish_effects, is_cancel_into_vanish_conditions}
+                    FIGHTER_STATUS_KIND_VANISH, CAN_VANISH, WHO_GOT_HIT_BOMA, FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_VANISH, DEFENDER_VANISH
                 }
             },
-            misc::{
-
-            }
         },
         function_hooks::notify_collision_event::{PROJECTILE_HIT, DIRECT_HIT, IS_HIT}
     }
@@ -242,17 +251,21 @@ miigunner::install();
 //*/
 
 
-/*
+
 //TESTING
+/*
 pub mod common;
-pub mod fox;
-pub mod edge;
-pub mod falco;
+pub mod captain;
+pub mod wolf;
+//pub mod gamewatch;
+//pub mod tantan;
 
 pub fn install() {
 common::install();
-fox::install();
-edge::install();
-falco::install();
+captain::install();
+wolf::install();
+//gamewatch::install();
+//tantan::install();
 }
+
 */

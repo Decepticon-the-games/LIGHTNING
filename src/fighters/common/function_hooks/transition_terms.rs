@@ -1,3 +1,4 @@
+use super::*;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::app::*;
@@ -5,83 +6,72 @@ use smash::hash40;
 use skyline::hooks::{getRegionAddress, Region};
 use smash::app::FighterManager;
 
-use crate::fighters::common::mechanics::lightning_mechanics::ultrainstinct::{SECRET_SENSATION, CROSS_CANCEL_BUTTON};
-use crate::fighters::common::mechanics::lightning_mechanics::vanish::{VANISH, VANISH_BUTTON, DISABLE_CATCH};
+use crate::fighters::common::mechanics::lightning_mechanics::ultrainstinct::{FIGHTER_STATUS_KIND_CROSS_CANCEL};
 use crate::fighters::common::mechanics::misc::upbtransitions::DISABLE_UP_SPECIAL;
-use crate::fighters::common::mechanics::lightning_mechanics::lightning_fsmeter::{DISABLE_FINAL, FINAL_SMASH_BUTTON};
-use crate::fighters::common::mechanics::lightning_mechanics::crimson_cancel::{CRIMSON_CANCEL_BUTTON, CRIMSON_CANCEL_TIMER};
-use crate::fighters::common::mechanics::lightning_mechanics::lightning_mode::{LIGHTNING_BUTTON};
-use crate::fighters::common::mechanics::misc::misc::{TRANSITION_TERM_NONE};
-use crate::fighters::common::mechanics::cancels::motioncancels::DISABLE_MOVESET_TRANSITIONS;
 
 #[skyline::hook(replace = smash::app::lua_bind::WorkModule::is_enable_transition_term )]
 pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut BattleObjectModuleAccessor, term: i32) -> bool {
     let ret = original!()(module_accessor,term);
     let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    let special_mechanics_button = (CRIMSON_CANCEL_BUTTON[entry_id]
-    || CROSS_CANCEL_BUTTON[entry_id]
-    || VANISH_BUTTON[entry_id]
-    || LIGHTNING_BUTTON[entry_id]);
+    let status_kind = StatusModule::status_kind(module_accessor);
 
-    let moveset_out_of_odash_term = (
-        //Jabs
-        //term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK
-        //|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_100
-        term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_DASH
-        //Tilts
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_S3
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI3
-        //|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW3
-        //Aerials
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR
-        //Smash Attacks
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_S4_HOLD
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_HOLD
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4_HOLD
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_S4_START
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START
-        //|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4_START
-        //Specials
-        //|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI
-        //|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW
-        //Command Attacks
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_COMMAND1
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N_COMMAND
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI_COMMAND
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW_COMMAND
-        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_COMMAND_623NB
-    );
-    
-    if SECRET_SENSATION[entry_id] {
+
+    let combo_flags = (WorkModule::is_flag(module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO)
+    || WorkModule::is_flag(module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO_INPUT)
+    || WorkModule::is_flag(module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO_PRECEDE)
+    || WorkModule::is_flag(module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100)
+    || WorkModule::is_flag(module_accessor, *FIGHTER_BAYONETTA_STATUS_ATTACK_AIR_F_FLAG_ENABLE_COMBO)
+    || WorkModule::is_flag(module_accessor, *FIGHTER_TRAIL_STATUS_ATTACK_AIR_N_FLAG_ENABLE_COMBO)
+    || WorkModule::is_flag(module_accessor, *FIGHTER_TRAIL_STATUS_ATTACK_AIR_F_FLAG_ENABLE_COMBO)
+    || WorkModule::is_flag(module_accessor, *FIGHTER_DEMON_STATUS_ATTACK_COMBO_FLAG_ENABLE_COMBO)
+    || WorkModule::is_flag(module_accessor, *FIGHTER_SIMON_STATUS_ATTACK_FLAG_ENABLE_COMBO));
+
+    if FIGHTER_STATUS_KIND_CROSS_CANCEL[entry_id] {
         return false;
     }
-    else if VANISH[entry_id] {
+    else if FIGHTER_STATUS_KIND_VANISH[entry_id] {
         return false;
     }
-    else if TRANSITION_TERM_NONE[entry_id] {
+    else if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_FINAL {
         return false;
+    }   
+    else if CANCEL_IN_NEUTRAL[entry_id] {
+        if ! (term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_F
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_LIGHT
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_ATTACK_AIR
+        || term == *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_FALL_SPECIAL
+        )
+        {
+            return false;
+        }
+        else {
+            return ret;
+        }
+    }
+    else if (status_kind == *FIGHTER_STATUS_KIND_ATTACK 
+        || status_kind == *FIGHTER_TANTAN_STATUS_KIND_ATTACK_COMBO) 
+        && AttackModule::is_attack_occur(module_accessor) {
+        if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK /*&& ! combo_flags*/ {
+            return false;
+        }
+        else {
+            return ret;
+        }
     }
     else if DISABLE_UP_SPECIAL[entry_id] {
         if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI {
-            return false;
-        }
-        else {
-            return ret;
-        }
-    }
-    else if DISABLE_FINAL[entry_id] {
-        if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_FINAL {
-            return false;
-        }
-        else {
-            return ret;
-        }
-    }
-    else if DISABLE_MOVESET_TRANSITIONS[entry_id] {
-        if  moveset_out_of_odash_term {
             return false;
         }
         else {

@@ -1,6 +1,4 @@
 use super::*;
-
-pub static mut TRANSITION_TERM_NONE : [bool; 8] = [false; 8];
 #[fighter_frame_callback]
 pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
@@ -39,14 +37,7 @@ pub fn once_per_fighter_frame(fighter : &mut L2CFighterCommon) {
             //macros::EFFECT_OFF_KIND(fighter, smash::phx::Hash40::new("sys_attack_speedline"), true, true);
         }*/         
 
-        
-//SHORTHOP SPECIAL
-        if status_kind == *FIGHTER_STATUS_KIND_JUMP_SQUAT && ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-
-            if MotionModule::is_end(fighter.module_accessor) {
-                CancelModule::enable_cancel(fighter.module_accessor);
-            }
-        }
+    
 
 
 

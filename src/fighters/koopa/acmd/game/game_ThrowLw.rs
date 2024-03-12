@@ -10,7 +10,7 @@ unsafe fn game_throwlw(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         macros::ATTACK(fighter, 0, 0, Hash40::new("waist"), 10.0, 0, 100, 0, 0, 9.6, -0.5, 3.2, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
         macros::ATTACK(fighter, 1, 0, Hash40::new("head"), 10.0, 0, 100, 0, 0, 9.6, 0.0, 3.2, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-        //ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        //enable_attack_cancel(fighter); 
         AttackModule::set_catch_only_all(fighter.module_accessor, true, false);
     }
     frame(fighter.lua_state_agent, 36.0);
@@ -25,7 +25,7 @@ unsafe fn game_throwlw(fighter: &mut L2CAgentBase) {
         let target_group = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
         let target_no = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
     frame(fighter.lua_state_agent, 46.0);
     if macros::is_excute(fighter) {

@@ -25,7 +25,9 @@ unsafe fn game_attacks4hi(fighter: &mut L2CAgentBase) {
     wait(fighter.lua_state_agent, 5.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        if entry_id < 8 {
+            whiff_cancel(fighter); 
+        }
     }
     wait(fighter.lua_state_agent, 40.0);
     if macros::is_excute(fighter) {

@@ -26,13 +26,13 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     frame(fighter.lua_state_agent, 18.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
         macros::CATCH(fighter, 0, Hash40::new("top"), 4.0, 0.0, 8.0, 2.0, Some(0.0), Some(8.0), Some(8.0), *FIGHTER_STATUS_KIND_SWING_GAOGAEN_CATCHED, *COLLISION_SITUATION_MASK_G);
         macros::CATCH(fighter, 1, Hash40::new("top"), 2.5, 0.0, 8.0, 2.0, Some(0.0), Some(8.0), Some(9.5), *FIGHTER_STATUS_KIND_SWING_GAOGAEN_CATCHED, *COLLISION_SITUATION_MASK_GA);
     }
     frame(fighter.lua_state_agent, 35.0);
     if macros::is_excute(fighter) {
         grab!(fighter, *MA_MSC_CMD_GRAB_CLEAR_ALL);
+        whiff_cancel(fighter);
         GrabModule::set_rebound(fighter.module_accessor, false);
     }
     frame(fighter.lua_state_agent, 39.0);

@@ -18,10 +18,10 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 6.0, 361, 90, 0, 25, 4.5, 0.0,
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
         if AttackModule::is_attack_occur(fighter.module_accessor) {
-            ENABLE_ATTACK_CANCEL[entry_id] = true; 
+            enable_attack_cancel(fighter); 
         }  
         else {
-            CANCEL_IN_NEUTRAL[entry_id] = true;
+            whiff_cancel(fighter);
         }  
     }
 }    

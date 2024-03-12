@@ -62,7 +62,7 @@ use super::*;
 
 
             //In Lightning...
-            if LIGHTNING[entry_id] {
+            if IS_FLAG_FIGHTER_INSTANCE_WORK_ID_FLAG_LIGHTNING[entry_id] {
                 //dair cancels after 3 successful hits, cancel into shine     
                 let next_input = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0;
                 multihit_counter(fighter, 0, 0, smash::hash40("attack_air_lw") , 3, next_input, 0, 0, smash::hash40("attack_air_lw") );

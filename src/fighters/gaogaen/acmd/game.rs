@@ -21,13 +21,13 @@ use super::*;
  mod game_SpecialN;
  mod game_SpecialAirN;
 
- mod game_SpecialSFailure;
+ //mod game_SpecialSFailure;
  mod game_SpecialSLariat;
- mod game_SpecialSShoulder;
+ //mod game_SpecialSShoulder;
  mod game_SpecialSStart; 
- mod game_SpecialAirSFailure;
+ //mod game_SpecialAirSFailure;
  mod game_SpecialAirSLariat;
- mod game_SpecialAirSShoulder;
+ //mod game_SpecialAirSShoulder;
  mod game_SpecialAirSStart;
 
  mod game_SpecialHiStart;
@@ -70,12 +70,12 @@ use super::*;
      game_SpecialAirN::install();
     
      //game_SpecialSFailure::install();
-     //game_SpecialSLariat::install();
-     game_SpecialSShoulder::install();
+     game_SpecialSLariat::install();
+     //game_SpecialSShoulder::install();
      game_SpecialSStart::install(); 
      //game_SpecialAirSFailure::install();
-     //game_SpecialAirSLariat::install();
-     game_SpecialAirSShoulder::install();
+     game_SpecialAirSLariat::install();
+     //game_SpecialAirSShoulder::install();
      game_SpecialAirSStart::install();
     
      game_SpecialHiStart::install();

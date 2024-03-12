@@ -12,7 +12,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
     macros::FT_MOTION_RATE(fighter, 1.0);
     if macros::is_excute(fighter) {
         ArticleModule::shoot(fighter.module_accessor, *FIGHTER_MEWTWO_GENERATE_ARTICLE_SHADOWBALL, smash::app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_LAST), false);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }
 pub fn install() {

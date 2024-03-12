@@ -28,7 +28,7 @@ pub static mut FASTFALL_LASER : [bool; 8] = [false; 8];
 
             
             //In Lightning...
-            if LIGHTNING[entry_id] {
+            if IS_FLAG_FIGHTER_INSTANCE_WORK_ID_FLAG_LIGHTNING[entry_id] {
                 //Cancel fair after 3 successful hits    
                 let next_input = (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0 && ! ControlModule::get_attack_air_kind(fighter.module_accessor) == *FIGHTER_COMMAND_ATTACK_AIR_KIND_F;
                 multihit_counter(fighter, 0, 0, smash::hash40("attack_air_f") , 3, next_input, 0, 0, smash::hash40("attack_air_f"));

@@ -2,7 +2,7 @@ use super::*;
 #[acmd_script( agent = "gamewatch", script = "game_specialairlwend", category = ACMD_GAME, low_priority )]
 unsafe fn game_specialairlwend(fighter: &mut L2CAgentBase) {
 let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    CANCEL_IN_NEUTRAL[entry_id] = true;
+    whiff_cancel(fighter);
     frame(fighter.lua_state_agent, 5.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAMEWATCH_STATUS_SPECIAL_LW_FLAG_LOOP);

@@ -22,7 +22,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 2.0, 60, 50, 130, 0, 4.0, 0.0,
     frame(fighter.lua_state_agent, 31.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_FLAG_100KICK_HIT_CHECK_ONOFF);
     }
     frame(fighter.lua_state_agent, 35.0);

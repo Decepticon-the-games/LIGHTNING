@@ -18,7 +18,7 @@ unsafe fn game_attacks4(fighter: &mut L2CAgentBase) {
         //DamageModule::damage(fighter.module_accessor);
         if ! AttackModule::is_attack_occur(fighter.module_accessor){
             ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_SWORD_BEAM, false, -1);
-            CANCEL_IN_NEUTRAL[entry_id] = true;
+            whiff_cancel(fighter);
         }
     }
     wait(fighter.lua_state_agent, 2.0);

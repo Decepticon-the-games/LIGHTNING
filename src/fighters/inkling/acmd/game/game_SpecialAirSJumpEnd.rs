@@ -2,7 +2,7 @@ use super::*;
 #[acmd_script( agent = "inkling", script = "game_specialairsjumpend", category = ACMD_GAME, low_priority )]
 unsafe fn game_specialairsjumpend(fighter: &mut L2CAgentBase) {
 let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
     frame(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
         FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 1.0, 9.0);

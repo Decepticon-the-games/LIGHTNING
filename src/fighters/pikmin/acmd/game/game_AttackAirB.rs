@@ -13,7 +13,7 @@ if macros::is_excute(fighter) {
 frame(fighter.lua_state_agent, 13.0);
 if macros::is_excute(fighter) {
     AttackModule::clear_all(fighter.module_accessor);
-    CANCEL_IN_NEUTRAL[entry_id] = true;
+    whiff_cancel(fighter);
     HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
 }
 } 
@@ -30,7 +30,7 @@ unsafe fn game_attackairb_b(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 13.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }   
@@ -48,7 +48,7 @@ unsafe fn game_attackairb_v(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         PIKMIN_PIKMIN_ATTACK_CANCEL[entry_id] = true; 
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
@@ -65,7 +65,7 @@ unsafe fn game_attackairb_w(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 13.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
@@ -82,7 +82,7 @@ unsafe fn game_attackairb_y(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 13.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }

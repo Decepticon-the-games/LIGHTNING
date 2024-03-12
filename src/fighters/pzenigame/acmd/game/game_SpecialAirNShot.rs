@@ -18,7 +18,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
 frame(fighter.lua_state_agent, 40.0);
 if macros::is_excute(fighter) {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_PZENIGAME_STATUS_SPECIAL_N_FLAG_SHOOT_ANGLE_ENABLE);
-    CANCEL_IN_NEUTRAL[entry_id] = true;
+    whiff_cancel(fighter);
 }
 }    
 pub fn install() {

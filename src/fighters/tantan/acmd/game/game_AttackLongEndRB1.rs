@@ -62,7 +62,7 @@ pub fn install() {
 }
 }
 AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
 }
 }
 frame(fighter.lua_state_agent, 31.0);

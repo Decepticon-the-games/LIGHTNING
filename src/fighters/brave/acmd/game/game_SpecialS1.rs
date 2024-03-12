@@ -43,7 +43,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 5.0, 45, 100, 0, 35, 8.0, 0.0,
     else{
         if macros::is_excute(fighter) {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BRAVE_INSTANCE_WORK_ID_FLAG_PLAY_MISS_SE);
-            ENABLE_ATTACK_CANCEL[entry_id] = true; 
+            enable_attack_cancel(fighter); 
     macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 2.0, 45, 100, 0, 30, 7.0, 0.0, 9.0, 9.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         }
     }    
@@ -52,10 +52,10 @@ frame(fighter.lua_state_agent, 12.0);
 if macros::is_excute(fighter) {
     AttackModule::clear_all(fighter.module_accessor);
     if AttackModule::is_attack_occur(fighter.module_accessor) {
-        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        enable_attack_cancel(fighter); 
     }  
     else {
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }  
     FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 6.0, 6.0);
 }

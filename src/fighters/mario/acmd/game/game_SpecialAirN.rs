@@ -6,7 +6,7 @@ unsafe fn game_specialairn(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 14.0);
     if macros::is_excute(fighter) {
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_MARIO_GENERATE_ARTICLE_FIREBALL, false, -1);
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }    
 pub fn install() {

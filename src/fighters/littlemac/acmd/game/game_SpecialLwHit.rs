@@ -11,7 +11,7 @@ COUNTER_CANCEL[entry_id] = true;
     }
     frame(fighter.lua_state_agent, 16.0);
     if macros::is_excute(fighter) {
-        ENABLE_ATTACK_CANCEL[entry_id] = true; 
+        enable_attack_cancel(fighter); 
 macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 10.0, 361, 50, 0, 90, 4.0, 3.0, 0.0, 0.0, None, None, None, 1.6, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
         AttackModule::set_force_reaction(fighter.module_accessor, 0, true, false);
     }
@@ -23,7 +23,7 @@ macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 10.0, 361, 50, 0, 90, 4.0, 3.
     frame(fighter.lua_state_agent, 22.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-CANCEL_IN_NEUTRAL[entry_id] = true;
+whiff_cancel(fighter);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LITTLEMAC_STATUS_SPECIAL_LW_FLAG_COUNTER_ATTACK_END);
     }
     frame(fighter.lua_state_agent, 45.0);

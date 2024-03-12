@@ -19,3 +19,7 @@ let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WO
         KineticModule::resume_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
 }
+pub fn install() {
+    smashline::install_acmd_scripts!(
+    game_attackairlw);
+}

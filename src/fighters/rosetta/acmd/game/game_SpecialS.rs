@@ -10,7 +10,7 @@ unsafe fn game_specials(fighter: &mut L2CAgentBase) {
 
     frame(fighter.lua_state_agent, 22.0);
     if macros::is_excute(fighter) {
-        CANCEL_IN_NEUTRAL[entry_id] = true;
+        whiff_cancel(fighter);
     }
 }    
 pub fn install() {
